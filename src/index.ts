@@ -24,7 +24,7 @@ app.use(cors());
 app.use('/v1', router)
 // app.use(routes)
 app.get('/', (request, response) => {
-  const user = process.env.NAME || "usuario";
+  const user = String(process.env.NAME) || "User";
   return response.send({
     message: `Hello ${user}`,
   });
@@ -35,6 +35,7 @@ mongoose.connect(String(DATABASE_URL))
     console.log('connecting to database successful')
 
     app.listen(PORT, () => {
+      console.log(DATABASE_URL)
       console.log(`App started on http://localhost:${PORT}`);
     });
   })

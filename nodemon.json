@@ -4,6 +4,6 @@
   ],
   "ext": "ts,tsx,js,jsx",
   "execMap": {
-    "ts": "src/index.ts"
+    "ts": "ts-node-dev src/index.ts"
   }
 }
