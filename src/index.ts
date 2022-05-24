@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 // import routes from './routes';
 
 import helmet from 'helmet';
+import morganMiddleware from './middlewares/morgan';
+import healthMiddleware from './middlewares/health';
 
 const PORT = process.env.APP_PORT || 3000
 const { DATABASE_URL } = process.env
@@ -14,6 +16,8 @@ const router = express.Router()
 
 // Middlewares
 app.use(helmet());
+morganMiddleware.setup(app)
+healthMiddleware.setup(app)
 
 // Express middlewares
 app.use(express.json());
@@ -35,7 +39,6 @@ mongoose.connect(String(DATABASE_URL))
     console.log('connecting to database successful')
 
     app.listen(PORT, () => {
-      console.log(DATABASE_URL)
       console.log(`App started on http://localhost:${PORT}`);
     });
   })

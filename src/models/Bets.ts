@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
+import BetsInterface from "../types/Bets";
 
-export const BillModel = mongoose.model('Bet', new Schema({
+export const BetsModel = mongoose.model('Bet', new Schema<BetsInterface>({
   details: { type: Object, required: true },
   better: {
     type: Schema.Types.ObjectId,
