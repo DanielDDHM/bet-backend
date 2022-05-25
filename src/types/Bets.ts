@@ -8,4 +8,7 @@ export default interface BetsInterface {
   dateBet: Date,
   createdAt: Date,
   updatedAt: Date
+  isActive: boolean,
+  isConfirmed: boolean,
+  isStaff: boolean
 }

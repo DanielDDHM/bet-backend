@@ -47,7 +47,7 @@
   },
   "scripts": {
     "start": "npm run lint:fix && npm run dev",
-    "dev": "nodemon ts-node-dev --inspect --transpile-only src/index.ts",
+    "dev": "nodemon ts-node-dev --inspect --transpile-only src/app.ts",
     "lint": "eslint --ext js,ts src",
     "lint:fix": "eslint --ext js,ts src --fix",
     "docker:up": "docker-compose -f docker-compose.test.yml up -d",

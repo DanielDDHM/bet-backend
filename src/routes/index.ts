@@ -1,5 +1,10 @@
 import e from 'express';
+import usersRoutes from './users.routes'
+import betsRoutes from './bets.routes'
 
-const routes = e.Router();
+const rootRoutes = e.Router();
 
-export default routes;
+rootRoutes.use('/users', usersRoutes);
+rootRoutes.use('/bets', betsRoutes);
+
+export default rootRoutes;
