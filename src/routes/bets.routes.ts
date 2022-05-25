@@ -1,10 +1,10 @@
 import e from 'express';
-import { betsController } from '../controllers';
+// import { BetsController } from '../controllers';
 
 const router = e.Router();
 
 router.get('/')
-router.post('/create', betsController.create);
+router.post('/')
 router.put('/')
 router.patch('/')
 router.delete('/')

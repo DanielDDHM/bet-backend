@@ -1,2 +1,2 @@
-export * as usersController from "./users.controller";
-export * as betsController from "./bets.controller";
+export { default as UsersController } from "./users.controller";
+export { default as BetsController } from "./bets.controller";

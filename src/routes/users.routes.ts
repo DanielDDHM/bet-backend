@@ -1,10 +1,9 @@
 import e from 'express';
-import { usersController } from '../controllers';
+import { UsersController } from '../controllers';
 
 const router = e.Router();
-
 router.get('/')
-router.post('/create', usersController.create);
+router.post('/create', new UsersController().create);
 router.put('/')
 router.patch('/')
 router.delete('/')
