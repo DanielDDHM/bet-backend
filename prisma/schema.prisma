@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["mongodb"]
+}
+
+model users {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  contact   Json
+  address   Json
+  bets      bets[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now())
+  deleted   Boolean?  @default(false)
+  deletedAt DateTime?
+}
+
+model bets {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  value     String
+  winner    Boolean
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now())
+  deleted   Boolean?  @default(false)
+  deletedAt DateTime?
+  users     users?    @relation(fields: [usersId], references: [id])
+  usersId   String?   @db.ObjectId
+}
+
+model game {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  winner    String    @unique
+  sortDate  DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now())
+  deleted   Boolean?  @default(false)
+  deletedAt DateTime?
+}

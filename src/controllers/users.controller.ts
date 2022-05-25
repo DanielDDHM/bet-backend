@@ -2,7 +2,6 @@ import { StatusCode } from "../types";
 import { Request, Response } from 'express';
 import { AppError } from "../helpers";
 
-
 export const create = (req: Request, res: Response) => {
   const { body } = req;
   try {
