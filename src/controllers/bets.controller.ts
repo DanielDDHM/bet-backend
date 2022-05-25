@@ -15,11 +15,11 @@ export default class BetsController {
     }
   }
 
-  async update(req: Request, res: Response) { }
+  // async update(req: Request, res: Response) { }
 
-  async patch(req: Request, res: Response) { }
+  // async patch(req: Request, res: Response) { }
 
-  async delete(req: Request, res: Response) { }
+  // async delete(req: Request, res: Response) { }
 
-  async get(req: Request, res: Response) { }
+  // async get(req: Request, res: Response) { }
 }
