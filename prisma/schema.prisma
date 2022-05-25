@@ -50,7 +50,14 @@ model game {
   deletedAt DateTime?
 }
 
-model achieviements {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-}
+// model achieviements {
+//   id        String    @id @default(auto()) @map("_id") @db.ObjectId
+//   name      String
+//   condition String?
+//   completed Boolean   @default(false)
+//   isActive  Boolean   @default(false)
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime? @default(now())
+//   deleted   Boolean?  @default(false)
+//   deletedAt DateTime?
+// }

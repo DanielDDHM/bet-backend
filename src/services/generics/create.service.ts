@@ -1,11 +1,10 @@
 import AppError from "../../helpers/AppError";
 import { StatusCode } from "../../types";
 import { Request, Response } from 'express';
-
+import { prisma } from '../../helpers';
 export interface CustomRequestBody<T> extends Request {
   body: T
 }
-
 export default class CreateService {
   //Atribuindo tipagens
   req: Request
