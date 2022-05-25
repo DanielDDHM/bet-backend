@@ -1,22 +1,24 @@
 import AppError from "../../helpers/AppError";
 import { StatusCode } from "../../types";
-import { Request, Response } from 'express';
 import { prisma } from '../../helpers';
-export interface CustomRequestBody<T> extends Request {
-  body: T
-}
+import { UserParam } from "../../types";
+
 export default class CreateService {
   //Atribuindo tipagens
-  req: Request
+  params: UserParam
   //Criando Constructor
-  constructor(req: Request) {
-    this.req = req
+  constructor(params: UserParam) {
+    this.params = params
   }
 
-  async createService(req: Request, res: Response) {
+  async createService(params = this.params) {
     try {
-      const { body } = req
-      return res.status(StatusCode.OK).send(body)
+      const registerCreated = await prisma.users.create({
+        data: {
+          ...params
+        }
+      })
+      return [registerCreated]
     } catch (error: any) {
       throw new AppError(String(error.messages), StatusCode.INTERNAL_SERVER_ERROR)
     }

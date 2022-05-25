@@ -1,7 +1,8 @@
-import UserInterface from "./User"
+import { UserInterface } from "./User.typings"
+import { DefaultSchema } from './default.typings';
 
-export default interface BetsInterface {
-  details: JSON,
+export interface BetsInterface extends DefaultSchema {
+  details: object,
   value: string,
   winner: boolean,
   better: UserInterface,

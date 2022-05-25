@@ -4,7 +4,7 @@ import cors from 'cors';
 
 import rootRoutes from './routes';
 
-const { DATABASE_URL, PORT, NAME } = process.env
+const { PORT, NAME } = process.env
 
 const app = express();
 
@@ -18,13 +18,13 @@ app.use('/v1', rootRoutes)
 
 // one call for test
 app.get('/', (request, response) => {
-  const user = String(process.env.NAME) || "User";
+  const user = String(NAME) || "User";
   return response.send({
     message: `Hello ${user}`,
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`App started on http://localhost:${PORT || 3000}`);
+  console.log(`App started on http://localhost:${PORT || 3000}, welcome ${NAME}`);
 });
 
