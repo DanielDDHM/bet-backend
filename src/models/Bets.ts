@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 import BetsInterface from "../types/Bets";
 
-export const BetsModel = mongoose.model('Bet', new Schema<BetsInterface>({
+const BetsModel = mongoose.model('Bet', new Schema<BetsInterface>({
   details: { type: Object, required: true },
   better: {
     type: Schema.Types.ObjectId,
@@ -14,3 +14,5 @@ export const BetsModel = mongoose.model('Bet', new Schema<BetsInterface>({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 }))
+
+export default BetsModel

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 import UserInterface from "../types/User";
 
-export const UserModel = mongoose.model('User', new Schema<UserInterface>({
+const UserModel = mongoose.model('User', new Schema<UserInterface>({
   name: { type: String, required: true },
   email: {
     type: String,
@@ -25,3 +25,5 @@ export const UserModel = mongoose.model('User', new Schema<UserInterface>({
   isConfirmed: { type: Boolean, required: false, default: false },
   isStaff: { type: Boolean, required: false, default: false },
 }))
+
+export default UserModel

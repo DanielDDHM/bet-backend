@@ -5,8 +5,7 @@ import mongoose from 'mongoose';
 
 import rootRoutes from './routes';
 
-const PORT = process.env.APP_PORT || 3000
-const { DATABASE_URL } = process.env
+const { DATABASE_URL, PORT, NAME } = process.env
 
 const app = express();
 
@@ -28,13 +27,13 @@ app.get('/', (request, response) => {
 
 mongoose.connect(String(DATABASE_URL))
   .then(() => {
-    console.log('connecting to database successful')
-
+    console.log(`connecting to database successful, Dear ${NAME || "USER"}`)
     app.listen(PORT, () => {
-      console.log(`App started on http://localhost:${PORT}`);
+      console.log(`App started on http://localhost:${PORT || 3000}`);
     });
   })
   .catch(e => console.error('could not connect to DB', e))
 
+mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
