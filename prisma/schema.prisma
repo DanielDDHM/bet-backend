@@ -27,21 +27,30 @@ model users {
 model bets {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   value     String
-  winner    Boolean
+  winner    Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(now())
   deleted   Boolean?  @default(false)
   deletedAt DateTime?
   users     users?    @relation(fields: [usersId], references: [id])
   usersId   String?   @db.ObjectId
+  game      game?     @relation(fields: [gameId], references: [id])
+  gameId    String?   @db.ObjectId
 }
 
 model game {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  winner    String    @unique
-  sortDate  DateTime
+  winner    String?   @unique
+  sortDate  DateTime?
+  bets      bets[]
+  prize     String
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(now())
   deleted   Boolean?  @default(false)
   deletedAt DateTime?
+}
+
+model achieviements {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
 }
