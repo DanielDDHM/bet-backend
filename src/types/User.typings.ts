@@ -13,20 +13,20 @@ export interface UserCreateDTO extends DefaultSchema {
   isStaff: boolean,
 }
 
-export interface UserUpdateDTO {
+// export interface UserUpdateDTO {
 
-}
-export interface UserDeleteDTO {
+// }
+// export interface UserDeleteDTO {
 
-}
+// }
 
-export interface UserPatchDTO {
+// export interface UserPatchDTO {
 
-}
+// }
 
-export interface UserGetDTO {
+// export interface UserGetDTO {
 
-}
+// }
 
 interface UserContactDTO {
   id?: any,
