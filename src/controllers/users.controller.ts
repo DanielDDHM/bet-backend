@@ -1,15 +1,17 @@
-import { StatusCode, UserInterface } from "../types";
+import { StatusCode } from "../types";
 import { Request, Response } from 'express';
 import { UserService } from "../services";
-
+import { UserCreateDTO, UserDeleteDTO, UserGetDTO, UserPatchDTO, UserUpdateDTO } from "../types";
+import { AppError } from "../helpers";
 export default class UsersController {
   async create(req: Request, res: Response) {
     const { body } = req;
     try {
-      const userCreated = await new UserService(body as UserInterface).createService()
-      return res.status(StatusCode.OK).send({ data: [userCreated], message: 'USER_CREATED' })
+      const userCreated = await new UserService(body as UserCreateDTO).createService()
+      console.log(userCreated)
+      return res.status(StatusCode.OK).send({ data: userCreated, message: 'USER_CREATED' })
     } catch (error: any) {
-      res.status(Number(error.statusCode)).json(error)
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
 

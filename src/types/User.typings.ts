@@ -1,11 +1,11 @@
 import { DefaultSchema } from './default.typings';
 
-export interface UserInterface extends DefaultSchema {
+export interface UserCreateDTO extends DefaultSchema {
   name: string,
   nick: string,
-  contact: UserContact,
+  contact: UserContactDTO,
   email: string,
-  address: UserAddress,
+  address: UserAddressDTO,
   password: string,
   photo: string,
   isActive: boolean,
@@ -13,13 +13,28 @@ export interface UserInterface extends DefaultSchema {
   isStaff: boolean,
 }
 
-interface UserContact {
+export interface UserUpdateDTO {
+
+}
+export interface UserDeleteDTO {
+
+}
+
+export interface UserPatchDTO {
+
+}
+
+export interface UserGetDTO {
+
+}
+
+interface UserContactDTO {
   id?: any,
   phone: string,
   email: string,
 }
 
-interface UserAddress {
+interface UserAddressDTO {
   id?: any,
   streetNumber: number,
   zipCode: string,
@@ -29,10 +44,3 @@ interface UserAddress {
   state: string,
 }
 
-export type UserParam = Omit<UserInterface,
-  'id' |
-  'createdAt' |
-  'updatedAt' |
-  'deleted' |
-  'deletedAt'
->;

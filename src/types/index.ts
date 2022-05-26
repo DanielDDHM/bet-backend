@@ -1,4 +1,4 @@
-export { UserInterface, UserParam } from './User.typings'
-export { BetsInterface } from './Bets.typings'
-export { StatusCode } from './statusCode.typings'
-
+export * from './User.typings'
+export * from './default.typings'
+export * from './Bets.typings'
+export * from './statusCode.typings'

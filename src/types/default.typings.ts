@@ -1,5 +1,4 @@
 import { Request } from 'express';
-
 export interface DefaultSchema {
   createdAt: Date,
   updatedAt: Date,
@@ -15,7 +14,6 @@ export interface GetAllPaginate {
 export type AvailableModelsNames = 'user' |
   'bets' |
   'game'
-
 
 export interface CustomRequestBody<T> extends Request {
   body: T

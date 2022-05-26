@@ -1,10 +1,10 @@
-import { StatusCode, UserInterface } from "../types";
-import { AppError } from '../helpers';
+import { AddressFinder, AppError, PasswordCrypt } from "../helpers";
 import { prisma } from "../config";
 import { usersCreateValidation } from "../validations";
+import { UserCreateDTO, UserUpdateDTO, UserPatchDTO, UserDeleteDTO, UserGetDTO, StatusCode } from "../types";
 export default class UserService {
-  params: UserInterface
-  constructor(params: UserInterface) {
+  params: UserCreateDTO | UserUpdateDTO
+  constructor(params: UserCreateDTO | UserUpdateDTO) {
     this.params = params
   }
   async createService(params = this.params) {
@@ -21,6 +21,8 @@ export default class UserService {
         // isConfirmed,
         // isStaff,
       } = usersCreateValidation.parse(params)
+
+      console.log(password)
 
       const [existNick, existUser, existAddress] = await Promise.all([
         await prisma.users.findFirst({
@@ -39,23 +41,34 @@ export default class UserService {
       ])
 
       if (existUser || existNick) {
+        console.log(existUser?.password, 'senha do user')
+        await new PasswordCrypt(password, String(existUser?.password)).compare()
         throw new AppError('USER EXISTS', StatusCode.BAD_REQUEST)
       }
 
       if (!existAddress) {
+        const { data } = await new AddressFinder(address.zipCode).check()
+        const { logradouro, bairro, localidade, uf } = data
         const addressCreated = await prisma.address.create({
-          data: address
+          data: {
+            ...address,
+            street: logradouro,
+            neighborhood: bairro,
+            city: localidade,
+            state: uf
+          }
         });
         const userCreated = await prisma.users.create({
           data: {
             name,
             nick,
-            password,
+            password: await new PasswordCrypt(password).crypt(),
             email,
             contact,
             addressId: addressCreated.id
           }
         });
+        console.log(password)
         return userCreated
       }
 
@@ -63,7 +76,7 @@ export default class UserService {
         data: {
           name,
           nick,
-          password,
+          password: await new PasswordCrypt(password).crypt(),
           email,
           contact,
           addressId: existAddress.id
@@ -71,7 +84,8 @@ export default class UserService {
       });
       return userCreated
     } catch (error: any) {
-      throw new AppError(String(error.message), error.statusCode)
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 

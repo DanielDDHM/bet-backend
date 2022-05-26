@@ -42,12 +42,11 @@
     "@typescript-eslint/parser": "^5.25.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.16.0",
-    "husky": "^8.0.1",
-    "nodemon": "^2.0.16"
+    "husky": "^8.0.1"
   },
   "scripts": {
     "start": "npm run lint:fix && npm run dev",
-    "dev": "nodemon ts-node-dev --inspect --transpile-only src/app.ts",
+    "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
     "lint": "eslint --ext js,ts src",
     "lint:fix": "eslint --ext js,ts src --fix",
     "docker:up": "docker-compose -f docker-compose.test.yml up -d",
