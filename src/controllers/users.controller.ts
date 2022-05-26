@@ -4,14 +4,12 @@ import { UserService } from "../services";
 
 export default class UsersController {
   async create(req: Request, res: Response) {
-    console.log(`entrou no create`)
     const { body } = req;
     try {
       const userCreated = await new UserService(body as UserInterface).createService()
-      console.log(`try controller`, userCreated, body)
       return res.status(StatusCode.OK).send({ data: [userCreated], message: 'USER_CREATED' })
-    } catch (error) {
-      res.status(StatusCode.INTERNAL_SERVER_ERROR).json(error)
+    } catch (error: any) {
+      res.status(Number(error.statusCode)).json(error)
     }
   }
 
