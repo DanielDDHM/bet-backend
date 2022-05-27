@@ -15,6 +15,7 @@ export interface UserCreateDTO extends DefaultSchema {
 
 //TODO: terminar tipagens
 export interface UserUpdateDTO {
+  nick: string
   email: string,
 }
 export interface UserDeleteDTO {

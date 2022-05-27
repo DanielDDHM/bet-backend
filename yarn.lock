@@ -753,6 +753,13 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/chalk@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@types/chalk/-/chalk-2.2.0.tgz#b7f6e446f4511029ee8e3f43075fb5b73fbaa0ba"
+  integrity sha512-1zzPV9FDe1I/WHhRkf9SNgqtRJWZqrBWgu7JGveuHmmyR9CnAPCie2N/x+iHrgnpYBIcCJWHBoMRv2TRWktsvw==
+  dependencies:
+    chalk "*"
+
 "@types/connect@*":
   version "3.4.35"
   resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.35.tgz#5fcf6ae445e4021d1fc2219a4873cc73a3bb2ad1"
@@ -1392,6 +1399,11 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
+chalk@*, chalk@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.0.1.tgz#ca57d71e82bb534a296df63bbacc4a1c22b2a4b6"
+  integrity sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==
+
 chalk@^2.0.0:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -1408,11 +1420,6 @@ chalk@^4.0.0:
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
-
-chalk@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.0.1.tgz#ca57d71e82bb534a296df63bbacc4a1c22b2a4b6"
-  integrity sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==
 
 char-regex@^1.0.2:
   version "1.0.2"

@@ -1,4 +1,4 @@
-import { BetsCreateDTO, BetsDeleteDTO, BetsGetDTO, BetsPatchDTO, BetsUpdateDTO, StatusCode } from "../types"
+import { StatusCode, BetsCreateDTO, BetsDeleteDTO, BetsGetDTO, BetsPatchDTO, BetsUpdateDTO } from "../types"
 import { AppError } from "../helpers"
 import { betsCreateValidation } from "../validations"
 import { prisma } from "../config"
@@ -9,6 +9,11 @@ export default class BetsService {
   constructor(params: BetsCreateDTO | BetsUpdateDTO) {
     this.params = params
   }
+
+  async get(params = this.params) {
+    console.log('get')
+  }
+
   async create(params = this.params) {
     try {
       const {
@@ -54,7 +59,4 @@ export default class BetsService {
     console.log('delete')
   }
 
-  async get(params = this.params) {
-    console.log('get')
-  }
 }

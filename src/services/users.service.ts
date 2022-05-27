@@ -1,12 +1,30 @@
 import { AddressFinder, AppError, PasswordCrypt } from "../helpers";
 import { prisma } from "../config";
 import { usersCreateValidation } from "../validations";
-import { UserCreateDTO, UserUpdateDTO, UserPatchDTO, UserDeleteDTO, UserGetDTO, StatusCode } from "../types";
+import { StatusCode, UserCreateDTO, UserUpdateDTO, UserPatchDTO, UserDeleteDTO, UserGetDTO } from "../types";
 export default class UserService {
   params: UserCreateDTO | UserUpdateDTO
   constructor(params: UserCreateDTO | UserUpdateDTO) {
     this.params = params
   }
+
+  async get(params = this.params) {
+    const { email, nick } = params
+    try {
+      const user = await prisma.users.findFirst({
+        where: {
+          OR: [
+            { email },
+            { nick }
+          ]
+        }
+      });
+      return user
+    } catch (error: any) {
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
   async createService(params = this.params) {
     try {
       const {
@@ -105,7 +123,4 @@ export default class UserService {
     console.log('delete')
   }
 
-  async get(params = this.params) {
-    console.log('get')
-  }
 }

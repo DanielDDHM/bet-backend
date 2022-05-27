@@ -1,2 +1,2 @@
-export * from './Bets.validation'
-export * from './Users.validation'
+export * from './bets.validation'
+export * from './users.validation'

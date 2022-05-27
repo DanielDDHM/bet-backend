@@ -1,4 +1,4 @@
-export * from './User.typings'
+export * from './user.typings'
 export * from './default.typings'
-export * from './Bets.typings'
+export * from './bets.typings'
 export * from './statusCode.typings'
