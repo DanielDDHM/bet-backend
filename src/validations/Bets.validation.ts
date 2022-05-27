@@ -1,5 +1,14 @@
 import * as z from "zod";
 
+export const getBetsValidation = z.object({
+  usersId: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
+  gameId: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
+}).strict();
+
 export const betsCreateValidation = z.object({
   usersId: z.string()
     .min(3, { message: 'NOT_EMPTY' }),

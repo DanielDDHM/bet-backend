@@ -1,17 +1,32 @@
 import { StatusCode, BetsCreateDTO, BetsDeleteDTO, BetsGetDTO, BetsPatchDTO, BetsUpdateDTO } from "../types"
 import { AppError } from "../helpers"
-import { betsCreateValidation } from "../validations"
+import { betsCreateValidation, getBetsValidation } from "../validations"
 import { prisma } from "../config"
 
 // TODO: Terminar bets services
 export default class BetsService {
-  params: BetsCreateDTO | BetsUpdateDTO
-  constructor(params: BetsCreateDTO | BetsUpdateDTO) {
+  params: BetsCreateDTO | BetsUpdateDTO | BetsGetDTO
+  constructor(params: BetsCreateDTO | BetsUpdateDTO | BetsGetDTO) {
     this.params = params
   }
 
   async get(params = this.params) {
-    console.log('get')
+    try {
+      const {
+        usersId,
+        gameId
+      } = getBetsValidation.parse(params)
+
+      const bets = await prisma.bets.findMany({
+        where: {
+          usersId
+        }
+      })
+
+      return bets
+    } catch (error: any) {
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
   }
 
   async create(params = this.params) {

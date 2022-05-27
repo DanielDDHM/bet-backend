@@ -6,7 +6,7 @@ export default class UsersController {
   async create(req: Request, res: Response) {
     const { body } = req;
     try {
-      const userCreated = await new UserService(body as UserCreateDTO).createService()
+      const userCreated = await new UserService(body as UserCreateDTO).create()
       console.log(userCreated)
       return res.status(StatusCode.OK).send({ data: userCreated, message: 'USER_CREATED' })
     } catch (error: any) {

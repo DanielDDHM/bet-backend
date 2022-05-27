@@ -1,5 +1,10 @@
 import { DefaultSchema } from './default.typings';
 
+export interface BetsGetDTO {
+  usersId?: string,
+  gameId?: string,
+}
+
 export interface BetsCreateDTO extends DefaultSchema {
   usersId: string,
   gameId: string,
@@ -20,6 +25,3 @@ export interface BetsPatchDTO {
   email: string,
 }
 
-export interface BetsGetDTO {
-  email: string,
-}

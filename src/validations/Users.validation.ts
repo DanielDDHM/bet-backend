@@ -1,6 +1,14 @@
 import * as z from "zod";
 
-export const usersCreateValidation = z.object({
+export const getUserValidation = z.object({
+  nick: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .max(8, { message: 'MAX_LENGTH_8' }),
+  email: z.string()
+    .min(2, { message: 'NON_EMPTY' }),
+}).strict();
+
+export const createUserValidation = z.object({
   name: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
     .max(10, { message: 'MAX_LENGTH_10' }),
