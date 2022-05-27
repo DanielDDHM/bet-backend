@@ -21,12 +21,10 @@ export default class PasswordCrypt {
     }
   }
 
+  // TODO: Ajustar erro de comparacao do password /sempre retornando false/
   async compare(pass = this.pass, userP = this.userP as string) {
     try {
       const comparePass = bcrypt.compareSync(pass, String(userP))
-      console.log(`pass 1`, pass)
-      console.log(`pass 2`, userP)
-      console.log(comparePass)
       return comparePass
     } catch (error) {
       throw new AppError('WRONG PASS', StatusCode.NOT_FOUND)

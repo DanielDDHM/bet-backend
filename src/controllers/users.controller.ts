@@ -2,7 +2,6 @@ import { StatusCode } from "../types";
 import { Request, Response } from 'express';
 import { UserService } from "../services";
 import { UserCreateDTO, UserDeleteDTO, UserGetDTO, UserPatchDTO, UserUpdateDTO } from "../types";
-import { AppError } from "../helpers";
 export default class UsersController {
   async create(req: Request, res: Response) {
     const { body } = req;
@@ -15,6 +14,7 @@ export default class UsersController {
     }
   }
 
+  // TODO: terminar Controllers
   // async update(req: Request, res: Response) { }
 
   // async patch(req: Request, res: Response) { }

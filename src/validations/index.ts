@@ -1,1 +1,2 @@
-export { usersCreateValidation } from './Users.validation'
+export * from './Bets.validation'
+export * from './Users.validation'

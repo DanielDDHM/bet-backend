@@ -13,20 +13,21 @@ export interface UserCreateDTO extends DefaultSchema {
   isStaff: boolean,
 }
 
-// export interface UserUpdateDTO {
+//TODO: terminar tipagens
+export interface UserUpdateDTO {
+  email: string,
+}
+export interface UserDeleteDTO {
+  email: string,
+}
 
-// }
-// export interface UserDeleteDTO {
+export interface UserPatchDTO {
+  email: string,
+}
 
-// }
-
-// export interface UserPatchDTO {
-
-// }
-
-// export interface UserGetDTO {
-
-// }
+export interface UserGetDTO {
+  email: string,
+}
 
 interface UserContactDTO {
   id?: any,

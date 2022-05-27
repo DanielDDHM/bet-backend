@@ -41,8 +41,6 @@ export default class UserService {
       ])
 
       if (existUser || existNick) {
-        console.log(existUser?.password, 'senha do user')
-        await new PasswordCrypt(password, String(existUser?.password)).compare()
         throw new AppError('USER EXISTS', StatusCode.BAD_REQUEST)
       }
 
@@ -89,8 +87,24 @@ export default class UserService {
     }
   }
 
-  // async updateService(params = this.params) { }
-  // async patchService(params = this.params) { }
-  // async deleteeService(params = this.params) { }
-  // async getService(params = this.params) { }
+  // TODO: Terminar user services
+  async create(params = this.params) {
+    console.log('create')
+  }
+
+  async update(params = this.params) {
+    console.log('update')
+  }
+
+  async patch(params = this.params) {
+    console.log('patch')
+  }
+
+  async delete(params = this.params) {
+    console.log('delete')
+  }
+
+  async get(params = this.params) {
+    console.log('get')
+  }
 }
