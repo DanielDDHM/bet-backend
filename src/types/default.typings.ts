@@ -11,6 +11,12 @@ export interface GetAllPaginate {
   perPage: number;
 }
 
+export interface Login {
+  nick: string,
+  email: string,
+  password: string,
+}
+
 export type AvailableModelsNames = 'user' |
   'bets' |
   'game'

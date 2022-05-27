@@ -25,9 +25,10 @@ export default class PasswordCrypt {
   async compare(pass = this.pass, userP = this.userP as string) {
     try {
       const comparePass = bcrypt.compareSync(pass, String(userP))
+      if (!comparePass) throw new AppError('WRONG PASS', StatusCode.NOT_FOUND);
       return comparePass
-    } catch (error) {
-      throw new AppError('WRONG PASS', StatusCode.NOT_FOUND)
+    } catch (error: any) {
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 

@@ -49,27 +49,29 @@ model address {
 model bets {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   value     String
-  winner    Boolean   @default(false)
+  winner    Boolean?  @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(now())
   deleted   Boolean?  @default(false)
   deletedAt DateTime?
   users     users?    @relation(fields: [usersId], references: [id])
-  usersId   String?   @unique @db.ObjectId
+  usersId   String?   @db.ObjectId
   game      game?     @relation(fields: [gameId], references: [id])
-  gameId    String?   @unique @db.ObjectId
+  gameId    String?   @db.ObjectId
 }
 
 model game {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  winner    String?   @unique
-  sortDate  DateTime?
-  bets      bets[]
-  prize     String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now())
-  deleted   Boolean?  @default(false)
-  deletedAt DateTime?
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  winner     String?
+  sortDate   DateTime?
+  bets       bets[]
+  prize      String
+  prizePhoto String?
+  isActive   Boolean?  @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @default(now())
+  deleted    Boolean?  @default(false)
+  deletedAt  DateTime?
 }
 
 // model achieviements {

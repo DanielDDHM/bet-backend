@@ -22,25 +22,27 @@ export default class UserService {
         // isStaff,
       } = usersCreateValidation.parse(params)
 
-      console.log(password)
-
-      const [existNick, existUser, existAddress] = await Promise.all([
+      const { zipCode, streetNumber } = address
+      const [existUser, existAddress] = await Promise.all([
         await prisma.users.findFirst({
           where: {
-            nick
-          }
-        }),
-        await prisma.users.findFirst({
-          where: {
-            email
+            OR: [
+              { email },
+              { nick }
+            ]
           }
         }),
         await prisma.address.findFirst({
-          where: address
+          where: {
+            zipCode,
+            streetNumber
+          }
         })
       ])
 
-      if (existUser || existNick) {
+      console.log(existAddress)
+
+      if (existUser) {
         throw new AppError('USER EXISTS', StatusCode.BAD_REQUEST)
       }
 
@@ -66,7 +68,6 @@ export default class UserService {
             addressId: addressCreated.id
           }
         });
-        console.log(password)
         return userCreated
       }
 

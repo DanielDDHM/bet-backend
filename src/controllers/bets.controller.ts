@@ -1,15 +1,15 @@
-import { StatusCode } from "../types";
+import { StatusCode, BetsCreateDTO, BetsDeleteDTO, BetsGetDTO, BetsPatchDTO, BetsUpdateDTO } from "../types";
 import { Request, Response } from 'express';
-// import { BetsInterface } from "../types";
+import { BetService } from "../services";
 
 export default class BetsController {
   async create(req: Request, res: Response) {
-    console.log(`entrou no create`)
     const { body } = req;
     try {
-      console.log(body)
-    } catch (error) {
-      res.status(StatusCode.INTERNAL_SERVER_ERROR).json(error)
+      const betCreated = await new BetService(body as BetsCreateDTO).create()
+      return res.status(StatusCode.OK).send({ data: betCreated, message: 'BET_CREATED' })
+    } catch (error: any) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
   // TODO: terminar Controllers

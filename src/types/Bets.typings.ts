@@ -1,10 +1,9 @@
 import { DefaultSchema } from './default.typings';
 
 export interface BetsCreateDTO extends DefaultSchema {
-  details: object,
+  usersId: string,
+  gameId: string,
   value: string,
-  winner: boolean,
-  dateBet: Date,
   createdAt: Date,
   updatedAt: Date
 }
