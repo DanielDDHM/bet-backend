@@ -17,17 +17,27 @@ export default class UserService {
   }
 
   async get(params = this.params) {
-    const { email, nick } = getUserValidation.parse(params)
+    const { email, nick, id } = getUserValidation.parse(params)
     try {
-      const user = await prisma.users.findFirst({
-        where: {
-          OR: [
-            { email },
-            { nick }
-          ]
-        }
-      });
-      return user
+      if (email || nick || id) {
+        const user = await prisma.users.findFirst({
+          where: {
+            OR: [
+              { email },
+              { nick },
+              { id }
+            ]
+          }
+        });
+        return user
+      } else {
+        const [users, total] = await Promise.all([
+          await prisma.users.findMany(),
+          await prisma.users.count()
+        ])
+        console.log(users, total)
+        return [{ users, Total: total }]
+      }
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }

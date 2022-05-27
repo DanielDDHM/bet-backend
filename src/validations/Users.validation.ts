@@ -1,11 +1,14 @@
 import * as z from "zod";
 
 export const getUserValidation = z.object({
+  id: z.string().optional(),
   nick: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
-    .max(8, { message: 'MAX_LENGTH_8' }),
+    .max(8, { message: 'MAX_LENGTH_8' })
+    .optional(),
   email: z.string()
-    .min(2, { message: 'NON_EMPTY' }),
+    .min(2, { message: 'NON_EMPTY' })
+    .optional(),
 }).strict();
 
 export const createUserValidation = z.object({

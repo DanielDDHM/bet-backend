@@ -3,6 +3,17 @@ import { Request, Response } from 'express';
 import { BetService } from "../services";
 
 export default class BetsController {
+
+  async get(req: Request, res: Response) {
+    const { body } = req;
+    try {
+      const bet = await new BetService(body as BetsGetDTO).get()
+      return res.status(StatusCode.OK).send(bet)
+    } catch (error: any) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
+
   async create(req: Request, res: Response) {
     const { body } = req;
     try {
@@ -18,6 +29,4 @@ export default class BetsController {
   // async patch(req: Request, res: Response) { }
 
   // async delete(req: Request, res: Response) { }
-
-  // async get(req: Request, res: Response) { }
 }

@@ -3,6 +3,19 @@ import { Request, Response } from 'express';
 import { UserService } from "../services";
 import { UserCreateDTO, UserDeleteDTO, UserGetDTO, UserPatchDTO, UserUpdateDTO } from "../types";
 export default class UsersController {
+
+  async get(req: Request, res: Response) {
+    const { params, body } = req;
+    const { id } = params
+    try {
+      if (id) { body.id = params.id }
+      const user = await new UserService(body as UserGetDTO).get()
+      return res.status(StatusCode.OK).send(user)
+    } catch (error) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
+
   async create(req: Request, res: Response) {
     const { body } = req;
     try {
@@ -21,5 +34,4 @@ export default class UsersController {
 
   // async delete(req: Request, res: Response) { }
 
-  // async get(req: Request, res: Response) { }
 }

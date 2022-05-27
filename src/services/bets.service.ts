@@ -11,19 +11,35 @@ export default class BetsService {
   }
 
   async get(params = this.params) {
+    const {
+      usersId,
+      gameId
+    } = getBetsValidation.parse(params)
     try {
-      const {
-        usersId,
-        gameId
-      } = getBetsValidation.parse(params)
+      if (usersId || gameId) {
+        const [bets, total] = await Promise.all([
+          await prisma.bets.findMany({
+            where: {
+              usersId,
+              gameId
+            }
+          }),
+          await prisma.bets.count({
+            where: {
+              usersId,
+              gameId
+            }
+          }),
+        ])
+        return [{ bets, Total: total }]
+      } else {
+        const [bets, total] = await Promise.all([
+          await prisma.bets.findMany(),
+          await prisma.bets.count()
+        ])
+        return [{ bets, Total: total }]
+      }
 
-      const bets = await prisma.bets.findMany({
-        where: {
-          usersId
-        }
-      })
-
-      return bets
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }

@@ -2,7 +2,7 @@ import e from 'express';
 import { UsersController } from '../controllers';
 
 const router = e.Router();
-router.get('/')
+router.get('/get/:id?', new UsersController().get)
 router.post('/create', new UsersController().create);
 router.put('/')
 router.patch('/')
