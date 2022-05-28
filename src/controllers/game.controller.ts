@@ -10,6 +10,7 @@ export default class GamesController {
 
   async get(req: Request, res: Response) {
     const { params } = req;
+    console.log(params)
     try {
       const game = await new GameService(params as GamesGetDTO).get()
       return res.status(StatusCode.OK).send(game)
@@ -23,7 +24,7 @@ export default class GamesController {
     try {
 
       // Auxiliar if to manage body of request
-      if (id) body.usersId = id;
+      if (id) body.ownerId = id;
       if (typeof body.sortDate as string) body.sortDate = new Date(body.sortDate)
 
 

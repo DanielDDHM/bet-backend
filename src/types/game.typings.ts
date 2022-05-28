@@ -4,7 +4,7 @@ export interface GamesGetDTO {
 
 export interface GamesCreateDTO {
   name: string,
-  usersId: string,
+  ownerId: string,
   prize: string,
   sortDate: Date
 }

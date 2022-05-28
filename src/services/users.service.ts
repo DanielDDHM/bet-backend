@@ -68,8 +68,6 @@ export default class UserService {
         await new AddressService({ zipCode, streetNumber } as GetAddressDTO).get()
       ])
 
-      console.log(existAddress, existUser)
-
       if (existUser) {
         throw new AppError('USER EXISTS', StatusCode.BAD_REQUEST)
       }

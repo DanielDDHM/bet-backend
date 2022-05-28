@@ -25,7 +25,7 @@ export default class AddressService {
           streetNumber
         }
       });
-      if (!address) throw new AppError('ADDRESS NOT FOUND', StatusCode.NOT_FOUND)
+      if (!address) return null
       return address
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

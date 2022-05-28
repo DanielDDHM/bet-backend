@@ -43,7 +43,7 @@ export default class GamesService {
     try {
       const {
         name,
-        usersId,
+        ownerId,
         prize,
         sortDate
       } = createGamesValidation.parse(params)
@@ -51,7 +51,7 @@ export default class GamesService {
       const gameCreated = await prisma.game.create({
         data: {
           name,
-          usersId,
+          ownerId,
           prize,
           sortDate
         }
