@@ -1,16 +1,12 @@
-import { DefaultSchema } from './default.typings';
-
 export interface BetsGetDTO {
   usersId?: string,
   gameId?: string,
 }
 
-export interface BetsCreateDTO extends DefaultSchema {
+export interface BetsCreateDTO {
   usersId: string,
   gameId: string,
   value: string,
-  createdAt: Date,
-  updatedAt: Date
 }
 
 //TODO: terminar tipagens

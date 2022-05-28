@@ -1,4 +1,8 @@
-import { StatusCode, BetsCreateDTO, BetsDeleteDTO, BetsGetDTO, BetsPatchDTO, BetsUpdateDTO } from "../types";
+import {
+  StatusCode,
+  BetsCreateDTO,
+  BetsGetDTO,
+} from "../types";
 import { Request, Response } from 'express';
 import { BetService } from "../services";
 

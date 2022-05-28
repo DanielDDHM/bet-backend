@@ -29,6 +29,7 @@ model users {
   deletedAt   DateTime?
   address     address?  @relation(fields: [addressId], references: [id])
   addressId   String?   @db.ObjectId
+  gameOwn     game[]
 }
 
 model address {
@@ -62,8 +63,10 @@ model bets {
 
 model game {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  owner      users?    @relation(fields: [usersId], references: [id])
   winner     String?
-  sortDate   DateTime?
+  sortDate   DateTime
   bets       bets[]
   prize      String
   prizePhoto String?
@@ -72,6 +75,7 @@ model game {
   updatedAt  DateTime? @default(now())
   deleted    Boolean?  @default(false)
   deletedAt  DateTime?
+  usersId    String?   @db.ObjectId
 }
 
 // model achieviements {

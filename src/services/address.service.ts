@@ -1,8 +1,14 @@
 import { AppError } from "../helpers";
-import { StatusCode } from "../types";
 import { prisma } from "../config";
-import { GetAddressDTO, CreateAddressDTO } from "../types";
-import { getAddressValidation, createAddressValidation } from "../validations";
+import {
+  GetAddressDTO,
+  CreateAddressDTO,
+  StatusCode
+} from "../types";
+import {
+  getAddressValidation,
+  createAddressValidation
+} from "../validations";
 
 export default class AddressService {
   params: GetAddressDTO | CreateAddressDTO
@@ -19,6 +25,7 @@ export default class AddressService {
           streetNumber
         }
       });
+      if (!address) throw new AppError('ADDRESS NOT FOUND', StatusCode.NOT_FOUND)
       return address
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

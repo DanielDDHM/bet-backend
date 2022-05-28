@@ -1,4 +1,9 @@
-import { StatusCode, BetsCreateDTO, BetsDeleteDTO, BetsGetDTO, BetsPatchDTO, BetsUpdateDTO } from "../types"
+import {
+  StatusCode,
+  BetsCreateDTO,
+  BetsGetDTO,
+  BetsUpdateDTO
+} from "../types"
 import { AppError } from "../helpers"
 import { betsCreateValidation, getBetsValidation } from "../validations"
 import { prisma } from "../config"

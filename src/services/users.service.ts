@@ -1,7 +1,14 @@
-import { AddressFinder, AppError, PasswordCrypt } from "../helpers";
+import {
+  AddressFinder,
+  AppError,
+  PasswordCrypt
+} from "../helpers";
 import { AddressService } from "./index";
 import { prisma } from "../config";
-import { createUserValidation, getUserValidation } from "../validations";
+import {
+  createUserValidation,
+  getUserValidation
+} from "../validations";
 import {
   StatusCode,
   UserCreateDTO,
@@ -121,5 +128,4 @@ export default class UserService {
   async delete(params = this.params) {
     console.log('delete')
   }
-
 }

@@ -1,7 +1,10 @@
 import { StatusCode } from "../types";
 import { Request, Response } from 'express';
 import { UserService } from "../services";
-import { UserCreateDTO, UserDeleteDTO, UserGetDTO, UserPatchDTO, UserUpdateDTO } from "../types";
+import {
+  UserCreateDTO,
+  UserGetDTO
+} from "../types";
 export default class UsersController {
 
   async get(req: Request, res: Response) {
