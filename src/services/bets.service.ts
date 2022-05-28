@@ -83,16 +83,16 @@ export default class BetsService {
     }
   }
 
-  async update(params = this.params) {
-    console.log('update')
-  }
+  // async update(params = this.params) {
+  //   console.log('update')
+  // }
 
-  async patch(params = this.params) {
-    console.log('patch')
-  }
+  // async patch(params = this.params) {
+  //   console.log('patch')
+  // }
 
-  async delete(params = this.params) {
-    console.log('delete')
-  }
+  // async delete(params = this.params) {
+  //   console.log('delete')
+  // }
 
 }

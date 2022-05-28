@@ -19,17 +19,15 @@ model users {
   email       String    @unique
   contact     Json
   password    String
-  bets        bets[]
   isActive    Boolean?  @default(false)
   isConfirmed Boolean?  @default(false)
   isStaff     Boolean?  @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @default(now())
-  deleted     Boolean?  @default(false)
-  deletedAt   DateTime?
   address     address?  @relation(fields: [addressId], references: [id])
   addressId   String?   @db.ObjectId
+  bets        bets[]
   gameOwn     game[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @default(now())
 }
 
 model address {
@@ -43,8 +41,6 @@ model address {
   users        users[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @default(now())
-  deleted      Boolean?  @default(false)
-  deletedAt    DateTime?
 }
 
 model bets {
@@ -53,8 +49,6 @@ model bets {
   winner    Boolean?  @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(now())
-  deleted   Boolean?  @default(false)
-  deletedAt DateTime?
   users     users?    @relation(fields: [usersId], references: [id])
   usersId   String?   @db.ObjectId
   game      game?     @relation(fields: [gameId], references: [id])
@@ -73,8 +67,6 @@ model game {
   isActive   Boolean?  @default(false)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @default(now())
-  deleted    Boolean?  @default(false)
-  deletedAt  DateTime?
   usersId    String?   @db.ObjectId
 }
 
@@ -86,6 +78,4 @@ model game {
 //   isActive  Boolean   @default(false)
 //   createdAt DateTime  @default(now())
 //   updatedAt DateTime? @default(now())
-//   deleted   Boolean?  @default(false)
-//   deletedAt DateTime?
 // }
