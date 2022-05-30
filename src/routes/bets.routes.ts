@@ -5,8 +5,6 @@ const router = e.Router();
 
 router.get('/get', new BetsController().get)
 router.post('/create', new BetsController().create)
-router.put('/')
-router.patch('/')
-router.delete('/')
+router.delete('/delete', new BetsController().delete)
 
 export default router

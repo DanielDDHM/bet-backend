@@ -5,8 +5,6 @@ const router = e.Router();
 
 router.get('/get', new AddressController().get)
 router.post('/create', new AddressController().create)
-router.put('/')
-router.patch('/')
-router.delete('/')
+router.put('/update', new AddressController().update)
 
 export default router

@@ -17,8 +17,9 @@ model users {
   nick        String    @unique
   name        String
   email       String    @unique
-  contact     Json
+  phone       String
   password    String
+  photo       String?
   isActive    Boolean?  @default(false)
   isConfirmed Boolean?  @default(false)
   isStaff     Boolean?  @default(false)

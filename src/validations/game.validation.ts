@@ -15,3 +15,14 @@ export const createGamesValidation = z.object({
     .min(3, { message: 'NOT_EMPTY' }),
   sortDate: z.date()
 }).strict();
+
+export const updateGamesValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  prize: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
+  sortDate: z.date()
+    .optional()
+}).strict();

@@ -3,7 +3,8 @@ import { Request, Response } from 'express';
 import { UserService } from "../services";
 import {
   UserCreateDTO,
-  UserGetDTO
+  UserGetDTO,
+  UserUpdateDTO
 } from "../types";
 export default class UsersController {
 
@@ -30,8 +31,16 @@ export default class UsersController {
     }
   }
 
+  async update(req: Request, res: Response) {
+    const { params, body } = req
+    try {
+      const updatedUser = await new UserService({ params, body } as UserUpdateDTO).update
+      return res.status(StatusCode.OK).send({ data: updatedUser, message: 'GAME UPDATED' })
+    } catch (error: any) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
   // TODO: terminar Controllers
-  // async update(req: Request, res: Response) { }
 
   // async patch(req: Request, res: Response) { }
 

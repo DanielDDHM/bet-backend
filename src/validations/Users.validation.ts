@@ -24,14 +24,15 @@ export const createUserValidation = z.object({
     .min(2, { message: 'NON_EMPTY' })
     .max(10, { message: 'MAX_LENGTH_8' }),
   photo: z.string()
-    .min(2, { message: 'MIN_LENGHT_3' }).optional(),
-  contact: z.object({
-    phone: z.string()
-      .min(2, { message: 'NON_EMPTY' })
-  }),
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  phone: z.string()
+    .min(2, { message: 'NON_EMPTY' })
+    .max(13, { message: 'MAX_LENGTH_13' }),
   address: z.object({
     zipCode: z.string()
-      .min(2, { message: 'NON_EMPTY' }),
+      .min(2, { message: 'NON_EMPTY' })
+      .max(10, { message: 'MAX_LENGTH_10' }),
     streetNumber: z.number()
       .nonnegative({ message: 'NON_NEGATIVE' })
       .min(2, { message: 'NON_EMPTY' }),
@@ -53,4 +54,54 @@ export const createUserValidation = z.object({
   isActive: z.boolean().optional(),
   isConfirmed: z.boolean().optional(),
   isStaff: z.boolean().optional(),
+}).strict();
+
+export const userUpdateValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' }),
+  name: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .max(10, { message: 'MAX_LENGTH_10' })
+    .optional(),
+  nick: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .max(8, { message: 'MAX_LENGTH_8' })
+    .optional(),
+  email: z.string()
+    .min(2, { message: 'NON_EMPTY' }),
+  password: z.string()
+    .min(2, { message: 'NON_EMPTY' })
+    .max(10, { message: 'MAX_LENGTH_8' }),
+  photo: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  phone: z.string()
+    .min(2, { message: 'NON_EMPTY' })
+    .optional(),
+  address: z.object({
+    zipCode: z.string()
+      .min(2, { message: 'NON_EMPTY' })
+      .optional(),
+    streetNumber: z.number()
+      .nonnegative({ message: 'NON_NEGATIVE' })
+      .min(2, { message: 'NON_EMPTY' })
+      .max(5, { message: 'MAX_LENGTH_5' })
+      .optional(),
+  }).optional(),
+  isActive: z.boolean().optional(),
+  isConfirmed: z.boolean().optional(),
+  isStaff: z.boolean().optional(),
+}).strict();
+
+export const deleteUserValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  email: z.string()
+    .min(2, { message: 'NON_EMPTY' })
+    .optional(),
+  password: z.string()
+    .min(2, { message: 'NON_EMPTY' })
+    .max(10, { message: 'MAX_LENGTH_8' })
+    .optional(),
 }).strict();

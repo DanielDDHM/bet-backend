@@ -1,8 +1,8 @@
-import 'dotenv/config';
-import express from 'express';
 import cors from 'cors';
-import { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { AppError } from './helpers';
+import "express-async-errors";
+import 'dotenv/config';
 
 import rootRoutes from './routes';
 
@@ -15,11 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// app use routes
-app.use('/v1', rootRoutes)
-
 app.use(
-  (error: Error, request: Request, response: Response) => {
+  (error: Error, request: Request, response: Response, next: NextFunction) => {
     if (error instanceof AppError) {
       return response.status(500).json({ error: error });
     }
@@ -30,6 +27,8 @@ app.use(
   }
 );
 
+// app use routes
+app.use('/v1', rootRoutes)
 
 // one call for test
 app.get('/', (request, response) => {

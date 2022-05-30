@@ -1,18 +1,20 @@
-import { AppError } from "../helpers";
+import { AddressFinder, AppError } from "../helpers";
 import { prisma } from "../config";
 import {
   GetAddressDTO,
   CreateAddressDTO,
+  UpdateAddressDTO,
   StatusCode
 } from "../types";
 import {
   getAddressValidation,
-  createAddressValidation
+  createAddressValidation,
+  updateAddressValidation
 } from "../validations";
 
 export default class AddressService {
-  params: GetAddressDTO | CreateAddressDTO
-  constructor(params: GetAddressDTO | CreateAddressDTO) {
+  params: GetAddressDTO | CreateAddressDTO | UpdateAddressDTO
+  constructor(params: GetAddressDTO | CreateAddressDTO | UpdateAddressDTO) {
     this.params = params
   }
 
@@ -25,11 +27,6 @@ export default class AddressService {
           streetNumber
         }
       });
-      console.log('dentro do address', zipCode, streetNumber, address)
-      if (!address || address === null) {
-        throw new AppError('THIS ADDRESS DOESNT EXIST ON DB', StatusCode.NOT_FOUND)
-      }
-
       return [{ address, message: 'THIS ADDRESS CONSTS IN OUR DATABASE' }]
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -40,26 +37,47 @@ export default class AddressService {
     try {
       const {
         zipCode,
-        streetNumber,
-        street,
-        neighborhood,
-        city,
-        state,
+        streetNumber
       } = createAddressValidation.parse(params)
+
+      const addressFinded = await new AddressFinder(zipCode).check()
+      const { logradouro, bairro, localidade, uf } = addressFinded.data
 
       const addressCreated = await prisma.address.create({
         data: {
           zipCode,
           streetNumber,
-          street,
-          neighborhood,
-          city,
-          state,
+          street: logradouro,
+          neighborhood: bairro,
+          city: localidade,
+          state: uf
         }
       });
 
-      return addressCreated
+      return [{ addressCreated, message: 'ADDRESS CREATED' }]
+
     } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async update(params = this.params) {
+    try {
+      const {
+        id
+      } = updateAddressValidation.parse(params)
+
+      await prisma.address.update({
+        where: {
+          id
+        },
+        data: {
+          ...params
+        }
+      })
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }

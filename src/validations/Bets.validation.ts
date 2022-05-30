@@ -17,3 +17,9 @@ export const betsCreateValidation = z.object({
   value: z.string()
     .min(1, { message: 'NOT_EMPTY' }),
 }).strict();
+
+export const betsDeleteValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+}).strict();

@@ -1,7 +1,8 @@
 import {
   StatusCode,
   CreateAddressDTO,
-  GetAddressDTO
+  GetAddressDTO,
+  UpdateAddressDTO
 } from "../types";
 import { AddressService } from "../services";
 import { Request, Response } from 'express';
@@ -27,10 +28,14 @@ export default class AddressController {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
-  // TODO: terminar Controllers
-  // async update(req: Request, res: Response) { }
 
-  // async patch(req: Request, res: Response) { }
-
-  // async delete(req: Request, res: Response) { }
+  async update(req: Request, res: Response) {
+    const { params, body } = req
+    try {
+      const updatedAddress = await new AddressService({ params, body } as UpdateAddressDTO).update
+      return res.status(StatusCode.OK).send({ data: updatedAddress, message: 'ADDRESS_UPDATED' })
+    } catch (error: any) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
 }

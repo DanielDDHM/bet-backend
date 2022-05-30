@@ -1,19 +1,21 @@
 import {
   StatusCode,
   GamesCreateDTO,
-  GamesGetDTO
+  GamesGetDTO,
+  GamesUpdateDTO
 } from "../types"
 import { AppError } from "../helpers"
 import {
   getGamesValidation,
-  createGamesValidation
+  createGamesValidation,
+  updateGamesValidation
 } from "../validations"
 import { prisma } from "../config"
 
 // TODO: Terminar bets services
 export default class GamesService {
-  params: GamesCreateDTO | GamesGetDTO
-  constructor(params: GamesCreateDTO | GamesGetDTO) {
+  params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO
+  constructor(params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO) {
     this.params = params
   }
 
@@ -64,9 +66,34 @@ export default class GamesService {
     }
   }
 
-  //   async update(params = this.params) {
-  //   console.log('update')
-  // }
+  async update(params = this.params) {
+    try {
+      const { id,
+        prize,
+        sortDate } = updateGamesValidation.parse(params)
+
+      const gameExists = await prisma.game.findFirst({
+        where: { id }
+      })
+
+      if (!gameExists) throw new AppError('GAME NOT EXISTS', StatusCode.NOT_FOUND)
+
+      const gameUpdate = await prisma.game.update({
+        where: {
+          id
+        },
+        data: {
+          prize,
+          sortDate
+        }
+      })
+
+      return [{ data: gameUpdate, message: 'GAME UPDATED' }]
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
 
   //   async patch(params = this.params) {
   //   console.log('patch')

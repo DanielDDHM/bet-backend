@@ -8,3 +8,9 @@ export interface GamesCreateDTO {
   prize: string,
   sortDate: Date
 }
+
+export interface GamesUpdateDTO {
+  id?: string
+  prize?: string,
+  sortDate?: Date
+}

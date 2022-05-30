@@ -10,6 +10,7 @@ export default class AddressFinder {
 
   async check(zipCode = this.zipCode) {
     try {
+      console.log('entrou no finder address')
       const address = await axios.get(`https://viacep.com.br/ws/${zipCode}/json/`)
       if (!address) throw new AppError('API CPF NAO ESTA EM FUNCIONAMENTO', StatusCode.SERVICE_UNAVAILABLE)
       return address

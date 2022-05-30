@@ -6,8 +6,12 @@ export interface GetAddressDTO {
 export interface CreateAddressDTO {
   zipCode: string,
   streetNumber: number,
-  street: string,
-  neighborhood: string,
-  city: string,
-  state: string
+  street?: string,
+  neighborhood?: string,
+  city?: string,
+  state?: string
+}
+
+export interface UpdateAddressDTO {
+  id?: string
 }

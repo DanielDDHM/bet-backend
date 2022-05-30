@@ -2,16 +2,20 @@ import {
   StatusCode,
   BetsCreateDTO,
   BetsGetDTO,
-  BetsUpdateDTO
+  BetsDeleteDTO
 } from "../types"
 import { AppError } from "../helpers"
-import { betsCreateValidation, getBetsValidation } from "../validations"
+import {
+  betsCreateValidation,
+  getBetsValidation,
+  betsDeleteValidation
+} from "../validations"
 import { prisma } from "../config"
 
 // TODO: Terminar bets services
 export default class BetsService {
-  params: BetsCreateDTO | BetsUpdateDTO | BetsGetDTO
-  constructor(params: BetsCreateDTO | BetsUpdateDTO | BetsGetDTO) {
+  params: BetsCreateDTO | BetsDeleteDTO | BetsGetDTO
+  constructor(params: BetsCreateDTO | BetsDeleteDTO | BetsGetDTO) {
     this.params = params
   }
 
@@ -46,6 +50,7 @@ export default class BetsService {
       }
 
     } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
@@ -83,16 +88,28 @@ export default class BetsService {
     }
   }
 
-  // async update(params = this.params) {
-  //   console.log('update')
-  // }
+  async delete(params = this.params) {
+    try {
+      const { id } = betsDeleteValidation.parse(params)
+      const existBet = await prisma.bets.findFirst({
+        where: {
+          id
+        }
+      })
 
-  // async patch(params = this.params) {
-  //   console.log('patch')
-  // }
+      if (existBet) throw new AppError('BET DOENSN`T EXISTS', StatusCode.NOT_FOUND)
 
-  // async delete(params = this.params) {
-  //   console.log('delete')
-  // }
+      await prisma.bets.delete({
+        where: {
+          id
+        }
+      })
+
+      return [{ message: 'USER HAS DELETED' }]
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
 
 }

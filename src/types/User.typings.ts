@@ -1,30 +1,14 @@
-import { DefaultSchema } from './default.typings';
-
-export interface UserCreateDTO extends DefaultSchema {
+export interface UserCreateDTO {
   name: string,
   nick: string,
-  contact: UserContactDTO,
+  phone: string,
   email: string,
   address: UserAddressDTO,
   password: string,
-  photo: string,
-  isActive: boolean,
-  isConfirmed: boolean,
-  isStaff: boolean,
-}
-
-//TODO: terminar tipagens
-export interface UserUpdateDTO {
-  nick: string,
-  email: string,
-  password: string
-}
-export interface UserDeleteDTO {
-  email: string,
-}
-
-export interface UserPatchDTO {
-  email: string,
+  photo?: string,
+  isActive?: boolean,
+  isConfirmed?: boolean,
+  isStaff?: boolean,
 }
 
 export interface UserGetDTO {
@@ -33,19 +17,21 @@ export interface UserGetDTO {
   email: string,
 }
 
-interface UserContactDTO {
-  id?: any,
-  phone: string,
-  email: string,
+export interface UserUpdateDTO {
+  id: string,
+  nick?: string,
+  phone?: string,
+  email?: string,
+  password?: string,
+  photo?: string,
+  addressId?: string
+  isActive?: boolean,
+  isConfirmed?: boolean,
+  isStaff?: boolean
 }
 
 interface UserAddressDTO {
-  id?: any,
-  streetNumber: number,
-  zipCode: string,
-  street: string,
-  neighboorhood: string,
-  city: string,
-  state: string,
+  streetNumber?: number,
+  zipCode?: string,
 }
 

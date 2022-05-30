@@ -9,15 +9,8 @@ export interface BetsCreateDTO {
   value: string,
 }
 
-//TODO: terminar tipagens
-export interface BetsUpdateDTO {
-  email: string,
-}
 export interface BetsDeleteDTO {
-  email: string,
+  id?: string,
 }
 
-export interface BetsPatchDTO {
-  email: string,
-}
 

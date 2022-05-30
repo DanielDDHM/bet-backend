@@ -2,7 +2,7 @@ import jwt from 'jwt-simple';
 import { prisma } from '../config';
 import { StatusCode, Login } from '../types';
 import AppError from './AppError';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import 'dotenv/config';
 
 export default class Auth {
@@ -32,7 +32,7 @@ export default class Auth {
 
       if (!user) throw new AppError('USER NOT FOUND', StatusCode.NOT_FOUND);
 
-      const passMatch = bcrypt.compareSync(password, user.password)
+      const passMatch = bcrypt.compare(password, user.password)
 
       if (!passMatch) throw new AppError('WRONG PASS', StatusCode.BAD_REQUEST);
 

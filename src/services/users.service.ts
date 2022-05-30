@@ -7,7 +7,8 @@ import { AddressService } from "./index";
 import { prisma } from "../config";
 import {
   createUserValidation,
-  getUserValidation
+  getUserValidation,
+  userUpdateValidation
 } from "../validations";
 import {
   StatusCode,
@@ -18,8 +19,8 @@ import {
   CreateAddressDTO
 } from "../types";
 export default class UserService {
-  params: UserCreateDTO | UserUpdateDTO | UserGetDTO
-  constructor(params: UserCreateDTO | UserUpdateDTO | UserGetDTO) {
+  params: UserGetDTO | UserCreateDTO | UserUpdateDTO
+  constructor(params: UserGetDTO | UserCreateDTO | UserUpdateDTO) {
     this.params = params
   }
 
@@ -42,7 +43,6 @@ export default class UserService {
           await prisma.users.findMany(),
           await prisma.users.count()
         ])
-        console.log(users, total)
         return [{ users, Total: total }]
       }
     } catch (error: any) {
@@ -56,7 +56,7 @@ export default class UserService {
         name,
         nick,
         password,
-        contact,
+        phone,
         email,
         address,
       } = createUserValidation.parse(params)
@@ -89,8 +89,8 @@ export default class UserService {
             nick,
             password: await new PasswordCrypt(password).crypt(),
             email,
-            contact,
-            addressId: addressCreated.id
+            phone,
+            addressId: addressCreated[0].addressCreated.id
           }
         });
         return userCreated
@@ -102,8 +102,8 @@ export default class UserService {
           nick,
           password: await new PasswordCrypt(password).crypt(),
           email,
-          contact,
-          addressId: existAddress.id
+          phone,
+          addressId: existAddress[0].address?.id
         }
       });
       return userCreated
@@ -112,12 +112,78 @@ export default class UserService {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
+  async update(params = this.params) {
+    try {
+      const {
+        id,
+        name,
+        nick,
+        email,
+        password,
+        isActive,
+        isConfirmed,
+        isStaff,
+        phone,
+        photo,
+        address
+      } = userUpdateValidation.parse(params)
+
+      const [userExists, addressExists] = await Promise.all([
+        await this.get({ id } as UserGetDTO),
+        await new AddressService(address as GetAddressDTO).get()
+      ])
+
+      if (!userExists) throw new AppError('USER DOESNT EXISTS', StatusCode.NOT_FOUND)
+      if (!addressExists) {
+        const createdAddress = await new AddressService(address as CreateAddressDTO).create()
+        const userUpdated = await prisma.users.update({
+          where: {
+            id
+          },
+          data: {
+            name,
+            nick,
+            email,
+            password,
+            isActive,
+            isConfirmed,
+            isStaff,
+            phone,
+            photo,
+            addressId: createdAddress[0].addressCreated.id
+          }
+        })
+
+        return [{ data: userUpdated, message: 'USER UPDATED' }]
+      }
+
+      const userUpdated = await prisma.users.update({
+        where: {
+          id
+        },
+        data: {
+          name,
+          nick,
+          email,
+          password,
+          isActive,
+          isConfirmed,
+          isStaff,
+          phone,
+          photo,
+          addressId: addressExists[0]?.address?.id
+        }
+      })
+
+      return [{ data: userUpdated, message: 'USER UPDATED' }]
+
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
 
   // TODO: Terminar user services
-
-  // async update(params = this.params) {
-  //   console.log('update')
-  // }
 
   // async patch(params = this.params) {
   //   console.log('patch')
