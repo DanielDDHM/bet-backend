@@ -18,8 +18,10 @@ export interface Login {
 }
 
 export type AvailableModelsNames = 'user' |
-  'bets' |
-  'game'
+  'bets' | 'game'
+
+export type AvailableOperationsTypes = 'CREATE' |
+  'UPDATE' | 'DELETE' | 'ACTIVATE' | 'GET'
 
 export interface CustomRequestBody<T> extends Request {
   body: T

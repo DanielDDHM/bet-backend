@@ -25,8 +25,12 @@ export default class AddressService {
           streetNumber
         }
       });
-      if (!address) return null
-      return address
+      console.log('dentro do address', zipCode, streetNumber, address)
+      if (!address || address === null) {
+        throw new AppError('THIS ADDRESS DOESNT EXIST ON DB', StatusCode.NOT_FOUND)
+      }
+
+      return [{ address, message: 'THIS ADDRESS CONSTS IN OUR DATABASE' }]
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
