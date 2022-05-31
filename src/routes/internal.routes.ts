@@ -3,7 +3,12 @@ import { BetsController } from '../controllers';
 
 const router = e.Router();
 
-router.get('/get', new BetsController().get)
-router.post('/create', new BetsController().create)
+// USERS
 
+// BETS
+router.delete('/bets/delete/:id', new BetsController().delete)
+
+//GAME
+
+//ADDRESS
 export default router

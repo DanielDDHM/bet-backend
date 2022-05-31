@@ -12,5 +12,8 @@ export interface GamesCreateDTO {
 export interface GamesUpdateDTO {
   id?: string
   prize?: string,
-  sortDate?: Date
+  sortDate?: Date,
+  winner?: string,
+  prizePhoto?: string,
+  isActive?: boolean
 }

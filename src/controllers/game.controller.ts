@@ -6,6 +6,7 @@ import {
 } from "../types";
 import { Request, Response } from 'express';
 import { GameService } from "../services";
+import { AppError } from "../helpers";
 
 export default class GamesController {
 
@@ -23,7 +24,6 @@ export default class GamesController {
   async create(req: Request, res: Response) {
     const { body, query: { id } } = req;
     try {
-
       // Auxiliar if to manage body of request
       if (id) body.ownerId = id;
       if (typeof body.sortDate as string) body.sortDate = new Date(body.sortDate)
@@ -37,8 +37,10 @@ export default class GamesController {
 
   async update(req: Request, res: Response) {
     const { params, body } = req
+    if (params.id) body.id = params.id;
+    if (typeof body.sortDate as string) body.sortDate = new Date(body.sortDate)
     try {
-      const updatedGame = await new GameService({ params, body } as GamesUpdateDTO).update
+      const updatedGame = await new GameService(body as GamesUpdateDTO).update()
       return res.status(StatusCode.OK).send({ data: updatedGame, message: 'GAME UPDATED' })
     } catch (error: any) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)

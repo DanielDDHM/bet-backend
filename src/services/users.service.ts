@@ -43,7 +43,7 @@ export default class UserService {
           await prisma.users.findMany(),
           await prisma.users.count()
         ])
-        return [{ users, Total: total }]
+        return { users, Total: total }
       }
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -68,6 +68,14 @@ export default class UserService {
         await new AddressService({ zipCode, streetNumber } as GetAddressDTO).get()
       ])
 
+      const test = await prisma.users.findFirst({
+        where: {
+          nick
+        }
+      })
+
+      console.log(await new PasswordCrypt(password, test?.password).compare())
+
       if (existUser) {
         throw new AppError('USER EXISTS', StatusCode.BAD_REQUEST)
       }
@@ -90,7 +98,7 @@ export default class UserService {
             password: await new PasswordCrypt(password).crypt(),
             email,
             phone,
-            addressId: addressCreated[0].addressCreated.id
+            addressId: addressCreated.id
           }
         });
         return userCreated
@@ -103,7 +111,7 @@ export default class UserService {
           password: await new PasswordCrypt(password).crypt(),
           email,
           phone,
-          addressId: existAddress[0].address?.id
+          addressId: existAddress.id
         }
       });
       return userCreated
@@ -150,11 +158,11 @@ export default class UserService {
             isStaff,
             phone,
             photo,
-            addressId: createdAddress[0].addressCreated.id
+            addressId: createdAddress.id
           }
         })
 
-        return [{ data: userUpdated, message: 'USER UPDATED' }]
+        return userUpdated
       }
 
       const userUpdated = await prisma.users.update({
@@ -171,11 +179,11 @@ export default class UserService {
           isStaff,
           phone,
           photo,
-          addressId: addressExists[0]?.address?.id
+          addressId: addressExists.id
         }
       })
 
-      return [{ data: userUpdated, message: 'USER UPDATED' }]
+      return userUpdated
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)

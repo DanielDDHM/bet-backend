@@ -61,7 +61,6 @@ export const userUpdateValidation = z.object({
     .min(2, { message: 'MIN_LENGHT_3' }),
   name: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
-    .max(10, { message: 'MAX_LENGTH_10' })
     .optional(),
   nick: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
@@ -85,7 +84,6 @@ export const userUpdateValidation = z.object({
     streetNumber: z.number()
       .nonnegative({ message: 'NON_NEGATIVE' })
       .min(2, { message: 'NON_EMPTY' })
-      .max(5, { message: 'MAX_LENGTH_5' })
       .optional(),
   }).optional(),
   isActive: z.boolean().optional(),

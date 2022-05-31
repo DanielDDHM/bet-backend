@@ -5,7 +5,7 @@ const router = e.Router();
 
 router.get('/get/:id?', new GamesController().get)
 router.post('/create', new GamesController().create)
-router.put('/update', new GamesController().update)
+router.put('/update/:id?', new GamesController().update)
 router.patch('/')
 router.delete('/')
 

@@ -34,7 +34,7 @@ export default class GamesService {
         await prisma.game.findMany()
       ])
 
-      return [{ games, Total: total }]
+      return { games, Total: total }
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -68,10 +68,16 @@ export default class GamesService {
 
   async update(params = this.params) {
     try {
-      const { id,
+      const {
+        id,
         prize,
-        sortDate } = updateGamesValidation.parse(params)
+        sortDate,
+        winner,
+        prizePhoto,
+        isActive
+      } = updateGamesValidation.parse(params)
 
+      console.log(params)
       const gameExists = await prisma.game.findFirst({
         where: { id }
       })
@@ -84,11 +90,15 @@ export default class GamesService {
         },
         data: {
           prize,
-          sortDate
+          sortDate,
+          winner,
+          prizePhoto,
+          isActive
         }
       })
 
-      return [{ data: gameUpdate, message: 'GAME UPDATED' }]
+      return gameUpdate
+
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

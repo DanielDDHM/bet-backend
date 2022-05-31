@@ -12,6 +12,3 @@ export interface CreateAddressDTO {
   state?: string
 }
 
-export interface UpdateAddressDTO {
-  id?: string
-}

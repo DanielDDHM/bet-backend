@@ -3,18 +3,16 @@ import { prisma } from "../config";
 import {
   GetAddressDTO,
   CreateAddressDTO,
-  UpdateAddressDTO,
   StatusCode
 } from "../types";
 import {
   getAddressValidation,
-  createAddressValidation,
-  updateAddressValidation
+  createAddressValidation
 } from "../validations";
 
 export default class AddressService {
-  params: GetAddressDTO | CreateAddressDTO | UpdateAddressDTO
-  constructor(params: GetAddressDTO | CreateAddressDTO | UpdateAddressDTO) {
+  params: GetAddressDTO | CreateAddressDTO
+  constructor(params: GetAddressDTO | CreateAddressDTO) {
     this.params = params
   }
 
@@ -27,7 +25,7 @@ export default class AddressService {
           streetNumber
         }
       });
-      return [{ address, message: 'THIS ADDRESS CONSTS IN OUR DATABASE' }]
+      return address
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
@@ -54,28 +52,8 @@ export default class AddressService {
         }
       });
 
-      return [{ addressCreated, message: 'ADDRESS CREATED' }]
+      return addressCreated
 
-    } catch (error: any) {
-      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
-      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
-    }
-  }
-
-  async update(params = this.params) {
-    try {
-      const {
-        id
-      } = updateAddressValidation.parse(params)
-
-      await prisma.address.update({
-        where: {
-          id
-        },
-        data: {
-          ...params
-        }
-      })
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

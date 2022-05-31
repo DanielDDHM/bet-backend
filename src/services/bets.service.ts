@@ -2,7 +2,8 @@ import {
   StatusCode,
   BetsCreateDTO,
   BetsGetDTO,
-  BetsDeleteDTO
+  BetsDeleteDTO,
+  GamesGetDTO
 } from "../types"
 import { AppError } from "../helpers"
 import {
@@ -11,6 +12,7 @@ import {
   betsDeleteValidation
 } from "../validations"
 import { prisma } from "../config"
+import GamesService from "./game.service"
 
 // TODO: Terminar bets services
 export default class BetsService {
@@ -46,7 +48,7 @@ export default class BetsService {
           await prisma.bets.findMany(),
           await prisma.bets.count()
         ])
-        return [{ bets, Total: total }]
+        return { bets, Total: total }
       }
 
     } catch (error: any) {
@@ -63,15 +65,17 @@ export default class BetsService {
         value
       } = betsCreateValidation.parse(params)
 
-      // TODO: Utilizar um service de get futuramente
-      const userExist = await prisma.users.findFirst({
-        where: {
-          id: usersId
-        }
-      });
+      const [userExist, gameExist] = await Promise.all([
+        await prisma.users.findFirst({
+          where: {
+            id: usersId
+          }
+        }),
+        await new GamesService(gameId as GamesGetDTO).get()
+      ])
       // TODO: Implementar verificar se o game existe ou esta ativo
 
-      if (userExist) {
+      if (userExist && gameExist) {
         const betCreated = await prisma.bets.create({
           data: {
             usersId,
@@ -105,7 +109,7 @@ export default class BetsService {
         }
       })
 
-      return [{ message: 'USER HAS DELETED' }]
+      return { message: 'BET HAS DELETED' }
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

@@ -24,5 +24,12 @@ export const updateGamesValidation = z.object({
     .min(3, { message: 'NOT_EMPTY' })
     .optional(),
   sortDate: z.date()
-    .optional()
+    .optional(),
+  winner: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
+  prizePhoto: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
+  isActive: z.boolean().optional(),
 }).strict();
