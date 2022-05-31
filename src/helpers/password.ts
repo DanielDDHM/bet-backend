@@ -12,20 +12,18 @@ export default class PasswordCrypt {
     this.userP = userP
     this.salt = 10
   }
-  async crypt(userP = this.userP, salt = this.salt) {
+  async crypt(pass = this.pass, salt = this.salt) {
     try {
-      const encryptPass = await bcrypt.hash(String(userP), salt)
+      const encryptPass = await bcrypt.hash(String(pass), salt)
       return encryptPass
     } catch (error) {
       throw new AppError('ERROR ON CRYPT PASSWORD', StatusCode.FAILED_DEPENDENCY)
     }
   }
 
-  // TODO: Ajustar erro de comparacao do password /sempre retornando false/
   async compare(pass = this.pass, userP = this.userP) {
     try {
       const comparePass = await bcrypt.compare(pass, String(userP))
-      console.log(this.pass, this.userP, comparePass, typeof pass, typeof userP)
       return comparePass
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

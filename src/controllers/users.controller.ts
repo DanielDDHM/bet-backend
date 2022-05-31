@@ -25,7 +25,6 @@ export default class UsersController {
     const { body } = req;
     try {
       const userCreated = await new UserService(body as UserCreateDTO).create()
-      console.log(userCreated)
       return res.status(StatusCode.OK).send({ data: userCreated, message: 'USER CREATED' })
     } catch (error: any) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)

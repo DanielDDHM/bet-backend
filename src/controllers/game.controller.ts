@@ -12,7 +12,6 @@ export default class GamesController {
 
   async get(req: Request, res: Response) {
     const { params } = req;
-    console.log(params)
     try {
       const game = await new GameService(params as GamesGetDTO).get()
       return res.status(StatusCode.OK).send(game)

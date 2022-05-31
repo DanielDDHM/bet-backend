@@ -12,7 +12,6 @@ import {
 } from "../validations"
 import { prisma } from "../config"
 
-// TODO: Terminar bets services
 export default class GamesService {
   params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO
   constructor(params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO) {
@@ -77,7 +76,6 @@ export default class GamesService {
         isActive
       } = updateGamesValidation.parse(params)
 
-      console.log(params)
       const gameExists = await prisma.game.findFirst({
         where: { id }
       })

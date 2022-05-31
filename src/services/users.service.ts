@@ -61,20 +61,14 @@ export default class UserService {
         address,
       } = createUserValidation.parse(params)
 
+
+
       const { zipCode, streetNumber } = address
 
       const [existUser, existAddress] = await Promise.all([
         await this.get({ email, nick } as UserGetDTO),
         await new AddressService({ zipCode, streetNumber } as GetAddressDTO).get()
       ])
-
-      const test = await prisma.users.findFirst({
-        where: {
-          nick
-        }
-      })
-
-      console.log(await new PasswordCrypt(password, test?.password).compare())
 
       if (existUser) {
         throw new AppError('USER EXISTS', StatusCode.BAD_REQUEST)
