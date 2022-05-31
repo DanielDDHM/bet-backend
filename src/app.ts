@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
+// import { healthMiddleware, morganMiddleware } from './middlewares'
 import { AppError } from './helpers';
 import "express-async-errors";
 import 'dotenv/config';
@@ -14,6 +15,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+// Others Middlewares
+// app.use(healthMiddleware)
+// app.use(morganMiddleware)
 
 app.use(
   (error: Error, request: Request, response: Response, next: NextFunction) => {

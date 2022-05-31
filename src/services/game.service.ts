@@ -49,6 +49,7 @@ export default class GamesService {
         sortDate
       } = createGamesValidation.parse(params)
 
+
       const gameCreated = await prisma.game.create({
         data: {
           name,

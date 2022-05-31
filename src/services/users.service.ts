@@ -65,6 +65,14 @@ export default class UserService {
 
       const { zipCode, streetNumber } = address
 
+      const query = {
+        name,
+        nick,
+        password: await new PasswordCrypt(password).crypt(),
+        phone,
+        email
+      }
+
       const [existUser, existAddress] = await Promise.all([
         await this.get({ email, nick } as UserGetDTO),
         await new AddressService({ zipCode, streetNumber } as GetAddressDTO).get()
@@ -87,11 +95,7 @@ export default class UserService {
 
         const userCreated = await prisma.users.create({
           data: {
-            name,
-            nick,
-            password: await new PasswordCrypt(password).crypt(),
-            email,
-            phone,
+            ...query,
             addressId: addressCreated.id
           }
         });
@@ -100,11 +104,7 @@ export default class UserService {
 
       const userCreated = await prisma.users.create({
         data: {
-          name,
-          nick,
-          password: await new PasswordCrypt(password).crypt(),
-          email,
-          phone,
+          ...query,
           addressId: existAddress.id
         }
       });
@@ -130,6 +130,18 @@ export default class UserService {
         address
       } = userUpdateValidation.parse(params)
 
+      const query = {
+        name,
+        nick,
+        email,
+        password: await new PasswordCrypt(password).crypt(),
+        isActive,
+        isConfirmed,
+        isStaff,
+        phone,
+        photo
+      }
+
       const [userExists, addressExists] = await Promise.all([
         await this.get({ id } as UserGetDTO),
         await new AddressService(address as GetAddressDTO).get()
@@ -143,15 +155,7 @@ export default class UserService {
             id
           },
           data: {
-            name,
-            nick,
-            email,
-            password,
-            isActive,
-            isConfirmed,
-            isStaff,
-            phone,
-            photo,
+            ...query,
             addressId: createdAddress.id
           }
         })
@@ -164,15 +168,7 @@ export default class UserService {
           id
         },
         data: {
-          name,
-          nick,
-          email,
-          password,
-          isActive,
-          isConfirmed,
-          isStaff,
-          phone,
-          photo,
+          ...query,
           addressId: addressExists.id
         }
       })

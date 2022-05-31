@@ -42,7 +42,7 @@ export default class BetsService {
             }
           }),
         ])
-        return [{ bets, Total: total }]
+        return { bets, Total: total }
       } else {
         const [bets, total] = await Promise.all([
           await prisma.bets.findMany(),
