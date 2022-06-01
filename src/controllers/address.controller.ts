@@ -27,6 +27,4 @@ export default class AddressController {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
-
-  // TODO: Ver se precisa de um delete
 }

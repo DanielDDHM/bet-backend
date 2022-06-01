@@ -7,6 +7,5 @@ router.get('/get/:id?', new GamesController().get)
 router.post('/create', new GamesController().create)
 router.put('/update/:id?', new GamesController().update)
 router.patch('/')
-router.delete('/')
 
 export default router

@@ -13,8 +13,6 @@ import {
 } from "../validations"
 import { prisma } from "../config"
 import GamesService from "./game.service"
-
-// TODO: Terminar bets services
 export default class BetsService {
   params: BetsCreateDTO | BetsDeleteDTO | BetsGetDTO
   constructor(params: BetsCreateDTO | BetsDeleteDTO | BetsGetDTO) {
