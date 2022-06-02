@@ -25,6 +25,7 @@ model users {
   isStaff     Boolean?  @default(false)
   address     address?  @relation(fields: [addressId], references: [id])
   addressId   String?   @db.ObjectId
+  token       String?   @unique
   bets        bets[]
   gameOwn     game[]
   createdAt   DateTime  @default(now())

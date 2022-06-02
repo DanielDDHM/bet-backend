@@ -25,7 +25,7 @@ export default class UserService {
   }
 
   async get(params = this.params) {
-    const { email, nick, id } = getUserValidation.parse(params)
+    const { email, nick, id, page, perPage } = getUserValidation.parse(params)
     try {
       if (email || nick || id) {
         const user = await prisma.users.findFirst({
@@ -35,12 +35,15 @@ export default class UserService {
               { nick },
               { id }
             ]
-          }
+          },
         });
         return user
       } else {
         const [users, total] = await Promise.all([
-          await prisma.users.findMany(),
+          await prisma.users.findMany({
+            skip: (Number(page) - 1) * Number(perPage) || 0,
+            take: Number(perPage) || 10,
+          }),
           await prisma.users.count()
         ])
         return { users, Total: total }

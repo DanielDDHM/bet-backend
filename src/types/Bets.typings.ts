@@ -1,6 +1,8 @@
 export interface BetsGetDTO {
   usersId?: string,
   gameId?: string,
+  page?: number,
+  perPage?: number
 }
 
 export interface BetsCreateDTO {

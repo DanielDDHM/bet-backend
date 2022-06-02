@@ -4,6 +4,12 @@ export const getGamesValidation = z.object({
   id: z.string()
     .min(3, { message: 'NOT_EMPTY' })
     .optional(),
+  page: z.number()
+    .nonnegative()
+    .optional(),
+  perPage: z.number()
+    .nonnegative()
+    .optional()
 }).strict();
 
 export const createGamesValidation = z.object({

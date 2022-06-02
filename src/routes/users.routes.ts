@@ -1,5 +1,5 @@
 import e from 'express';
-import { UsersController } from '../controllers';
+import { AuthController, UsersController } from '../controllers';
 
 const router = e.Router();
 router.get('/get/:id?', new UsersController().get)

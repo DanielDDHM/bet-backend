@@ -22,7 +22,9 @@ export default class BetsService {
   async get(params = this.params) {
     const {
       usersId,
-      gameId
+      gameId,
+      page,
+      perPage
     } = getBetsValidation.parse(params)
     try {
       if (usersId || gameId) {
@@ -31,7 +33,9 @@ export default class BetsService {
             where: {
               usersId,
               gameId
-            }
+            },
+            skip: (Number(page) - 1) * Number(perPage) || 0,
+            take: Number(perPage) || 10,
           }),
           await prisma.bets.count({
             where: {
@@ -43,7 +47,10 @@ export default class BetsService {
         return { bets, Total: total }
       } else {
         const [bets, total] = await Promise.all([
-          await prisma.bets.findMany(),
+          await prisma.bets.findMany({
+            skip: (Number(page) - 1) * Number(perPage) || 0,
+            take: Number(perPage) || 10,
+          }),
           await prisma.bets.count()
         ])
         return { bets, Total: total }

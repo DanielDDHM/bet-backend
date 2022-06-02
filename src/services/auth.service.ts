@@ -1,24 +1,25 @@
-import jwt from 'jwt-simple';
+import jwt from 'jsonwebtoken';
 import { prisma } from '../config';
 import { StatusCode, Login } from '../types';
-import AppError from './AppError';
-import bcrypt from 'bcryptjs';
+import AppError from '../helpers/AppError';
 import 'dotenv/config';
+import { PasswordCrypt } from '../helpers';
 
 export default class Auth {
   payload: Login
   headers?: any
   AUTH_SECRET?: any
 
-  constructor(payload: Login, headers: any) {
+  constructor(payload?: any, headers?: any) {
     this.payload = payload
     this.headers = headers
     this.AUTH_SECRET = process.env.AUTH_SECRET
   }
 
-  // TODO: Verificar o Auth
-  async signIn(payload = this.payload) {
+  async login(payload = this.payload) {
     const { email, nick, password } = payload
+
+    console.log(payload)
     const exp = (60 * 60 * 24 * 3);
     try {
       const user = await prisma.users.findFirst({
@@ -31,35 +32,36 @@ export default class Auth {
       })
 
       if (!user) throw new AppError('USER NOT FOUND', StatusCode.NOT_FOUND);
-
-      const passMatch = bcrypt.compare(password, user.password)
-
+      const passMatch = await new PasswordCrypt(password, user.password).compare()
       if (!passMatch) throw new AppError('WRONG PASS', StatusCode.BAD_REQUEST);
 
       const data = {
-        ...payload,
+        data: nick,
         iat: Date.now(),
         exp: Date.now() + exp,
-        token: jwt.encode(payload, String(this.AUTH_SECRET))
       }
+      const token = jwt.sign(data, String(this.AUTH_SECRET))
 
-      return data;
+      console.log(token)
+
+      return { auth: true, token };
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.BAD_REQUEST)
     }
   }
 
-  async validateToken(headers = this.headers) {
-    try {
-      const { token } = headers;
-      if (!token) throw new AppError('MISSING TOKEN', StatusCode.BAD_REQUEST);
+  // TODO: AJUSTAR VERIFICACAO DE TOKEN
+  async verifyToken(headers = this.headers) {
+    const { token } = headers
+    console.log(token)
+    if (!token) throw new AppError('NO TOKEN PROVIDED', StatusCode.UNAUTHORIZED);
 
-      const tokenValidate = await jwt.decode(token, this.AUTH_SECRET);
+    const verify = jwt.verify(token, this.AUTH_SECRET)
 
-      if (tokenValidate?.exp > Date.now()) return true
+    if (!verify) throw new AppError('FAILED TO AUTH CODE', StatusCode.INTERNAL_SERVER_ERROR)
 
-    } catch (error: any) {
-      throw new AppError(String(error.message), StatusCode.BAD_REQUEST)
-    }
+    console.log(verify)
+
+    return { auth: true, decodedToken: verify }
   }
 }

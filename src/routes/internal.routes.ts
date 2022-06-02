@@ -1,18 +1,25 @@
 import e from 'express';
-import { BetsController } from '../controllers';
+import {
+  BetsController,
+  UsersController,
+  GamesController,
+  AddressController
+} from '../controllers';
 
 const router = e.Router();
 
 // USERS
-router.patch('/')
-router.delete('/')
+router.patch('/users/patch/:id')
+router.delete('/users/delete/:id')
 
 // BETS
 router.delete('/bets/delete/:id', new BetsController().delete)
 
 //GAME
-router.patch('/')
-router.delete('/')
+router.patch('/game/patch/:id')
+router.delete('/game/delete/:id')
 
 //ADDRESS
+router.delete('/game/delete/:id')
+
 export default router

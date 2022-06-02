@@ -1,5 +1,7 @@
 export interface GamesGetDTO {
-  id?: string
+  id?: string,
+  page?: number,
+  perPage?: number
 }
 
 export interface GamesCreateDTO {

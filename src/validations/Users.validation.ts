@@ -9,6 +9,12 @@ export const getUserValidation = z.object({
   email: z.string()
     .min(2, { message: 'NON_EMPTY' })
     .optional(),
+  page: z.number()
+    .nonnegative()
+    .optional(),
+  perPage: z.number()
+    .nonnegative()
+    .optional()
 }).strict();
 
 export const createUserValidation = z.object({

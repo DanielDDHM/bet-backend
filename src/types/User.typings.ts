@@ -15,6 +15,8 @@ export interface UserGetDTO {
   id?: string,
   nick: string,
   email: string,
+  page?: number,
+  perPage?: number
 }
 
 export interface UserUpdateDTO {

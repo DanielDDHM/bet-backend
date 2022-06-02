@@ -20,7 +20,7 @@ export default class GamesService {
 
   async get(params = this.params) {
     try {
-      const { id } = getGamesValidation.parse(params)
+      const { id, page, perPage } = getGamesValidation.parse(params)
       if (id) {
         const game = await prisma.game.findFirst({
           where: { id }
@@ -30,7 +30,10 @@ export default class GamesService {
 
       const [total, games] = await Promise.all([
         await prisma.game.count(),
-        await prisma.game.findMany()
+        await prisma.game.findMany({
+          skip: (Number(page) - 1) * Number(perPage) || 0,
+          take: Number(perPage) || 10,
+        })
       ])
 
       return { games, Total: total }
