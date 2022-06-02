@@ -78,7 +78,6 @@ export default class BetsService {
         }),
         await new GamesService(gameId as GamesGetDTO).get()
       ])
-      // TODO: Implementar verificar se o game existe ou esta ativo
 
       if (userExist && gameExist) {
         const betCreated = await prisma.bets.create({

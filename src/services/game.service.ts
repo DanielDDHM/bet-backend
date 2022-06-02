@@ -107,10 +107,6 @@ export default class GamesService {
     }
   }
 
-  //   async patch(params = this.params) {
-  //   console.log('patch')
-  // }
-
   //   async delete (params = this.params) {
   //   console.log('delete')
   // }

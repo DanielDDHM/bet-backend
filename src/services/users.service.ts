@@ -186,10 +186,6 @@ export default class UserService {
 
   // TODO: Terminar user services
 
-  // async patch(params = this.params) {
-  //   console.log('patch')
-  // }
-
   // async delete(params = this.params) {
   //   console.log('delete')
   // }

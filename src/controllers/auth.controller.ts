@@ -2,7 +2,6 @@
 import { Request, Response } from 'express';
 import { Auth } from '../helpers';
 import { StatusCode } from '../types';
-import jwt from 'jsonwebtoken';
 
 export default class AuthController {
 
@@ -10,7 +9,6 @@ export default class AuthController {
     const { body } = req;
     try {
       const userLogin = await new Auth(body).login()
-      console.log('saiu do service', userLogin)
       return res.status(StatusCode.OK).send(userLogin)
     } catch (error: any) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
@@ -24,11 +22,11 @@ export default class AuthController {
       if (!token) return res.status(StatusCode.UNAUTHORIZED)
         .send({ auth: false, message: 'NO TOKEN PROVIDED' });
 
-      const userVerify = await new Auth(token).verifyToken();
+      const userVerify = await new Auth(null, { token }).verifyToken();
 
-      return res.status(StatusCode.OK).send(userVerify)
+      return userVerify
     } catch (error: any) {
-      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+      res.status(Number(error.statusCode)).json(error)
     }
   }
 

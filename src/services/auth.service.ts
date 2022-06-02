@@ -19,7 +19,6 @@ export default class Auth {
   async login(payload = this.payload) {
     const { email, nick, password } = payload
 
-    console.log(payload)
     const exp = (60 * 60 * 24 * 3);
     try {
       const user = await prisma.users.findFirst({
@@ -42,26 +41,24 @@ export default class Auth {
       }
       const token = jwt.sign(data, String(this.AUTH_SECRET))
 
-      console.log(token)
-
       return { auth: true, token };
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.BAD_REQUEST)
     }
   }
 
-  // TODO: AJUSTAR VERIFICACAO DE TOKEN
   async verifyToken(headers = this.headers) {
-    const { token } = headers
-    console.log(token)
-    if (!token) throw new AppError('NO TOKEN PROVIDED', StatusCode.UNAUTHORIZED);
+    try {
+      const { token } = headers
+      if (!token) throw new AppError('NO TOKEN PROVIDED', StatusCode.UNAUTHORIZED);
 
-    const verify = jwt.verify(token, this.AUTH_SECRET)
+      const verify = jwt.verify(token, this.AUTH_SECRET)
 
-    if (!verify) throw new AppError('FAILED TO AUTH CODE', StatusCode.INTERNAL_SERVER_ERROR)
+      if (!verify) throw new AppError('FAILED TO AUTH CODE', StatusCode.INTERNAL_SERVER_ERROR)
 
-    console.log(verify)
-
-    return { auth: true, decodedToken: verify }
+      return { auth: true, decodedToken: verify }
+    } catch (error: any) {
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
   }
 }
