@@ -1,5 +1,5 @@
 
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Auth } from '../helpers';
 import { StatusCode } from '../types';
 
@@ -15,16 +15,16 @@ export default class AuthController {
     }
   }
 
-  async verifyLogin(req: Request, res: Response) {
+  async verifyLogin(req: Request, res: Response, next: NextFunction) {
     try {
-      const token = req.headers['x-access-token'];
+      const token = req.headers['x-access-token'] || req.body;
 
       if (!token) return res.status(StatusCode.UNAUTHORIZED)
         .send({ auth: false, message: 'NO TOKEN PROVIDED' });
 
-      const userVerify = await new Auth(null, { token }).verifyToken();
+      await new Auth(null, { token }).verifyToken();
 
-      return userVerify
+      return next()
     } catch (error: any) {
       res.status(Number(error.statusCode)).json(error)
     }
@@ -32,7 +32,9 @@ export default class AuthController {
 
   async logout(req: Request, res: Response) {
     try {
-      res.status(200).send({ auth: false, token: null });
+      const { nick } = req.body || req.query;
+      const userLogout = await new Auth().logout(nick)
+      res.status(StatusCode.OK).send(userLogout);
     } catch (error: any) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }

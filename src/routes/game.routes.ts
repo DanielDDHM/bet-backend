@@ -1,11 +1,11 @@
 import e from 'express';
-import { GamesController } from '../controllers';
+import { AuthController, GamesController } from '../controllers';
 
 const router = e.Router();
 
-router.get('/get/:id?', new GamesController().get)
-router.post('/create', new GamesController().create)
-router.put('/update/:id?', new GamesController().update)
+router.get('/get/:id?', new AuthController().verifyLogin, new GamesController().get)
+router.post('/create', new AuthController().verifyLogin, new GamesController().create)
+router.put('/update/:id?', new AuthController().verifyLogin, new GamesController().update)
 router.patch('/')
 
 export default router

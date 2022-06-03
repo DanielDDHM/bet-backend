@@ -1,25 +1,25 @@
-import e from 'express';
-import {
-  BetsController,
-  UsersController,
-  GamesController,
-  AddressController
-} from '../controllers';
+// import e from 'express';
+// import {
+//   BetsController,
+//   UsersController,
+//   GamesController,
+//   AddressController
+// } from '../controllers';
 
-const router = e.Router();
+// const router = e.Router();
 
-// USERS
-router.patch('/users/patch/:id')
-router.delete('/users/delete/:id')
+// // USERS
+// router.patch('/users/patch/:id', new UsersController().)
+// router.delete('/users/delete/:id', new UsersController().)
 
-// BETS
-router.delete('/bets/delete/:id', new BetsController().delete)
+// // BETS
+// router.delete('/bets/delete/:id', new BetsController().delete)
 
-//GAME
-router.patch('/game/patch/:id')
-router.delete('/game/delete/:id')
+// //GAME
+// router.patch('/game/patch/:id', new GamesController().)
+// router.delete('/game/delete/:id', new GamesController().)
 
-//ADDRESS
-router.delete('/game/delete/:id')
+// //ADDRESS
+// router.delete('/Address/delete/:id', new AddressController().)
 
-export default router
+// export default router

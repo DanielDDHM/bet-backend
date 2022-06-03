@@ -39,12 +39,12 @@ export default class UserService {
         });
         return user
       } else {
-        const [users, total] = await Promise.all([
-          await prisma.users.findMany({
+        const [users, total] = await prisma.$transaction([
+          prisma.users.findMany({
             skip: (Number(page) - 1) * Number(perPage) || 0,
             take: Number(perPage) || 10,
           }),
-          await prisma.users.count()
+          prisma.users.count()
         ])
         return { users, Total: total }
       }
@@ -63,8 +63,6 @@ export default class UserService {
         email,
         address,
       } = createUserValidation.parse(params)
-
-
 
       const { zipCode, streetNumber } = address
 

@@ -28,8 +28,8 @@ export default class BetsService {
     } = getBetsValidation.parse(params)
     try {
       if (usersId || gameId) {
-        const [bets, total] = await Promise.all([
-          await prisma.bets.findMany({
+        const [bets, total] = await prisma.$transaction([
+          prisma.bets.findMany({
             where: {
               usersId,
               gameId
@@ -37,7 +37,7 @@ export default class BetsService {
             skip: (Number(page) - 1) * Number(perPage) || 0,
             take: Number(perPage) || 10,
           }),
-          await prisma.bets.count({
+          prisma.bets.count({
             where: {
               usersId,
               gameId
@@ -46,12 +46,12 @@ export default class BetsService {
         ])
         return { bets, Total: total }
       } else {
-        const [bets, total] = await Promise.all([
-          await prisma.bets.findMany({
+        const [bets, total] = await prisma.$transaction([
+          prisma.bets.findMany({
             skip: (Number(page) - 1) * Number(perPage) || 0,
             take: Number(perPage) || 10,
           }),
-          await prisma.bets.count()
+          prisma.bets.count()
         ])
         return { bets, Total: total }
       }

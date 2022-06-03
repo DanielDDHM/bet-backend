@@ -28,9 +28,9 @@ export default class GamesService {
         return game
       }
 
-      const [total, games] = await Promise.all([
-        await prisma.game.count(),
-        await prisma.game.findMany({
+      const [total, games] = await prisma.$transaction([
+        prisma.game.count(),
+        prisma.game.findMany({
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
         })
