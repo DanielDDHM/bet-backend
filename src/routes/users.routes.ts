@@ -20,10 +20,6 @@ router.put('/update/:id?',
   new CheckRoleMiddleware().checkRole,
   new UsersController().update)
 
-router.put('/activate/:id?',
-  new CheckTokenMiddleware().verifyToken,
-  new UsersController().update)
-
 router.put('/confirmAccount/:id?',
   new CheckTokenMiddleware().verifyToken,
   new UsersController().update)
