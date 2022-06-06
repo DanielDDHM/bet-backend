@@ -49,8 +49,7 @@ export default class AuthController {
     // TODO: AJUSTAR A FUNCAO CHECKROLE
     try {
       const nick = req.headers['x-access-nick'];
-
-      await new Auth(null, nick).checkRole();
+      await new Auth(null, { nick }).checkRole()
 
       return next()
     } catch (error: any) {

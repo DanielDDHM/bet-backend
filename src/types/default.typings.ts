@@ -21,3 +21,4 @@ export enum UserTypes {
   USER = 'USER',
   OWNER = 'OWNER'
 }
+

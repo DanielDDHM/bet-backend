@@ -34,7 +34,7 @@ export default class Auth {
         }
       })
 
-      const tokenOnDb = await prisma.token.findFirst({
+      const tokenOnDb = await prisma.token.findUnique({
         where: {
           usersId: user?.id
         }
@@ -84,7 +84,7 @@ export default class Auth {
       const { token } = headers
       if (!token) throw new AppError('NO TOKEN PROVIDED', StatusCode.UNAUTHORIZED);
 
-      const tokenOnDb = await prisma.token.findFirst({
+      const tokenOnDb = await prisma.token.findUnique({
         where: {
           token
         }
@@ -118,22 +118,21 @@ export default class Auth {
     }
   }
 
-  async checkRole(headers = this.headers) {
+  async checkRole(headers = this.headers,) {
     try {
       const { nick } = headers
-
-      const user = await prisma.users.findFirst({
+      const user = await prisma.users.findUnique({
         where: {
           nick
         }
       })
 
-      if (user?.isActive && user?.isConfirmed && user?.isStaff) {
+      if (user?.isActive === true && user?.isConfirmed === true && user?.isStaff === true) {
         return UserTypes.ADMIN;
-      } else if (user?.isActive && user?.isConfirmed && !user.isStaff) {
-        return UserTypes.USER
+      } else if (user?.isActive === true && user?.isConfirmed === true && !user.isStaff) {
+        return UserTypes.USER;
       } else {
-        throw new AppError('USER NOT FIND', StatusCode.BAD_REQUEST)
+        throw new AppError('PROBLEM WITH USER', StatusCode.BAD_REQUEST)
       }
 
     } catch (error: any) {
