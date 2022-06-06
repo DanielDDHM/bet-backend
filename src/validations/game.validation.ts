@@ -39,3 +39,10 @@ export const updateGamesValidation = z.object({
     .optional(),
   isActive: z.boolean().optional(),
 }).strict();
+
+
+export const deleteGamesValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+}).strict();

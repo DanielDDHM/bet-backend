@@ -8,7 +8,8 @@ import { AppError } from "../helpers"
 import {
   getGamesValidation,
   createGamesValidation,
-  updateGamesValidation
+  updateGamesValidation,
+  deleteGamesValidation
 } from "../validations"
 import { prisma } from "../config"
 
@@ -107,8 +108,27 @@ export default class GamesService {
     }
   }
 
-  //   async delete (params = this.params) {
-  //   console.log('delete')
-  // }
+  async delete(params = this.params) {
+    const {
+      id,
+    } = deleteGamesValidation.parse(params)
+
+    try {
+      const existGame = await prisma.game.findFirst({
+        where: { id }
+      })
+
+      if (!existGame) throw new AppError('GAME NOT EXISTS', StatusCode.NOT_FOUND)
+
+      await prisma.game.delete({
+        where: { id },
+      });
+
+      return `GAME ${existGame.name} DELETED`
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
 
 }

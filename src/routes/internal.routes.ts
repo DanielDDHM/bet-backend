@@ -1,25 +1,39 @@
-// import e from 'express';
-// import {
-//   BetsController,
-//   UsersController,
-//   GamesController,
-//   AddressController
-// } from '../controllers';
+import e from 'express';
+import {
+  BetsController,
+  UsersController,
+  GamesController,
+  AuthController
+} from '../controllers';
 
-// const router = e.Router();
+const router = e.Router();
 
-// // USERS
-// router.patch('/users/patch/:id', new UsersController().)
-// router.delete('/users/delete/:id', new UsersController().)
+// USERS
+router.patch('/users/patch/:id',
+  new AuthController().verifyLogin,
+  new AuthController().checkRole,
+  new UsersController().update)
 
-// // BETS
-// router.delete('/bets/delete/:id', new BetsController().delete)
+router.delete('/users/delete/:id',
+  new AuthController().verifyLogin,
+  new AuthController().checkRole,
+  new UsersController().delete)
 
-// //GAME
-// router.patch('/game/patch/:id', new GamesController().)
-// router.delete('/game/delete/:id', new GamesController().)
+// BETS
+router.delete('/bets/delete/:id',
+  new AuthController().verifyLogin,
+  new AuthController().checkRole,
+  new BetsController().delete)
 
-// //ADDRESS
-// router.delete('/Address/delete/:id', new AddressController().)
+//GAME
+router.patch('/game/patch/:id',
+  new AuthController().verifyLogin,
+  new AuthController().checkRole,
+  new GamesController().update)
 
-// export default router
+router.delete('/game/delete/:id',
+  new AuthController().verifyLogin,
+  new AuthController().checkRole,
+  new GamesController().delete)
+
+export default router

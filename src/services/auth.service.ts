@@ -118,9 +118,9 @@ export default class Auth {
     }
   }
 
-  async checkRole(body: any) {
+  async checkRole(headers = this.headers) {
     try {
-      const { nick } = body
+      const { nick } = headers
 
       const user = await prisma.users.findFirst({
         where: {

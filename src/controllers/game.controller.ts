@@ -2,11 +2,11 @@ import {
   StatusCode,
   GamesCreateDTO,
   GamesGetDTO,
-  GamesUpdateDTO
+  GamesUpdateDTO,
+  GamesDeleteDTO
 } from "../types";
 import { Request, Response } from 'express';
 import { GameService } from "../services";
-import { AppError } from "../helpers";
 
 export default class GamesController {
 
@@ -45,9 +45,14 @@ export default class GamesController {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
-  // TODO: terminar Controllers
 
-  // async patch(req: Request, res: Response) { }
-
-  // async delete(req: Request, res: Response) { }
+  async delete(req: Request, res: Response) {
+    const { id } = req.params
+    try {
+      const deletedGame = await new GameService(id as GamesDeleteDTO).delete()
+      return res.status(StatusCode.OK).send(deletedGame)
+    } catch (error: any) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
 }

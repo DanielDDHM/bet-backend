@@ -38,9 +38,5 @@ export default class BetsController {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
-  // TODO: terminar Controllers
 
-  // async patch(req: Request, res: Response) { }
-
-  // async delete(req: Request, res: Response) { }
 }

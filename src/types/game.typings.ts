@@ -19,3 +19,7 @@ export interface GamesUpdateDTO {
   prizePhoto?: string,
   isActive?: boolean
 }
+
+export interface GamesDeleteDTO {
+  id?: string
+}
