@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { AppError } from './helpers';
 import "express-async-errors";
 import 'dotenv/config';
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(
-  (error: Error, request: Request, response: Response, next: NextFunction) => {
+  (error: Error, request: Request, response: Response) => {
     if (error instanceof AppError) {
       return response.status(500).json({ error: error });
     }
