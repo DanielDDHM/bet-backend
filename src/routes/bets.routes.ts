@@ -1,15 +1,20 @@
 import e from 'express';
-import { AuthController, BetsController } from '../controllers';
+import { BetsController } from '../controllers';
+import {
+  CheckRoleMiddleware,
+  CheckTokenMiddleware
+} from '../middleware';
 
 const router = e.Router();
 
 router.get('/get',
-  new AuthController().verifyLogin,
-  new AuthController().checkRole,
+  new CheckTokenMiddleware().verifyToken,
+  new CheckRoleMiddleware().checkRole,
   new BetsController().get)
+
 router.post('/create',
-  new AuthController().verifyLogin,
-  new AuthController().checkRole,
+  new CheckTokenMiddleware().verifyToken,
+  new CheckRoleMiddleware().checkRole,
   new BetsController().create)
 
 export default router

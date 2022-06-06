@@ -20,7 +20,7 @@ model users {
   phone       String
   password    String
   photo       String?
-  isActive    Boolean?  @default(false)
+  isActive    Boolean?  @default(true)
   isConfirmed Boolean?  @default(false)
   isStaff     Boolean?  @default(false)
   address     address?  @relation(fields: [addressId], references: [id])

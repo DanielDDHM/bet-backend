@@ -2,7 +2,7 @@ import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 // import fs from 'fs';
 import { prisma } from '../config';
-import { StatusCode, Login, UserTypes } from '../types';
+import { StatusCode, Login } from '../types';
 import { PasswordCrypt, AppError } from '../helpers';
 
 export default class Auth {
@@ -78,32 +78,6 @@ export default class Auth {
       throw new AppError(String(error.message), StatusCode.BAD_REQUEST)
     }
   }
-
-  async verifyToken(headers = this.headers) {
-    try {
-      const { token } = headers
-      if (!token) throw new AppError('NO TOKEN PROVIDED', StatusCode.UNAUTHORIZED);
-
-      const tokenOnDb = await prisma.token.findUnique({
-        where: {
-          token
-        }
-      })
-
-      if (!tokenOnDb) throw new AppError('INVALID TOKEN', StatusCode.BAD_REQUEST);
-      const verify = jwt.verify(token, this.AUTH_SECRET)
-
-      if (!verify) {
-        await this.logout(token)
-        throw new AppError('YOUR LOGIN HAS EXPIRED', StatusCode.BAD_REQUEST);
-      }
-
-      return { auth: true, decodedToken: verify }
-    } catch (error: any) {
-      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
-    }
-  }
-
   async logout(body: any) {
     try {
       const { token } = body
@@ -113,28 +87,6 @@ export default class Auth {
         }
       })
       return { auth: false, token: null };
-    } catch (error: any) {
-      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
-    }
-  }
-
-  async checkRole(headers = this.headers,) {
-    try {
-      const { nick } = headers
-      const user = await prisma.users.findUnique({
-        where: {
-          nick
-        }
-      })
-
-      if (user?.isActive === true && user?.isConfirmed === true && user?.isStaff === true) {
-        return UserTypes.ADMIN;
-      } else if (user?.isActive === true && user?.isConfirmed === true && !user.isStaff) {
-        return UserTypes.USER;
-      } else {
-        throw new AppError('PROBLEM WITH USER', StatusCode.BAD_REQUEST)
-      }
-
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }

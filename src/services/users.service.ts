@@ -3,7 +3,7 @@ import {
   AppError,
   PasswordCrypt
 } from "../helpers";
-import { AddressService, AuthService } from "./index";
+import { AddressService } from "./index";
 import { prisma } from "../config";
 import {
   createUserValidation,

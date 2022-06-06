@@ -35,8 +35,8 @@ export default class GamesController {
   }
 
   async update(req: Request, res: Response) {
-    const { params, body } = req
-    if (params.id) body.id = params.id;
+    const { params: { id }, body } = req
+    if (id) body.id = id;
     if (typeof body.sortDate as string) body.sortDate = new Date(body.sortDate)
     try {
       const updatedGame = await new GameService(body as GamesUpdateDTO).update()
