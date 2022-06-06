@@ -1,19 +1,25 @@
 import e from 'express';
-import { AuthController, GamesController } from '../controllers';
+import { GamesController } from '../controllers';
+import {
+  CheckRoleMiddleware,
+  CheckTokenMiddleware
+} from '../middleware';
 
 const router = e.Router();
 
 router.get('/get/:id?',
-  new AuthController().verifyLogin,
-  new AuthController().checkRole,
+  new CheckTokenMiddleware().verifyToken,
+  new CheckRoleMiddleware().checkRole,
   new GamesController().get)
+
 router.post('/create',
-  new AuthController().verifyLogin,
-  new AuthController().checkRole,
+  new CheckTokenMiddleware().verifyToken,
+  new CheckRoleMiddleware().checkRole,
   new GamesController().create)
+
 router.put('/update/:id?',
-  new AuthController().verifyLogin,
-  new AuthController().checkRole,
+  new CheckTokenMiddleware().verifyToken,
+  new CheckRoleMiddleware().checkRole,
   new GamesController().update)
 
 export default router

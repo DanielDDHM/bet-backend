@@ -10,10 +10,9 @@ import { AppError } from "../helpers";
 export default class UsersController {
 
   async get(req: Request, res: Response) {
-    const { params, body } = req;
-    const { id } = params
+    const { params: { id }, body } = req;
     try {
-      if (id) { body.id = params.id }
+      if (id) { body.id = id }
       const user = await new UserService(body as UserGetDTO).get()
       return res.status(StatusCode.OK).send({ data: user, message: 'USER FINDED' })
     } catch (error) {
@@ -32,11 +31,10 @@ export default class UsersController {
   }
 
   async update(req: Request, res: Response) {
-    const { params, body } = req
-    const { id } = params
+    const { params: { id }, body } = req
     try {
       if (!id) throw new AppError('INVALID ID', StatusCode.BAD_REQUEST)
-      body.id = params.id
+      body.id = id
       const updatedUser = await new UserService(body as UserUpdateDTO).update()
       return res.status(StatusCode.OK).send({ data: updatedUser, message: 'USER UPDATED' })
     } catch (error: any) {
@@ -45,11 +43,10 @@ export default class UsersController {
   }
 
   async delete(req: Request, res: Response) {
-    const { params, body } = req
-    const { id } = params
+    const { params: { id }, body } = req
     try {
       if (!id) throw new AppError('INVALID ID', StatusCode.BAD_REQUEST)
-      body.id = params.id
+      body.id = id
       const deletedUser = await new UserService(body as UserDeleteDTO).delete()
       return res.status(StatusCode.OK).send(deletedUser)
     } catch (error: any) {
