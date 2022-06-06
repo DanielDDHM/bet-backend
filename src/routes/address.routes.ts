@@ -1,15 +1,15 @@
 import e from 'express';
-import { AuthController, BetsController } from '../controllers';
+import { AddressController, AuthController } from '../controllers';
 
 const router = e.Router();
 
 router.get('/get',
   new AuthController().verifyLogin,
   new AuthController().checkRole,
-  new BetsController().get)
+  new AddressController().get)
 router.post('/create',
   new AuthController().verifyLogin,
   new AuthController().checkRole,
-  new BetsController().create)
+  new AddressController().create)
 
 export default router

@@ -1,7 +1,31 @@
 import * as z from "zod";
 
-export const betsValidation = z.object({
-  value: z.string().nonempty({ message: 'NON_EMPTY' }).max(10, { message: 'MAX_LENGTH_10' }),
-  winner: z.boolean().optional(),
-  dateBet: z.date(),
+export const getBetsValidation = z.object({
+  usersId: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
+  gameId: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
+  page: z.number()
+    .nonnegative()
+    .optional(),
+  perPage: z.number()
+    .nonnegative()
+    .optional()
+}).strict();
+
+export const betsCreateValidation = z.object({
+  usersId: z.string()
+    .min(3, { message: 'NOT_EMPTY' }),
+  gameId: z.string()
+    .min(3, { message: 'NOT_EMPTY' }),
+  value: z.string()
+    .min(1, { message: 'NOT_EMPTY' }),
+}).strict();
+
+export const betsDeleteValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
 }).strict();

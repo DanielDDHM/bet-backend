@@ -1,4 +1,6 @@
-export { default as UserInterface } from './User'
-export { default as BetsInterface } from './Bets'
-export { StatusCode } from './statusCode'
-
+export * from './user.typings'
+export * from './default.typings'
+export * from './bets.typings'
+export * from './statusCode.typings'
+export * from './address.typings'
+export * from './game.typings'
