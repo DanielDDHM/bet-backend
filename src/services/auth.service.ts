@@ -42,7 +42,7 @@ export default class Auth {
 
       if (!user) throw new AppError('USER NOT FOUND', StatusCode.NOT_FOUND);
       const passMatch = await new PasswordCrypt(password, user.password).compare();
-      if (!passMatch) throw new AppError('WRONG PASS', StatusCode.BAD_REQUEST);
+      if (!passMatch || user.email != email) throw new AppError('WRONG DATA', StatusCode.BAD_REQUEST);
 
       const data = {
         data: nick,
@@ -75,7 +75,8 @@ export default class Auth {
       }
 
     } catch (error: any) {
-      throw new AppError(String(error.message), StatusCode.BAD_REQUEST)
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
   async logout(body: any) {

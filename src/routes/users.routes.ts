@@ -20,10 +20,11 @@ router.put('/update/:id?',
   new CheckRoleMiddleware().checkRole,
   new UsersController().update)
 
-router.put('/confirmAccount/:id?',
+router.patch('/confirmAccount/:id?',
   new CheckTokenMiddleware().verifyToken,
   new UsersController().update)
 
-//TODO: rota pra recuperar senha
+router.post('/recoverPassword/:id?',
+  new CheckTokenMiddleware().verifyToken)
 
 export default router

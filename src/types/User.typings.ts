@@ -25,8 +25,9 @@ export interface UserUpdateDTO {
   phone?: string,
   email?: string,
   password?: string,
+  address?: any,
   photo?: string,
-  addressId?: string
+  addressId?: string,
   isActive?: boolean,
   isConfirmed?: boolean,
   isStaff?: boolean

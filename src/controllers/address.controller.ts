@@ -5,6 +5,7 @@ import {
 } from "../types";
 import { AddressService } from "../services";
 import { Request, Response } from 'express';
+import { AppError } from "../helpers";
 
 export default class AddressController {
 
@@ -14,6 +15,7 @@ export default class AddressController {
       const address = await new AddressService(body as GetAddressDTO).get()
       return res.status(StatusCode.OK).send(address)
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).send(error)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
@@ -24,6 +26,7 @@ export default class AddressController {
       const addressCreated = await new AddressService(body as CreateAddressDTO).create()
       return res.status(StatusCode.OK).send({ data: addressCreated, message: 'ADDRESS CREATED' })
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).send(error)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }

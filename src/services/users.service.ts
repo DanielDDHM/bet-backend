@@ -9,7 +9,8 @@ import {
   createUserValidation,
   getUserValidation,
   userUpdateValidation,
-  deleteUserValidation
+  deleteUserValidation,
+  activateUserValidation
 } from "../validations";
 import {
   StatusCode,
@@ -50,6 +51,7 @@ export default class UserService {
         return { users, Total: total }
       }
     } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
@@ -118,6 +120,7 @@ export default class UserService {
     }
   }
   async update(params = this.params) {
+    console.log('service', params)
     try {
       const {
         id,
@@ -184,6 +187,28 @@ export default class UserService {
     }
   }
 
+  async activateUser(params = this.params) {
+    try {
+      const { id, isConfirmed } = activateUserValidation.parse(params)
+      const user = await prisma.users.findFirst({
+        where: { id },
+      });
+
+      if (!user) throw new AppError('USER NOT EXISTS', StatusCode.BAD_REQUEST)
+
+      await prisma.users.update({
+        where: { id },
+        data: { isConfirmed }
+      })
+
+      return { id, isConfirmed }
+
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
   async delete(params = this.params) {
     const {
       id,
@@ -194,9 +219,7 @@ export default class UserService {
     try {
 
       const user = await prisma.users.findFirst({
-        where: {
-          id
-        },
+        where: { id },
       });
 
 

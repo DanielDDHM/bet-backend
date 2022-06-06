@@ -109,3 +109,10 @@ export const deleteUserValidation = z.object({
     .max(10, { message: 'MAX_LENGTH_8' })
     .optional(),
 }).strict();
+
+export const activateUserValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  isConfirmed: z.boolean().optional()
+}).strict();
