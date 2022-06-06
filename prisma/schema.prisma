@@ -25,11 +25,11 @@ model users {
   isStaff     Boolean?  @default(false)
   address     address?  @relation(fields: [addressId], references: [id])
   addressId   String?   @db.ObjectId
-  token       String?   @unique
   bets        bets[]
   gameOwn     game[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @default(now())
+  token       token?
 }
 
 model address {
@@ -72,12 +72,12 @@ model game {
   ownerId    String?   @db.ObjectId
 }
 
-// model achieviements {
-//   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-//   name      String
-//   condition String?
-//   completed Boolean   @default(false)
-//   isActive  Boolean   @default(false)
-//   createdAt DateTime  @default(now())
-//   updatedAt DateTime? @default(now())
-// }
+model token {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  token     String    @unique
+  user      users?    @relation(fields: [usersId], references: [id])
+  usersId   String?   @unique @db.ObjectId
+  expDate   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now())
+}

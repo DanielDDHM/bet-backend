@@ -18,11 +18,16 @@ export default class AuthController {
   async verifyLogin(req: Request, res: Response, next: NextFunction) {
     try {
       const token = req.headers['x-access-token'] || req.body;
+      const nick = req.headers['x-access-nick'] || req.body || req.query
 
       if (!token) return res.status(StatusCode.UNAUTHORIZED)
         .send({ auth: false, message: 'NO TOKEN PROVIDED' });
 
-      await new Auth(null, { token }).verifyToken();
+      const auth = await new Auth(null, { token }).verifyToken();
+
+      if (auth?.decodedToken?.data != nick) {
+        res.status(StatusCode.BAD_REQUEST).send('THIS IS NOT YOUR CODE')
+      }
 
       return next()
     } catch (error: any) {
@@ -32,9 +37,19 @@ export default class AuthController {
 
   async logout(req: Request, res: Response) {
     try {
-      const { nick } = req.body || req.query;
-      const userLogout = await new Auth().logout(nick)
+      const token = req.headers['x-access-token'] || req.body;
+      const userLogout = await new Auth().logout({ token })
       res.status(StatusCode.OK).send(userLogout);
+    } catch (error: any) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
+
+  async checkRole(req: Request, res: Response, next: NextFunction) {
+    try {
+      const nick = req.headers['x-access-nick'];
+      const role = await new Auth().checkRole(nick);
+      return next()
     } catch (error: any) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }

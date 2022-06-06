@@ -3,12 +3,13 @@ import {
   AppError,
   PasswordCrypt
 } from "../helpers";
-import { AddressService } from "./index";
+import { AddressService, AuthService } from "./index";
 import { prisma } from "../config";
 import {
   createUserValidation,
   getUserValidation,
-  userUpdateValidation
+  userUpdateValidation,
+  deleteUserValidation
 } from "../validations";
 import {
   StatusCode,
@@ -106,9 +107,10 @@ export default class UserService {
       const userCreated = await prisma.users.create({
         data: {
           ...query,
-          addressId: existAddress.id
+          addressId: existAddress.id,
         }
       });
+
       return userCreated
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
@@ -182,9 +184,32 @@ export default class UserService {
     }
   }
 
-  // TODO: Terminar user services
+  async delete(params = this.params) {
+    const {
+      id,
+      email,
+      password
+    } = deleteUserValidation.parse(params)
 
-  // async delete(params = this.params) {
-  //   console.log('delete')
-  // }
+    try {
+
+      const user = await prisma.users.findFirst({
+        where: {
+          id
+        },
+      });
+
+
+      const verifyPass = await new PasswordCrypt(String(password), user?.password).compare()
+
+      if (!verifyPass || user?.email != email) {
+        throw new AppError('INCORRECT INFO', StatusCode.BAD_REQUEST)
+      }
+
+      return `USER ${user?.nick} DELETED`
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
 }

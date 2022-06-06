@@ -32,6 +32,12 @@ export interface UserUpdateDTO {
   isStaff?: boolean
 }
 
+export interface UserDeleteDTO {
+  id: string,
+  email?: string,
+  password?: string
+}
+
 interface UserAddressDTO {
   streetNumber?: number,
   zipCode?: string,

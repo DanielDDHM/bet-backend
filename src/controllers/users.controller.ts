@@ -1,4 +1,4 @@
-import { StatusCode } from "../types";
+import { StatusCode, UserDeleteDTO } from "../types";
 import { Request, Response } from 'express';
 import { UserService } from "../services";
 import {
@@ -43,10 +43,18 @@ export default class UsersController {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
-  // TODO: terminar Controllers
 
-  // async patch(req: Request, res: Response) { }
-
-  // async delete(req: Request, res: Response) { }
+  async delete(req: Request, res: Response) {
+    const { params, body } = req
+    const { id } = params
+    try {
+      if (!id) throw new AppError('INVALID ID', StatusCode.BAD_REQUEST)
+      body.id = params.id
+      const deletedUser = await new UserService(body as UserDeleteDTO).delete()
+      return res.status(StatusCode.OK).send(deletedUser)
+    } catch (error: any) {
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
 
 }

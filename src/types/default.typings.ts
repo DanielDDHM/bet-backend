@@ -1,4 +1,3 @@
-import { Request } from 'express';
 export interface DefaultSchema {
   createdAt: Date,
   updatedAt: Date,
@@ -17,12 +16,8 @@ export interface Login {
   password: string,
 }
 
-export type AvailableModelsNames = 'user' |
-  'bets' | 'game'
-
-export type AvailableOperationsTypes = 'CREATE' |
-  'UPDATE' | 'DELETE' | 'ACTIVATE' | 'GET'
-
-export interface CustomRequestBody<T> extends Request {
-  body: T
+export enum UserTypes {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+  OWNER = 'OWNER'
 }
