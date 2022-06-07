@@ -48,7 +48,8 @@ model address {
 model bets {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   value     String
-  status    String    @default("PENDING")
+  bet       Int
+  status    String?   @default("PENDING")
   winner    Boolean?  @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(now())

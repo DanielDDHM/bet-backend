@@ -14,14 +14,21 @@ export default class CheckRole {
         }
       })
 
-      if (user?.isActive === true && user?.isConfirmed === true && user?.isStaff === true) {
-        req.role = UserTypes.ADMIN;
-        return next()
-      } else if (user?.isActive === true && user?.isConfirmed === true && !user.isStaff) {
-        req.role = UserTypes.USER;
-        return next()
+      if (user?.isActive === true && user?.isConfirmed === true) {
+        if (user.isStaff === true) {
+          req.role = UserTypes.ADMIN;
+          return next()
+        } else {
+          req.role = UserTypes.USER;
+          return next()
+        }
       } else {
-        throw new AppError('PROBLEM WITH USER', StatusCode.BAD_REQUEST)
+        let problem;
+        user?.isActive === false ? problem = 'USER NOT ACTIVE' :
+          user?.isConfirmed === false ? problem = 'USER IS NOT CONFIRMED' :
+            problem = 'USER IS NOT ACTIVE AND CONFIRMED';
+
+        throw new AppError(`PROBLEM WITH USER: ${problem}`, StatusCode.BAD_REQUEST)
       }
 
     } catch (error: any) {

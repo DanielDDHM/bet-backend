@@ -1,19 +1,15 @@
-export interface DefaultSchema {
-  createdAt: Date,
-  updatedAt: Date,
-  deleted: boolean,
-  deletedAt: Date,
-}
-
 export interface GetAllPaginate {
-  page: number;
-  perPage: number;
+  page?: number,
+  perPage?: number
 }
 
+export interface Verify {
+  role?: string
+}
 export interface Login {
-  nick: string,
-  email: string,
-  password: string,
+  nick?: string,
+  email?: string,
+  password?: string,
 }
 
 export enum UserTypes {
@@ -22,3 +18,6 @@ export enum UserTypes {
   OWNER = 'OWNER'
 }
 
+export interface GenericDeleteDTO {
+  id?: string,
+}

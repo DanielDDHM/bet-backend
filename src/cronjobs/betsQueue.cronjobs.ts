@@ -5,48 +5,43 @@ import { betsQueue } from "../config/queue";
 const cron = '*/5 * * * * *';
 const tz = 'America/Sao_Paulo';
 
-export default class QueueCron {
-  async BetsCron() {
-    new CronJob(cron,
-      async function name() {
-        console.log('[ Searching for Bets... ]')
-        const queuedBets = await prisma.bets.findMany({
+export const betsCron = new CronJob(cron,
+  async function name() {
+    console.log('[ Searching for Bets... ]')
+    const queuedBets = await prisma.bets.findMany({
+      where: {
+        status: 'PENDING'
+      },
+      orderBy: {
+        createdAt: 'asc'
+      }
+    })
+
+    if (queuedBets.length === null) {
+      console.log('[ No pending/queued bets found! ]')
+    }
+
+    for (let i = 0; i < queuedBets.length; i++) {
+      if (queuedBets[i].status === 'PENDING') {
+        await prisma.bets.update({
           where: {
-            OR: [
-              { status: 'PENDING' },
-              { status: 'QUEUED' },
-            ]
+            id: queuedBets[i].id,
           },
-          orderBy: {
-            createdAt: 'asc'
+          data: {
+            status: 'QUEUED',
+            updatedAt: new Date(),
           }
         })
+      }
 
-        if (queuedBets.length === null) {
-          console.log('[ No pending/queued bets found! ]')
-        }
+      await betsQueue.add(queuedBets[i]);
 
-        for (let i = 0; i < queuedBets.length; i++) {
-          if (queuedBets[i].status === 'PENDING') {
-            await prisma.bets.update({
-              where: {
-                id: queuedBets[i].id,
-              },
-              data: {
-                status: 'QUEUED',
-                updatedAt: new Date(),
-              }
-            })
-          }
+      console.log(`[ Order ${queuedBets[i].id} added to the queue! ]`)
+    }
+  },
+  null,
+  true,
+  tz
+);
 
-          await betsQueue.add(queuedBets[i]);
 
-          console.log(`[ Order ${queuedBets[i].id} added to the queue! ]`)
-        }
-      },
-      null,
-      true,
-      tz
-    );
-  }
-}
