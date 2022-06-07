@@ -11,9 +11,11 @@ import {
 export default class UsersController {
 
   async get(req: Request, res: Response) {
-    const { params: { id }, body, role } = req;
+    const { params: { id }, body, role, query } = req;
+    const data = { id, role, ...body, ...query }
     try {
-      const user = await new UserService({ id, ...body, role } as UserGetDTO).get()
+      console.log(data)
+      const user = await new UserService(data as UserGetDTO).get()
       return res.status(StatusCode.OK).send({ data: user, message: DefaultMessages.USER_FIND })
     } catch (error) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)

@@ -11,9 +11,7 @@ import {
   getGamesValidation,
   createGamesValidation,
   updateGamesValidation,
-  deleteGamesValidation,
-  VerifyValidation,
-  PaginateValidation
+  deleteGamesValidation
 } from "../validations"
 import { prisma } from "../config"
 
@@ -25,8 +23,7 @@ export default class GamesService {
 
   async get(params = this.params) {
     try {
-      const { id } = getGamesValidation.parse(params)
-      const { page, perPage } = PaginateValidation.parse(params)
+      const { id, page, perPage } = getGamesValidation.parse(params)
 
       if (id) {
         const game = await prisma.game.findFirst({
@@ -91,10 +88,10 @@ export default class GamesService {
         sortDate,
         winner,
         prizePhoto,
-        isActive
+        isActive,
+        role,
+        nick
       } = updateGamesValidation.parse(params)
-
-      const { nick, role } = VerifyValidation.parse(params)
 
       const [user, game] = await prisma.$transaction([
         prisma.users.findUnique({
@@ -133,8 +130,7 @@ export default class GamesService {
   }
 
   async delete(params = this.params) {
-    const { id } = deleteGamesValidation.parse(params)
-    const { nick, role } = VerifyValidation.parse(params)
+    const { id, nick, role } = deleteGamesValidation.parse(params)
 
     try {
       const [user, game] = await prisma.$transaction([

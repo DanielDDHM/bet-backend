@@ -4,6 +4,12 @@ export const getGamesValidation = z.object({
   id: z.string()
     .min(3, { message: 'NOT_EMPTY' })
     .optional(),
+  page: z.number()
+    .nonnegative()
+    .optional(),
+  perPage: z.number()
+    .nonnegative()
+    .optional()
 }).strict();
 
 export const createGamesValidation = z.object({
@@ -33,11 +39,23 @@ export const updateGamesValidation = z.object({
     .optional(),
   isActive: z.boolean()
     .optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
+  nick: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
 }).strict();
 
 
 export const deleteGamesValidation = z.object({
   id: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
+  nick: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
     .optional(),
 }).strict();

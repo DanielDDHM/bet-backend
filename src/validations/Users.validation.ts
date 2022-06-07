@@ -1,7 +1,8 @@
 import * as z from "zod";
 
 export const getUserValidation = z.object({
-  id: z.string().optional(),
+  id: z.string()
+    .optional(),
   nick: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
     .max(8, { message: 'MAX_LENGTH_8' })
@@ -9,6 +10,15 @@ export const getUserValidation = z.object({
   email: z.string()
     .min(2, { message: 'NON_EMPTY' })
     .optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
+  page: z.number()
+    .nonnegative()
+    .optional(),
+  perPage: z.number()
+    .nonnegative()
+    .optional()
 }).strict();
 
 export const createUserValidation = z.object({
@@ -89,7 +99,9 @@ export const userUpdateValidation = z.object({
   isActive: z.boolean().optional(),
   isConfirmed: z.boolean().optional(),
   isStaff: z.boolean().optional(),
-  role: z.string().optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
 }).strict();
 
 export const deleteUserValidation = z.object({
@@ -103,11 +115,17 @@ export const deleteUserValidation = z.object({
     .min(2, { message: 'NON_EMPTY' })
     .max(10, { message: 'MAX_LENGTH_8' })
     .optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
 }).strict();
 
 export const activateUserValidation = z.object({
   id: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
     .optional(),
-  isConfirmed: z.boolean().optional()
+  isConfirmed: z.boolean().optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
 }).strict();

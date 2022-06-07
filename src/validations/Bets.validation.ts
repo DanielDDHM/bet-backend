@@ -12,7 +12,10 @@ export const getBetsValidation = z.object({
     .optional(),
   perPage: z.number()
     .nonnegative()
-    .optional()
+    .optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
 }).strict();
 
 export const betsCreateValidation = z.object({

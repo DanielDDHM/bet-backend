@@ -11,7 +11,6 @@ import {
   userUpdateValidation,
   deleteUserValidation,
   activateUserValidation,
-  PaginateValidation,
   VerifyValidation
 } from "../validations";
 import {
@@ -34,10 +33,8 @@ export default class UserService {
 
   async get(params = this.params) {
     const {
-      email, nick, id
+      id, email, nick, page, perPage, role
     } = getUserValidation.parse(params)
-    const { page, perPage } = PaginateValidation.parse(params)
-    const { role } = VerifyValidation.parse(params)
     try {
       if (email || nick || id) {
         const user = await prisma.users.findFirst({
@@ -223,10 +220,9 @@ export default class UserService {
     const {
       id,
       email,
-      password
+      password,
+      role
     } = deleteUserValidation.parse(params)
-
-    const { role } = VerifyValidation.parse(params)
 
     try {
       const user = await prisma.users.findUnique({

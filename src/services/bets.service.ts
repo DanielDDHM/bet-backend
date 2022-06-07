@@ -4,7 +4,8 @@ import {
   BetsGetDTO,
   GenericDeleteDTO,
   GamesGetDTO,
-  DefaultMessages
+  DefaultMessages,
+  UserTypes
 } from "../types"
 import { AppError } from "../helpers"
 import {
@@ -24,7 +25,8 @@ export default class BetsService {
       usersId,
       gameId,
       page,
-      perPage
+      perPage,
+      role
     } = getBetsValidation.parse(params)
     try {
       if (usersId || gameId) {
@@ -45,7 +47,7 @@ export default class BetsService {
           }),
         ])
         return { bets, Total: total }
-      } else {
+      } else if (role === UserTypes.ADMIN) {
         const [bets, total] = await prisma.$transaction([
           prisma.bets.findMany({
             skip: (Number(page) - 1) * Number(perPage) || 0,

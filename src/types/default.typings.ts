@@ -20,4 +20,5 @@ export enum UserTypes {
 
 export interface GenericDeleteDTO {
   id?: string,
+  role?: string
 }
