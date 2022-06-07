@@ -11,7 +11,6 @@ import {
   userUpdateValidation,
   deleteUserValidation,
   activateUserValidation,
-  VerifyValidation
 } from "../validations";
 import {
   StatusCode,
