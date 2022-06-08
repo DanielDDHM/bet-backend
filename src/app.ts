@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // CRON
-betsCron.start()
+// betsCron.start()
 
 // app.use(
 //   (error: Error, request: Request, response: Response) => {

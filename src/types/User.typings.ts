@@ -8,8 +8,6 @@ export interface UserCreateDTO {
   address: UserAddressDTO,
   password: string,
   photo?: string,
-  isActive?: boolean,
-  isConfirmed?: boolean,
   isStaff?: boolean,
 }
 
@@ -20,7 +18,7 @@ export interface UserGetDTO extends GetAllPaginate {
   role?: string
 }
 
-export interface UserUpdateDTO {
+export interface UserUpdateDTO extends Verify {
   id: string,
   nick?: string,
   phone?: string,
@@ -29,9 +27,6 @@ export interface UserUpdateDTO {
   address?: any,
   photo?: string,
   addressId?: string,
-  isActive?: boolean,
-  isConfirmed?: boolean,
-  isStaff?: boolean
 }
 
 export interface UserDeleteDTO extends Verify {

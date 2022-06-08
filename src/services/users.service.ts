@@ -11,6 +11,7 @@ import {
   userUpdateValidation,
   deleteUserValidation,
   activateUserValidation,
+  confirmUserValidation,
 } from "../validations";
 import {
   StatusCode,
@@ -56,7 +57,9 @@ export default class UserService {
         ])
         return { users, Total: total }
       }
-      return { message: DefaultMessages.NOT_STAFF }
+
+      throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.NOT_ACCEPTABLE)
+
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -71,10 +74,8 @@ export default class UserService {
         password,
         phone,
         email,
-        address,
+        address: { zipCode, streetNumber },
       } = createUserValidation.parse(params)
-
-      const { zipCode, streetNumber } = address
 
       const query = {
         name,
@@ -94,10 +95,10 @@ export default class UserService {
       }
 
       if (!existAddress) {
-        const { data } = await new AddressFinder(address.zipCode).check()
-        const { logradouro, bairro, localidade, uf } = data
+        const { data: { logradouro, bairro, localidade, uf } } = await new AddressFinder(zipCode).check()
         const addressCreated = await new AddressService({
-          ...address,
+          zipCode,
+          streetNumber,
           street: logradouro,
           neighborhood: bairro,
           city: localidade,
@@ -134,9 +135,6 @@ export default class UserService {
         nick,
         email,
         password,
-        isActive,
-        isConfirmed,
-        isStaff,
         phone,
         photo,
         address
@@ -147,9 +145,6 @@ export default class UserService {
         nick,
         email,
         password: await new PasswordCrypt(password).crypt(),
-        isActive,
-        isConfirmed,
-        isStaff,
         phone,
         photo
       }
@@ -163,9 +158,7 @@ export default class UserService {
       if (!addressExists) {
         const createdAddress = await new AddressService(address as CreateAddressDTO).create()
         const userUpdated = await prisma.users.update({
-          where: {
-            id
-          },
+          where: { id },
           data: {
             ...query,
             addressId: createdAddress.id
@@ -176,9 +169,7 @@ export default class UserService {
       }
 
       const userUpdated = await prisma.users.update({
-        where: {
-          id
-        },
+        where: { id },
         data: {
           ...query,
           addressId: addressExists.id
@@ -195,19 +186,60 @@ export default class UserService {
 
   async activateUser(params = this.params) {
     try {
-      const { id, isConfirmed } = activateUserValidation.parse(params)
-      const user = await prisma.users.findFirst({
+      const { id, role } = activateUserValidation.parse(params)
+      const user = await prisma.users.findUnique({
         where: { id },
       });
 
       if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.BAD_REQUEST)
 
-      await prisma.users.update({
+      if (role !== UserTypes.ADMIN) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
+
+      let activate;
+      switch (user.isActive) {
+        case true: activate = false
+          break;
+        case false: activate = true
+          break;
+      }
+
+      const userActivated = await prisma.users.update({
         where: { id },
-        data: { isConfirmed }
+        data: { isActive: activate }
       })
 
-      return { id, isConfirmed }
+      return userActivated
+
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async confirmUser(params = this.params) {
+    try {
+      const { id } = confirmUserValidation.parse(params)
+      const user = await prisma.users.findUnique({
+        where: { id },
+      });
+
+      if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.BAD_REQUEST)
+
+      let confirm;
+      switch (user.isConfirmed) {
+        case false: confirm = true
+          break;
+        case true: break;
+      }
+
+      const userConfirmed = await prisma.users.update({
+        where: { id },
+        data: { isConfirmed: confirm }
+      })
+
+      return userConfirmed
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
@@ -232,14 +264,12 @@ export default class UserService {
 
       const verifyPass = await new PasswordCrypt(String(password), user?.password).compare()
 
-      if (!verifyPass || user?.email != email || role !== UserTypes.ADMIN) {
+      if (!verifyPass || user?.email !== email || role !== UserTypes.ADMIN) {
         throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
       }
 
       await prisma.users.delete({
-        where: {
-          id
-        }
+        where: { id }
       })
       return `USER ${user?.nick} DELETED`
     } catch (error: any) {
@@ -247,4 +277,14 @@ export default class UserService {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
+
+
+  // async giveAdmin(params = this.params) {
+  //   try {
+  //     console.log('Give Admin')
+  //   } catch (error: any) {
+  //     if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+  //     throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+  //   }
+  // }
 }

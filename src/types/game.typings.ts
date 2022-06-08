@@ -1,14 +1,15 @@
 import { GetAllPaginate, Verify } from "./default.typings"
 
 export interface GamesGetDTO extends GetAllPaginate {
-  id?: string,
+  id?: string
 }
 
 export interface GamesCreateDTO {
   name: string,
   ownerId: string,
   prize: string,
-  sortDate: Date
+  sortDate: Date,
+  nick?: string
 }
 
 export interface GamesUpdateDTO extends Verify {

@@ -1,34 +1,37 @@
 import 'dotenv/config';
 import { prisma } from '../config';
-import { StatusCode, UserTypes } from '../types';
 import { AppError } from '../helpers';
 import { Request, Response, NextFunction } from 'express';
-
+import { DefaultMessages, StatusCode, UserTypes } from '../types';
 export default class CheckRole {
+
   async checkRole(req: Request, res: Response, next: NextFunction) {
     try {
       const nick = req.nick
       const user = await prisma.users.findUnique({
-        where: {
-          nick
-        }
+        where: { nick }
       })
 
       if (user?.isActive === true && user?.isConfirmed === true) {
         if (user.isStaff === true) {
           req.role = UserTypes.ADMIN;
-          return next()
-        } else {
-          req.role = UserTypes.USER;
-          return next()
+          return next();
         }
-      } else {
+        else if (user.isStaff === false) {
+          req.role = UserTypes.USER;
+          return next();
+        }
+        else {
+          throw new AppError(`${DefaultMessages.NOT_PERMITED}`, StatusCode.BAD_REQUEST)
+        }
+      }
+      else {
         let problem;
-        user?.isActive === false ? problem = 'USER NOT ACTIVE' :
-          user?.isConfirmed === false ? problem = 'USER IS NOT CONFIRMED' :
-            problem = 'USER IS NOT ACTIVE AND CONFIRMED';
+        user?.isActive === false ? problem = DefaultMessages.USER_NOT_ACTIVE :
+          user?.isConfirmed === false ? problem = DefaultMessages.USER_NOT_CONFIRMED :
+            problem = DefaultMessages.USER_NOT_SAME;
 
-        throw new AppError(`PROBLEM WITH USER: ${problem}`, StatusCode.BAD_REQUEST)
+        throw new AppError(`${DefaultMessages.USER_PROBLEM}: ${problem}`, StatusCode.BAD_REQUEST)
       }
 
     } catch (error: any) {

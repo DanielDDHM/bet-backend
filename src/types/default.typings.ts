@@ -5,6 +5,7 @@ export interface GetAllPaginate {
 
 export interface Verify {
   role?: string
+  nick?: string
 }
 export interface Login {
   nick?: string,

@@ -70,19 +70,20 @@ export default class BetsService {
         usersId,
         gameId,
         bet,
-        value
+        value,
+        nick
       } = betsCreateValidation.parse(params)
 
-      const [userExist, gameExist] = await Promise.all([
+      const [user, game] = await Promise.all([
         await prisma.users.findFirst({
-          where: {
-            id: usersId
-          }
+          where: { nick }
         }),
         await this.get({ gameId } as GamesGetDTO)
       ])
 
-      if (userExist && gameExist) {
+      if (user && game) {
+        if (user.id !== usersId) throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+
         const betCreated = await prisma.bets.create({
           data: {
             usersId,
@@ -102,14 +103,17 @@ export default class BetsService {
 
   async delete(params = this.params) {
     try {
-      const { id } = betsDeleteValidation.parse(params)
-      const existBet = await prisma.bets.findFirst({
-        where: {
-          id
-        }
-      })
+      const { id, role } = betsDeleteValidation.parse(params)
 
-      if (!existBet) throw new AppError(DefaultMessages.BET_NOT_EXISTS, StatusCode.NOT_FOUND)
+      if (role !== UserTypes.ADMIN) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
+
+      const bet = await prisma.bets.findUnique({
+        where: { id }
+      });
+
+      if (!bet) throw new AppError(DefaultMessages.BET_NOT_EXISTS, StatusCode.NOT_FOUND)
 
       await prisma.bets.delete({
         where: {

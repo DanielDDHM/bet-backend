@@ -11,7 +11,8 @@ import {
   getGamesValidation,
   createGamesValidation,
   updateGamesValidation,
-  deleteGamesValidation
+  deleteGamesValidation,
+  activateGameValidation
 } from "../validations"
 import { prisma } from "../config"
 
@@ -41,6 +42,7 @@ export default class GamesService {
       ])
 
       return { games, Total: total }
+
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -53,16 +55,17 @@ export default class GamesService {
         name,
         ownerId,
         prize,
-        sortDate
+        sortDate,
+        nick
       } = createGamesValidation.parse(params)
 
-      const user = await prisma.users.findFirst({
-        where: {
-          id: ownerId
-        }
+      const user = await prisma.users.findUnique({
+        where: { nick }
       })
 
       if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
+
+      if (user.id !== ownerId) throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
 
       const gameCreated = await prisma.game.create({
         data: {
@@ -122,6 +125,46 @@ export default class GamesService {
       })
 
       return gameUpdate
+
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async activateGame(params = this.params) {
+    try {
+      const { id, nick, role } = activateGameValidation.parse(params)
+
+      const [game, user] = await prisma.$transaction([
+        prisma.game.findUnique({
+          where: { id },
+        }),
+        prisma.users.findUnique({
+          where: { nick },
+        })
+      ])
+
+      let activate;
+      switch (game?.isActive) {
+        case false: activate = true
+          break;
+        case true: activate = false
+          break;
+      }
+
+      if (game?.ownerId !== user?.id || role !== UserTypes.ADMIN) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
+
+      if (!game) throw new AppError(DefaultMessages.GAME_NOT_EXISTS, StatusCode.BAD_REQUEST)
+
+      const gameActivated = await prisma.game.update({
+        where: { id },
+        data: { isActive: activate }
+      })
+
+      return gameActivated
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)

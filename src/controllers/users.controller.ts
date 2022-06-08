@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AppError } from '../helpers';
 import { UserService } from "../services";
 import {
   UserCreateDTO,
@@ -6,7 +7,8 @@ import {
   UserUpdateDTO,
   StatusCode,
   UserDeleteDTO,
-  DefaultMessages
+  DefaultMessages,
+  CrudOperations
 } from "../types";
 export default class UsersController {
 
@@ -14,10 +16,10 @@ export default class UsersController {
     const { params: { id }, body, role, query } = req;
     const data = { id, role, ...body, ...query }
     try {
-      console.log(data)
       const user = await new UserService(data as UserGetDTO).get()
       return res.status(StatusCode.OK).send({ data: user, message: DefaultMessages.USER_FIND })
     } catch (error) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
@@ -28,6 +30,7 @@ export default class UsersController {
       const userCreated = await new UserService(body as UserCreateDTO).create()
       return res.status(StatusCode.OK).send({ data: userCreated, message: DefaultMessages.USER_CREATED })
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
@@ -35,20 +38,22 @@ export default class UsersController {
   async update(req: Request, res: Response) {
     const { params: { id }, body, role } = req
     const data = { id, ...body, role }
+
     try {
-      if (req.method === 'PUT') {
+      if (req.method === CrudOperations.PUT) {
         const updatedUser = await new UserService(data as UserUpdateDTO).update()
         return res.status(StatusCode.OK)
           .send({ data: updatedUser, message: DefaultMessages.USER_UPDATED })
       }
 
-      if (req.method === 'PATCH') {
-        const confirmedUser = await new UserService(data as UserUpdateDTO).activateUser()
+      if (req.method === CrudOperations.PATCH) {
+        const confirmedUser = await new UserService({ id } as UserUpdateDTO).confirmUser()
         return res.status(StatusCode.OK)
           .send({ data: confirmedUser, message: DefaultMessages.USER_ACTIVATED })
       }
 
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
@@ -59,6 +64,7 @@ export default class UsersController {
       const deletedUser = await new UserService({ id, role } as UserDeleteDTO).delete()
       return res.status(StatusCode.OK).send(deletedUser)
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
