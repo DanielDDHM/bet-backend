@@ -17,19 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // CRON
-// betsCron.start()
-
-// app.use(
-//   (error: Error, request: Request, response: Response) => {
-//     if (error instanceof AppError) {
-//       return response.status(StatusCode.INTERNAL_SERVER_ERROR).json({ error: error });
-//     }
-//     return response.status(500).json({
-//       status: "error",
-//       message: `Internal server error - ${error.message}`,
-//     });
-//   }
-// );
+betsCron.start()
 
 // app use routes
 app.use('/v1', rootRoutes)
