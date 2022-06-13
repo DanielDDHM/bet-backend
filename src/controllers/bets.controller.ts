@@ -2,7 +2,6 @@ import {
   StatusCode,
   BetsCreateDTO,
   BetsGetDTO,
-  GenericDeleteDTO,
   DefaultMessages,
 } from "../types";
 import { Request, Response } from 'express';
@@ -29,18 +28,6 @@ export default class BetsController {
 
       return res.status(StatusCode.OK)
         .send({ data: betCreated, message: DefaultMessages.BET_CREATED })
-    } catch (error: any) {
-      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
-    }
-  }
-
-  async delete(req: Request, res: Response) {
-    const { id } = req.params
-    try {
-      const betDeleted = await new BetService(id as GenericDeleteDTO).delete
-
-      return res.status(StatusCode.OK)
-        .send({ data: betDeleted, message: DefaultMessages.BET_DELETED })
     } catch (error: any) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }

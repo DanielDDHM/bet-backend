@@ -6,7 +6,6 @@ import {
   UserGetDTO,
   UserUpdateDTO,
   StatusCode,
-  UserDeleteDTO,
   DefaultMessages,
   CrudOperations
 } from "../types";
@@ -49,20 +48,9 @@ export default class UsersController {
       if (req.method === CrudOperations.PATCH) {
         const confirmedUser = await new UserService({ id } as UserUpdateDTO).confirmUser()
         return res.status(StatusCode.OK)
-          .send({ data: confirmedUser, message: DefaultMessages.USER_ACTIVATED })
+          .send({ data: confirmedUser, message: DefaultMessages.USER_CONFIRMED })
       }
 
-    } catch (error: any) {
-      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
-      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
-    }
-  }
-
-  async delete(req: Request, res: Response) {
-    const { params: { id }, role } = req
-    try {
-      const deletedUser = await new UserService({ id, role } as UserDeleteDTO).delete()
-      return res.status(StatusCode.OK).send(deletedUser)
     } catch (error: any) {
       if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)

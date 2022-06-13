@@ -3,7 +3,6 @@ import {
   GamesCreateDTO,
   GamesGetDTO,
   GamesUpdateDTO,
-  GenericDeleteDTO,
   DefaultMessages,
   CrudOperations
 } from "../types";
@@ -62,14 +61,4 @@ export default class GamesController {
     }
   }
 
-  async delete(req: Request, res: Response) {
-    const { id } = req.params
-    try {
-      const deletedGame = await new GameService(id as GenericDeleteDTO).delete()
-      return res.status(StatusCode.OK).send(deletedGame)
-    } catch (error: any) {
-      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
-      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
-    }
-  }
 }

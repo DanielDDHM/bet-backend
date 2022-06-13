@@ -35,7 +35,7 @@ export interface UserDeleteDTO extends Verify {
   password?: string
 }
 
-interface UserAddressDTO {
+export interface UserAddressDTO {
   streetNumber?: number,
   zipCode?: string,
 }
