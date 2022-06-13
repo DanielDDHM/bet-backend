@@ -32,6 +32,6 @@ app.get('/', (request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`App started on http://localhost:${PORT || 3000}, welcome ${NAME}`);
+  console.log(`App started on http://localhost:${PORT || 3000}`);
 });
 
