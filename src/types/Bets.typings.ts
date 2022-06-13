@@ -1,16 +1,10 @@
-import { GetAllPaginate } from "./default.typings";
+import * as z from 'zod';
+import {
+  betsCreateValidation,
+  getBetsValidation
+} from '../validations';
 
-export interface BetsGetDTO extends GetAllPaginate {
-  usersId?: string,
-  gameId?: string,
-  role?: string
-}
+export type BetsGetDTO = z.infer<typeof getBetsValidation>
 
-export interface BetsCreateDTO {
-  usersId: string,
-  bet: number,
-  gameId: string,
-  value: string,
-}
-
+export type BetsCreateDTO = z.infer<typeof betsCreateValidation>
 

@@ -15,19 +15,17 @@ import {
 } from "../validations";
 import {
   StatusCode,
-  UserCreateDTO,
-  UserUpdateDTO,
   UserGetDTO,
-  GetAddressDTO,
-  CreateAddressDTO,
+  AddressGetDTO,
+  AddressCreateDTO,
   UserTypes,
-  UserDeleteDTO,
-  DefaultMessages
+  DefaultMessages,
+  UserParams
 } from "../types";
 
 export default class UserService {
-  params: UserGetDTO | UserCreateDTO | UserUpdateDTO | UserDeleteDTO
-  constructor(params: UserGetDTO | UserCreateDTO | UserUpdateDTO | UserDeleteDTO) {
+  params: UserParams
+  constructor(params: UserParams) {
     this.params = params
   }
 
@@ -87,7 +85,7 @@ export default class UserService {
 
       const [existUser, existAddress] = await Promise.all([
         await this.get({ email, nick } as UserGetDTO),
-        await new AddressService({ zipCode, streetNumber } as GetAddressDTO).get()
+        await new AddressService({ zipCode, streetNumber } as AddressGetDTO).get()
       ])
 
       if (existUser) {
@@ -103,7 +101,7 @@ export default class UserService {
           neighborhood: bairro,
           city: localidade,
           state: uf
-        } as CreateAddressDTO).create();
+        } as AddressCreateDTO).create();
 
         const userCreated = await prisma.users.create({
           data: {
@@ -151,12 +149,12 @@ export default class UserService {
 
       const [userExists, addressExists] = await Promise.all([
         await this.get({ id } as UserGetDTO),
-        await new AddressService(address as GetAddressDTO).get()
+        await new AddressService(address as AddressGetDTO).get()
       ])
 
       if (!userExists) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
       if (!addressExists) {
-        const createdAddress = await new AddressService(address as CreateAddressDTO).create()
+        const createdAddress = await new AddressService(address as AddressCreateDTO).create()
         const userUpdated = await prisma.users.update({
           where: { id },
           data: {

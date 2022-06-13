@@ -44,3 +44,9 @@ export enum CrudOperations {
   PATCH = 'PATCH',
   DELETE = 'DELETE'
 }
+
+export enum UserTypes {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+  OWNER = 'OWNER'
+}

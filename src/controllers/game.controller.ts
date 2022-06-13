@@ -3,8 +3,7 @@ import {
   GamesCreateDTO,
   GamesGetDTO,
   GamesUpdateDTO,
-  DefaultMessages,
-  CrudOperations
+  DefaultMessages
 } from "../types";
 import { Request, Response } from 'express';
 import { GameService } from "../services";
@@ -43,17 +42,9 @@ export default class GamesController {
     if (typeof body.sortDate as string) body.sortDate = new Date(body.sortDate)
 
     try {
-      if (req.method === CrudOperations.PUT) {
-        const updatedGame = await new GameService(data as GamesUpdateDTO).update()
-        return res.status(StatusCode.OK)
-          .send({ data: updatedGame, message: DefaultMessages.GAME_UPDATED })
-      }
-
-      if (req.method === CrudOperations.PATCH) {
-        const confirmedUser = await new GameService(data as GamesUpdateDTO).activateGame()
-        return res.status(StatusCode.OK)
-          .send({ data: confirmedUser, message: DefaultMessages.GAME_ACTIVATED })
-      }
+      const updatedGame = await new GameService(data as GamesUpdateDTO).update()
+      return res.status(StatusCode.OK)
+        .send({ data: updatedGame, message: DefaultMessages.GAME_UPDATED })
 
     } catch (error: any) {
       if (error instanceof AppError) res.status(error.statusCode).json(error.message)

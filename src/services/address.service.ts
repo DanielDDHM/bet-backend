@@ -1,9 +1,8 @@
 import { AddressFinder, AppError } from "../helpers";
 import { prisma } from "../config";
 import {
-  GetAddressDTO,
-  CreateAddressDTO,
-  StatusCode
+  StatusCode,
+  AddressParams
 } from "../types";
 import {
   getAddressValidation,
@@ -11,8 +10,8 @@ import {
 } from "../validations";
 
 export default class AddressService {
-  params: GetAddressDTO | CreateAddressDTO
-  constructor(params: GetAddressDTO | CreateAddressDTO) {
+  params: AddressParams
+  constructor(params: AddressParams) {
     this.params = params
   }
 

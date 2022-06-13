@@ -10,9 +10,9 @@ import { BetService } from "../services";
 export default class BetsController {
 
   async get(req: Request, res: Response) {
-    const { body } = req;
+    const { body, query } = req;
     try {
-      const bet = await new BetService(body as BetsGetDTO).get()
+      const bet = await new BetService({ ...body, query } as BetsGetDTO).get()
 
       return res.status(StatusCode.OK)
         .send({ data: bet, message: DefaultMessages.BET_FIND })

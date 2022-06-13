@@ -1,4 +1,4 @@
-import { AuthService } from "../../index"
+import { AuthService } from "../../services"
 
 describe('[login test]', () => {
   it('Login to return Auth', async () => {

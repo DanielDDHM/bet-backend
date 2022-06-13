@@ -1,11 +1,9 @@
 import {
   StatusCode,
-  BetsCreateDTO,
-  BetsGetDTO,
-  GenericDeleteDTO,
   GamesGetDTO,
   DefaultMessages,
-  UserTypes
+  UserTypes,
+  BetParams
 } from "../types"
 import { AppError } from "../helpers"
 import {
@@ -15,8 +13,8 @@ import {
 } from "../validations"
 import { prisma } from "../config"
 export default class BetsService {
-  params: BetsCreateDTO | GenericDeleteDTO | BetsGetDTO
-  constructor(params: BetsCreateDTO | GenericDeleteDTO | BetsGetDTO) {
+  params: BetParams
+  constructor(params: BetParams) {
     this.params = params
   }
 

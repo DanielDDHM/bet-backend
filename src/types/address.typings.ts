@@ -1,14 +1,10 @@
-export interface GetAddressDTO {
-  zipCode: string,
-  streetNumber: number
-}
+import * as z from 'zod';
+import {
+  createAddressValidation,
+  getAddressValidation
+} from '../validations';
 
-export interface CreateAddressDTO {
-  zipCode: string,
-  streetNumber: number,
-  street?: string,
-  neighborhood?: string,
-  city?: string,
-  state?: string
-}
+export type AddressGetDTO = z.infer<typeof getAddressValidation>
+
+export type AddressCreateDTO = z.infer<typeof createAddressValidation>
 

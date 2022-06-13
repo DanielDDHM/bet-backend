@@ -1,12 +1,9 @@
 import {
   StatusCode,
-  GamesCreateDTO,
-  GamesGetDTO,
-  GamesUpdateDTO,
+  GameParams,
   UserTypes,
   DefaultMessages
 } from "../types"
-import { AppError } from "../helpers"
 import {
   getGamesValidation,
   createGamesValidation,
@@ -15,10 +12,11 @@ import {
   activateGameValidation
 } from "../validations"
 import { prisma } from "../config"
+import { AppError } from "../helpers"
 
 export default class GamesService {
-  params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO
-  constructor(params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO) {
+  params: GameParams
+  constructor(params: GameParams) {
     this.params = params
   }
 
