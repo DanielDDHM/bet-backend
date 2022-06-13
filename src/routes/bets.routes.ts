@@ -14,7 +14,6 @@ router.get('/get',
 
 router.post('/create',
   new CheckTokenMiddleware().verifyToken,
-  new CheckRoleMiddleware().checkRole,
   new BetsController().create)
 
 export default router

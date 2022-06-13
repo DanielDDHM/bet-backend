@@ -1,25 +1,22 @@
-export interface GamesGetDTO {
-  id?: string,
-  page?: number,
-  perPage?: number
+import { GetAllPaginate, Verify } from "./default.typings"
+
+export interface GamesGetDTO extends GetAllPaginate {
+  id?: string
 }
 
 export interface GamesCreateDTO {
   name: string,
   ownerId: string,
   prize: string,
-  sortDate: Date
+  sortDate: Date,
+  nick?: string
 }
 
-export interface GamesUpdateDTO {
+export interface GamesUpdateDTO extends Verify {
   id?: string
   prize?: string,
   sortDate?: Date,
   winner?: string,
   prizePhoto?: string,
   isActive?: boolean
-}
-
-export interface GamesDeleteDTO {
-  id?: string
 }

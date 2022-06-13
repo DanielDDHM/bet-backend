@@ -1,3 +1,5 @@
+import { GetAllPaginate, Verify } from "./default.typings"
+
 export interface UserCreateDTO {
   name: string,
   nick: string,
@@ -6,39 +8,34 @@ export interface UserCreateDTO {
   address: UserAddressDTO,
   password: string,
   photo?: string,
-  isActive?: boolean,
-  isConfirmed?: boolean,
   isStaff?: boolean,
 }
 
-export interface UserGetDTO {
+export interface UserGetDTO extends GetAllPaginate {
   id?: string,
-  nick: string,
-  email: string,
-  page?: number,
-  perPage?: number
+  nick?: string,
+  email?: string,
+  role?: string
 }
 
-export interface UserUpdateDTO {
+export interface UserUpdateDTO extends Verify {
   id: string,
   nick?: string,
   phone?: string,
   email?: string,
   password?: string,
+  address?: any,
   photo?: string,
-  addressId?: string
-  isActive?: boolean,
-  isConfirmed?: boolean,
-  isStaff?: boolean
+  addressId?: string,
 }
 
-export interface UserDeleteDTO {
+export interface UserDeleteDTO extends Verify {
   id: string,
   email?: string,
   password?: string
 }
 
-interface UserAddressDTO {
+export interface UserAddressDTO {
   streetNumber?: number,
   zipCode?: string,
 }

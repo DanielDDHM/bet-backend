@@ -1,8 +1,8 @@
 import e from 'express';
 import {
-  BetsController,
-  UsersController,
-  GamesController
+  InternalBetsController,
+  InternalGameController,
+  InternalUsersController
 } from '../controllers';
 import {
   CheckRoleMiddleware,
@@ -14,29 +14,29 @@ const router = e.Router();
 router.patch('/users/activate/:id',
   new CheckTokenMiddleware().verifyToken,
   new CheckRoleMiddleware().checkRole,
-  new UsersController().update)
+  new InternalUsersController().update)
 
 router.delete('/users/delete/:id',
   new CheckTokenMiddleware().verifyToken,
   new CheckRoleMiddleware().checkRole,
-  new UsersController().delete)
+  new InternalUsersController().delete)
 
 // BETS
 
 router.delete('/bets/delete/:id',
   new CheckTokenMiddleware().verifyToken,
   new CheckRoleMiddleware().checkRole,
-  new BetsController().delete)
+  new InternalBetsController().delete)
 
 //GAME
 router.patch('/game/activate/:id',
   new CheckTokenMiddleware().verifyToken,
   new CheckRoleMiddleware().checkRole,
-  new GamesController().update)
+  new InternalGameController().update)
 
 router.delete('/game/delete/:id',
   new CheckTokenMiddleware().verifyToken,
   new CheckRoleMiddleware().checkRole,
-  new GamesController().delete)
+  new InternalGameController().delete)
 
 export default router

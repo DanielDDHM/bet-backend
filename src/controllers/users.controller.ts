@@ -1,21 +1,24 @@
-import { StatusCode, UserDeleteDTO } from "../types";
 import { Request, Response } from 'express';
+import { AppError } from '../helpers';
 import { UserService } from "../services";
 import {
   UserCreateDTO,
   UserGetDTO,
-  UserUpdateDTO
+  UserUpdateDTO,
+  StatusCode,
+  DefaultMessages,
+  CrudOperations
 } from "../types";
-import { AppError } from "../helpers";
 export default class UsersController {
 
   async get(req: Request, res: Response) {
-    const { params: { id }, body } = req;
+    const { params: { id }, body, role, query } = req;
+    const data = { id, role, ...body, ...query }
     try {
-      if (id) { body.id = id }
-      const user = await new UserService(body as UserGetDTO).get()
-      return res.status(StatusCode.OK).send({ data: user, message: 'USER FINDED' })
+      const user = await new UserService(data as UserGetDTO).get()
+      return res.status(StatusCode.OK).send({ data: user, message: DefaultMessages.USER_FIND })
     } catch (error) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
@@ -24,32 +27,32 @@ export default class UsersController {
     const { body } = req;
     try {
       const userCreated = await new UserService(body as UserCreateDTO).create()
-      return res.status(StatusCode.OK).send({ data: userCreated, message: 'USER CREATED' })
+      return res.status(StatusCode.OK).send({ data: userCreated, message: DefaultMessages.USER_CREATED })
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
 
   async update(req: Request, res: Response) {
-    const { params: { id }, body } = req
-    try {
-      if (!id) throw new AppError('INVALID ID', StatusCode.BAD_REQUEST)
-      body.id = id
-      const updatedUser = await new UserService(body as UserUpdateDTO).update()
-      return res.status(StatusCode.OK).send({ data: updatedUser, message: 'USER UPDATED' })
-    } catch (error: any) {
-      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
-    }
-  }
+    const { params: { id }, body, role } = req
+    const data = { id, ...body, role }
 
-  async delete(req: Request, res: Response) {
-    const { params: { id }, body } = req
     try {
-      if (!id) throw new AppError('INVALID ID', StatusCode.BAD_REQUEST)
-      body.id = id
-      const deletedUser = await new UserService(body as UserDeleteDTO).delete()
-      return res.status(StatusCode.OK).send(deletedUser)
+      if (req.method === CrudOperations.PUT) {
+        const updatedUser = await new UserService(data as UserUpdateDTO).update()
+        return res.status(StatusCode.OK)
+          .send({ data: updatedUser, message: DefaultMessages.USER_UPDATED })
+      }
+
+      if (req.method === CrudOperations.PATCH) {
+        const confirmedUser = await new UserService({ id } as UserUpdateDTO).confirmUser()
+        return res.status(StatusCode.OK)
+          .send({ data: confirmedUser, message: DefaultMessages.USER_CONFIRMED })
+      }
+
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }

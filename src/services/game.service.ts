@@ -2,14 +2,17 @@ import {
   StatusCode,
   GamesCreateDTO,
   GamesGetDTO,
-  GamesUpdateDTO
+  GamesUpdateDTO,
+  UserTypes,
+  DefaultMessages
 } from "../types"
 import { AppError } from "../helpers"
 import {
   getGamesValidation,
   createGamesValidation,
   updateGamesValidation,
-  deleteGamesValidation
+  deleteGamesValidation,
+  activateGameValidation
 } from "../validations"
 import { prisma } from "../config"
 
@@ -22,6 +25,7 @@ export default class GamesService {
   async get(params = this.params) {
     try {
       const { id, page, perPage } = getGamesValidation.parse(params)
+
       if (id) {
         const game = await prisma.game.findFirst({
           where: { id }
@@ -38,6 +42,7 @@ export default class GamesService {
       ])
 
       return { games, Total: total }
+
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -50,9 +55,17 @@ export default class GamesService {
         name,
         ownerId,
         prize,
-        sortDate
+        sortDate,
+        nick
       } = createGamesValidation.parse(params)
 
+      const user = await prisma.users.findUnique({
+        where: { nick }
+      })
+
+      if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
+
+      if (user.id !== ownerId) throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
 
       const gameCreated = await prisma.game.create({
         data: {
@@ -78,14 +91,25 @@ export default class GamesService {
         sortDate,
         winner,
         prizePhoto,
-        isActive
+        isActive,
+        role,
+        nick
       } = updateGamesValidation.parse(params)
 
-      const gameExists = await prisma.game.findFirst({
-        where: { id }
-      })
+      const [user, game] = await prisma.$transaction([
+        prisma.users.findUnique({
+          where: { nick }
+        }),
+        prisma.game.findFirst({
+          where: { id }
+        })
+      ])
 
-      if (!gameExists) throw new AppError('GAME NOT EXISTS', StatusCode.NOT_FOUND)
+      if (!game) throw new AppError(DefaultMessages.GAME_NOT_EXISTS, StatusCode.NOT_FOUND)
+
+      if (user?.id !== game.ownerId || role !== UserTypes.ADMIN) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
 
       const gameUpdate = await prisma.game.update({
         where: {
@@ -108,23 +132,69 @@ export default class GamesService {
     }
   }
 
-  async delete(params = this.params) {
-    const {
-      id,
-    } = deleteGamesValidation.parse(params)
-
+  async activateGame(params = this.params) {
     try {
-      const existGame = await prisma.game.findFirst({
-        where: { id }
+      const { id, nick, role } = activateGameValidation.parse(params)
+
+      const [game, user] = await prisma.$transaction([
+        prisma.game.findUnique({
+          where: { id },
+        }),
+        prisma.users.findUnique({
+          where: { nick },
+        })
+      ])
+
+      let activate;
+      switch (game?.isActive) {
+        case false: activate = true
+          break;
+        case true: activate = false
+          break;
+      }
+
+      if (game?.ownerId !== user?.id || role !== UserTypes.ADMIN) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
+
+      if (!game) throw new AppError(DefaultMessages.GAME_NOT_EXISTS, StatusCode.BAD_REQUEST)
+
+      const gameActivated = await prisma.game.update({
+        where: { id },
+        data: { isActive: activate }
       })
 
-      if (!existGame) throw new AppError('GAME NOT EXISTS', StatusCode.NOT_FOUND)
+      return gameActivated
 
+    } catch (error: any) {
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async delete(params = this.params) {
+    const { id, nick, role } = deleteGamesValidation.parse(params)
+
+    try {
+      const [user, game] = await prisma.$transaction([
+        prisma.users.findUnique({
+          where: { nick }
+        }),
+        prisma.game.findFirst({
+          where: { id }
+        })
+      ])
+
+      if (!game) throw new AppError(DefaultMessages.GAME_NOT_EXISTS, StatusCode.NOT_FOUND)
+
+      if (user?.id !== game.ownerId || role !== UserTypes.ADMIN) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
       await prisma.game.delete({
         where: { id },
       });
 
-      return `GAME ${existGame.name} DELETED`
+      return `GAME ${game.name} DELETED`
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

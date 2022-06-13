@@ -19,7 +19,10 @@ export const createGamesValidation = z.object({
     .min(3, { message: 'NOT_EMPTY' }),
   prize: z.string()
     .min(3, { message: 'NOT_EMPTY' }),
-  sortDate: z.date()
+  sortDate: z.date(),
+  nick: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
 }).strict();
 
 export const updateGamesValidation = z.object({
@@ -37,12 +40,37 @@ export const updateGamesValidation = z.object({
   prizePhoto: z.string()
     .min(3, { message: 'NOT_EMPTY' })
     .optional(),
-  isActive: z.boolean().optional(),
+  isActive: z.boolean()
+    .optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
+  nick: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
+    .optional(),
 }).strict();
 
+export const activateGameValidation = z.object({
+  id: z.string()
+    .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  isActive: z.boolean().optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
+  nick: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
+}).strict();
 
 export const deleteGamesValidation = z.object({
   id: z.string()
     .min(2, { message: 'MIN_LENGHT_3' })
+    .optional(),
+  role: z.string()
+    .min(1, { message: 'NOT_EMPTY' })
+    .optional(),
+  nick: z.string()
+    .min(3, { message: 'NOT_EMPTY' })
     .optional(),
 }).strict();

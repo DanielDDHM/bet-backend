@@ -48,6 +48,8 @@ model address {
 model bets {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   value     String
+  bet       Int
+  status    String?   @default("PENDING")
   winner    Boolean?  @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(now())
@@ -66,7 +68,7 @@ model game {
   bets       bets[]
   prize      String
   prizePhoto String?
-  isActive   Boolean?  @default(false)
+  isActive   Boolean?  @default(true)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @default(now())
   ownerId    String?   @db.ObjectId

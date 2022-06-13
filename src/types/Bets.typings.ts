@@ -1,18 +1,16 @@
-export interface BetsGetDTO {
+import { GetAllPaginate } from "./default.typings";
+
+export interface BetsGetDTO extends GetAllPaginate {
   usersId?: string,
   gameId?: string,
-  page?: number,
-  perPage?: number
+  role?: string
 }
 
 export interface BetsCreateDTO {
   usersId: string,
+  bet: number,
   gameId: string,
   value: string,
-}
-
-export interface BetsDeleteDTO {
-  id?: string,
 }
 
 

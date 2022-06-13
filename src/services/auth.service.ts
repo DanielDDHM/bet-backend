@@ -2,7 +2,7 @@ import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 // import fs from 'fs';
 import { prisma } from '../config';
-import { StatusCode, Login } from '../types';
+import { StatusCode, Login, DefaultMessages } from '../types';
 import { PasswordCrypt, AppError } from '../helpers';
 
 export default class Auth {
@@ -21,9 +21,8 @@ export default class Auth {
   async login(payload = this.payload) {
     const { email, nick, password } = payload
     const date = new Date()
-
-    // O fator de expiracao setado em 2 horas
     const expTime = (1000 * 60 * 60 * 2);
+
     try {
       const user = await prisma.users.findFirst({
         where: {
@@ -40,9 +39,9 @@ export default class Auth {
         }
       })
 
-      if (!user) throw new AppError('USER NOT FOUND', StatusCode.NOT_FOUND);
-      const passMatch = await new PasswordCrypt(password, user.password).compare();
-      if (!passMatch) throw new AppError('WRONG PASS', StatusCode.BAD_REQUEST);
+      if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND);
+      const passMatch = await new PasswordCrypt(String(password), user.password).compare();
+      if (!passMatch || user.email != email) throw new AppError('WRONG DATA', StatusCode.BAD_REQUEST);
 
       const data = {
         data: nick,
@@ -75,7 +74,8 @@ export default class Auth {
       }
 
     } catch (error: any) {
-      throw new AppError(String(error.message), StatusCode.BAD_REQUEST)
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
   async logout(body: any) {

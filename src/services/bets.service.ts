@@ -2,8 +2,10 @@ import {
   StatusCode,
   BetsCreateDTO,
   BetsGetDTO,
-  BetsDeleteDTO,
-  GamesGetDTO
+  GenericDeleteDTO,
+  GamesGetDTO,
+  DefaultMessages,
+  UserTypes
 } from "../types"
 import { AppError } from "../helpers"
 import {
@@ -12,10 +14,9 @@ import {
   betsDeleteValidation
 } from "../validations"
 import { prisma } from "../config"
-import GamesService from "./game.service"
 export default class BetsService {
-  params: BetsCreateDTO | BetsDeleteDTO | BetsGetDTO
-  constructor(params: BetsCreateDTO | BetsDeleteDTO | BetsGetDTO) {
+  params: BetsCreateDTO | GenericDeleteDTO | BetsGetDTO
+  constructor(params: BetsCreateDTO | GenericDeleteDTO | BetsGetDTO) {
     this.params = params
   }
 
@@ -24,7 +25,8 @@ export default class BetsService {
       usersId,
       gameId,
       page,
-      perPage
+      perPage,
+      role
     } = getBetsValidation.parse(params)
     try {
       if (usersId || gameId) {
@@ -45,7 +47,7 @@ export default class BetsService {
           }),
         ])
         return { bets, Total: total }
-      } else {
+      } else if (role === UserTypes.ADMIN) {
         const [bets, total] = await prisma.$transaction([
           prisma.bets.findMany({
             skip: (Number(page) - 1) * Number(perPage) || 0,
@@ -67,22 +69,25 @@ export default class BetsService {
       const {
         usersId,
         gameId,
-        value
+        bet,
+        value,
+        nick
       } = betsCreateValidation.parse(params)
 
-      const [userExist, gameExist] = await Promise.all([
+      const [user, game] = await Promise.all([
         await prisma.users.findFirst({
-          where: {
-            id: usersId
-          }
+          where: { nick }
         }),
-        await new GamesService(gameId as GamesGetDTO).get()
+        await this.get({ gameId } as GamesGetDTO)
       ])
 
-      if (userExist && gameExist) {
+      if (user && game) {
+        if (user.id !== usersId) throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+
         const betCreated = await prisma.bets.create({
           data: {
             usersId,
+            bet,
             value,
             gameId
           }
@@ -98,14 +103,17 @@ export default class BetsService {
 
   async delete(params = this.params) {
     try {
-      const { id } = betsDeleteValidation.parse(params)
-      const existBet = await prisma.bets.findFirst({
-        where: {
-          id
-        }
-      })
+      const { id, role } = betsDeleteValidation.parse(params)
 
-      if (existBet) throw new AppError('BET DOENSN`T EXISTS', StatusCode.NOT_FOUND)
+      if (role !== UserTypes.ADMIN) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
+
+      const bet = await prisma.bets.findUnique({
+        where: { id }
+      });
+
+      if (!bet) throw new AppError(DefaultMessages.BET_NOT_EXISTS, StatusCode.NOT_FOUND)
 
       await prisma.bets.delete({
         where: {
@@ -113,7 +121,7 @@ export default class BetsService {
         }
       })
 
-      return { message: 'BET HAS DELETED' }
+      return { message: `BET ${id} HAS DELETED` }
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

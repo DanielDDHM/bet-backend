@@ -39,7 +39,7 @@ export default class AddressService {
       } = createAddressValidation.parse(params)
 
       const addressFinded = await new AddressFinder(zipCode).check()
-      const { logradouro, bairro, localidade, uf } = addressFinded.data
+      const { data: { logradouro, bairro, localidade, uf } } = addressFinded
 
       const addressCreated = await prisma.address.create({
         data: {

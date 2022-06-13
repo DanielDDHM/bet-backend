@@ -1,10 +1,11 @@
 import cors from 'cors';
-import express, { Request, Response } from 'express';
-import { AppError } from './helpers';
+import express from 'express';
 import "express-async-errors";
 import 'dotenv/config';
 
 import rootRoutes from './routes';
+import { betsCron } from './cronjobs/betsQueue.cronjobs';
+
 
 const { PORT, NAME } = process.env
 
@@ -15,17 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use(
-  (error: Error, request: Request, response: Response) => {
-    if (error instanceof AppError) {
-      return response.status(500).json({ error: error });
-    }
-    return response.status(500).json({
-      status: "error",
-      message: `Internal server error - ${error.message}`,
-    });
-  }
-);
+// CRON
+betsCron.start()
 
 // app use routes
 app.use('/v1', rootRoutes)

@@ -1,7 +1,8 @@
 import {
   StatusCode,
   CreateAddressDTO,
-  GetAddressDTO
+  GetAddressDTO,
+  DefaultMessages
 } from "../types";
 import { AddressService } from "../services";
 import { Request, Response } from 'express';
@@ -22,7 +23,8 @@ export default class AddressController {
     const { body } = req;
     try {
       const addressCreated = await new AddressService(body as CreateAddressDTO).create()
-      return res.status(StatusCode.OK).send({ data: addressCreated, message: 'ADDRESS CREATED' })
+      return res.status(StatusCode.OK)
+        .send({ data: addressCreated, message: DefaultMessages.ADDRESS_CREATED })
     } catch (error: any) {
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }

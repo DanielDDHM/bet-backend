@@ -7,6 +7,7 @@ export default class AuthController {
 
   async login(req: Request, res: Response) {
     const { body } = req;
+    console.log(body)
     try {
       const userLogin = await new Auth(body).login()
       return res.status(StatusCode.OK).send(userLogin)
