@@ -1,1 +1,1 @@
-export * from './betsQueue.cronjobs'
+export * from './bets/bets.queue.cron'

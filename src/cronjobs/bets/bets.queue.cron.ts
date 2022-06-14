@@ -1,8 +1,8 @@
 import { CronJob } from "cron";
-import { prisma } from "../config";
-import { betsQueue } from "../config/queue";
+import { prisma } from "../../config";
+import { betsQueue } from "./queue";
 
-const cron = '*/5 * * * * *';
+const cron = '* * * * *';
 const tz = 'America/Sao_Paulo';
 
 export const betsCron = new CronJob(cron,

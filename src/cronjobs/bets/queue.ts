@@ -1,8 +1,8 @@
 import Queue from 'bull';
 import 'dotenv/config';
-import { prisma } from '.';
+import { prisma } from '../../config';
 
-const CONCURRENCY = 1
+const CONCURRENCY = 3
 
 export const betsQueue = new Queue('BETS', {
   redis: {

@@ -6,6 +6,7 @@ import {
 } from "../types";
 import { Request, Response } from 'express';
 import { BetService } from "../services";
+import { AppError } from "../helpers";
 
 export default class BetsController {
 
@@ -17,6 +18,7 @@ export default class BetsController {
       return res.status(StatusCode.OK)
         .send({ data: bet, message: DefaultMessages.BET_FIND })
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
@@ -29,6 +31,7 @@ export default class BetsController {
       return res.status(StatusCode.OK)
         .send({ data: betCreated, message: DefaultMessages.BET_CREATED })
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }

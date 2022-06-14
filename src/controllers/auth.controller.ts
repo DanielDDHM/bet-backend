@@ -1,5 +1,6 @@
 
 import { Request, Response } from 'express';
+import { AppError } from '../helpers';
 import { AuthService } from '../services';
 import { Login, StatusCode } from '../types';
 
@@ -11,6 +12,7 @@ export default class AuthController {
       const userLogin = await new AuthService({ ...body } as Login).login()
       return res.status(StatusCode.OK).send(userLogin)
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
@@ -21,6 +23,7 @@ export default class AuthController {
       const userLogout = await new AuthService().logout(token)
       res.status(StatusCode.OK).send(userLogout);
     } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
     }
   }
