@@ -4,6 +4,7 @@ import {
   activateUserValidation,
   createGamesValidation,
   getGamesValidation,
+  sortValidation,
   updateGamesValidation
 } from "../validations";
 
@@ -14,3 +15,5 @@ export type GamesCreateDTO = z.infer<typeof createGamesValidation> & Verify
 export type GamesUpdateDTO = z.infer<typeof updateGamesValidation> & Verify
 
 export type GameActivateDTO = z.infer<typeof activateUserValidation>
+
+export type GameSortDTO = z.infer<typeof sortValidation>

@@ -32,7 +32,9 @@ export default class Auth {
 
       const passMatch = await new PasswordCrypt(String(password), user.password).compare();
 
-      if (!passMatch || user.email != email) throw new AppError('WRONG DATA', StatusCode.BAD_REQUEST);
+      if (!passMatch || user.email != email) {
+        throw new AppError(DefaultMessages.WRONG_DATA, StatusCode.BAD_REQUEST);
+      }
 
       const data = {
         data: { nick, message: DefaultMessages.CURIOSITY },
@@ -44,7 +46,7 @@ export default class Auth {
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
-      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+      throw new AppError(DefaultMessages.INTERNAL_SERVER_ERROR, StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 
@@ -53,7 +55,7 @@ export default class Auth {
       //TODO: implementar invalidacao do token apos login
       return { auth: false, token: null };
     } catch (error: any) {
-      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+      throw new AppError(DefaultMessages.INTERNAL_SERVER_ERROR, StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 }

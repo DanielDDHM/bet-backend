@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "BET",
+    "description": "API for a bet animal game",
+    "version": "1.0.0",
+    "contact": {
+      "email": "daniel.ddhm@gmail.com"
+    }
+  },
+  "paths": {
+    "/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "LOGIN User",
+        "description": "Login using a JWT",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nick": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "auth": {
+                      "type": "boolean"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "WRONG DATA"
+          },
+          "404": {
+            "description": "USER DOESNT EXISTS"
+          },
+          "500": {
+            "description": "INTERNAL_SERVER_ERROR"
+          }
+        }
+      }
+    }
+  },
+  "/v1/auth/logout": {
+    "post": {
+      "tags": [
+        "Authentication"
+      ],
+      "summary": "LOGOUT USER",
+      "description": "Logout using a JWT",
+      "parameters": {}
+    },
+    "responses": {
+      "200": {
+        "description": "Success!",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "auth": {
+                  "type": "boolean"
+                },
+                "token": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR"
+      }
+    }
+  }
+}

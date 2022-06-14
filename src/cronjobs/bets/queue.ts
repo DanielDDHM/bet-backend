@@ -1,6 +1,7 @@
 import Queue from 'bull';
 import 'dotenv/config';
 import { prisma } from '../../config';
+import { DefaultStatus } from '../../types';
 
 const CONCURRENCY = 3
 
@@ -24,7 +25,7 @@ betsQueue.process(CONCURRENCY, async (job: any) => {
         id
       },
       data: {
-        status: 'CREATED'
+        status: DefaultStatus.CREATED
       }
     })
   } catch (error: any) {

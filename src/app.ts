@@ -4,9 +4,10 @@ import "express-async-errors";
 import 'dotenv/config';
 
 import rootRoutes from './routes';
-import { betsCron } from './cronjobs';
+import swaggerUi from 'swagger-ui-express'
+import swaggerFile from './docs/swagger.json'
 
-
+// import { betsCron } from './cronjobs';
 const { PORT, NAME } = process.env
 
 const app = express();
@@ -16,8 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+// DOCS
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile))
+
 // CRON
-betsCron.start()
+// betsCron.start()
 
 // app use routes
 app.use('/v1', rootRoutes)

@@ -2,17 +2,20 @@ import {
   StatusCode,
   GameParams,
   UserTypes,
-  DefaultMessages
+  DefaultMessages,
+  DefaultStatus
 } from "../types"
 import {
   getGamesValidation,
   createGamesValidation,
   updateGamesValidation,
   deleteGamesValidation,
-  activateGameValidation
+  activateGameValidation,
+  sortValidation
 } from "../validations"
 import { prisma } from "../config"
 import { AppError } from "../helpers"
+import Generator from "../helpers/generators"
 
 export default class GamesService {
   params: GameParams
@@ -201,4 +204,45 @@ export default class GamesService {
     }
   }
 
+  async sort(params = this.params) {
+    const { id, nick, role } = sortValidation.parse(params)
+
+    const [game, user] = await prisma.$transaction([
+      prisma.game.findUnique({
+        where: { id }
+      }),
+      prisma.users.findUnique({
+        where: { nick }
+      })
+    ])
+
+    if (game?.ownerId === user?.id || role === UserTypes.ADMIN) {
+      const sortedNumber = await new Generator(game?.numbers).numberGenerator()
+
+      console.log(sortedNumber)
+
+      const winner = await prisma.bets.findMany({
+        where: {
+          AND: [
+            { gameId: id },
+            { bet: sortedNumber },
+            { status: DefaultStatus.CREATED }
+          ]
+        }
+      })
+
+      for (const win of winner) {
+        await prisma.bets.update({
+          where: { id: win.id },
+          data: { winner: true }
+        })
+      }
+
+      return { message: `SORTED NUMBER HAS ${sortedNumber}`, winners: winner }
+    }
+
+  } catch(error: any) {
+    if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+    throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+  }
 }

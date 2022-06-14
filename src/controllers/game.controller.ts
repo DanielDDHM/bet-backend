@@ -3,7 +3,8 @@ import {
   GamesCreateDTO,
   GamesGetDTO,
   GamesUpdateDTO,
-  DefaultMessages
+  DefaultMessages,
+  GameSortDTO
 } from "../types";
 import { Request, Response } from 'express';
 import { GameService } from "../services";
@@ -50,6 +51,20 @@ export default class GamesController {
       return res.status(StatusCode.OK)
         .send({ data: updatedGame, message: DefaultMessages.GAME_UPDATED })
 
+    } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
+
+  async sort(req: Request, res: Response) {
+    try {
+      const { params: { id }, nick, role } = req
+      const data = { id, nick, role }
+      const numberSorted = await new GameService(data as GameSortDTO).sort()
+
+      return res.status(StatusCode.OK)
+        .send({ data: numberSorted })
     } catch (error: any) {
       if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)

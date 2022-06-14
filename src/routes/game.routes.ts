@@ -22,4 +22,9 @@ router.put('/update/:id?',
   new CheckRoleMiddleware().checkRole,
   new GamesController().update)
 
+router.post('/sort/:id?',
+  new CheckTokenMiddleware().verifyToken,
+  new CheckRoleMiddleware().checkRole,
+  new GamesController().sort)
+
 export default router

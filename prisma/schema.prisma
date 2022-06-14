@@ -59,7 +59,7 @@ model game {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   owner      users?    @relation(fields: [ownerId], references: [id])
-  winner     String?
+  winner     String[]
   sortDate   DateTime
   numbers    Int
   bets       bets[]

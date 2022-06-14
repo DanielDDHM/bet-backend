@@ -1,7 +1,7 @@
 import { AuthService } from "../../services"
 
-describe('[login test]', () => {
-  it('Login to return Auth', async () => {
+describe('[LOGIN TEST]', () => {
+  it('SUCESSFULL LOGIN', async () => {
     const login = await new AuthService(
       {
         nick: "picas",
