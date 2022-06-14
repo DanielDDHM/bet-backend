@@ -4,7 +4,7 @@ import "express-async-errors";
 import 'dotenv/config';
 
 import rootRoutes from './routes';
-import { betsCron } from './cronjobs/betsQueue.cronjobs';
+import { betsCron } from './cronjobs';
 
 
 const { PORT, NAME } = process.env
@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // CRON
-// betsCron.start()
+betsCron.start()
 
 // app use routes
 app.use('/v1', rootRoutes)
