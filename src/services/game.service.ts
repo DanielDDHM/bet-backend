@@ -218,9 +218,6 @@ export default class GamesService {
 
     if (game?.ownerId === user?.id || role === UserTypes.ADMIN) {
       const sortedNumber = await new Generator(game?.numbers).numberGenerator()
-
-      console.log(sortedNumber)
-
       const winner = await prisma.bets.findMany({
         where: {
           AND: [

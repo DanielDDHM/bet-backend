@@ -154,20 +154,29 @@ export default class UserService {
         photo
       }
 
-      const [userExists, addressExists] = await Promise.all([
-        await this.get({ id } as UserGetDTO),
-        await new AddressService(address as AddressGetDTO).get()
-      ])
+      const userExists = await prisma.users.findUnique({
+        where: { id }
+      })
 
       if (!userExists) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
 
-      if (!addressExists) {
-        const createdAddress = await new AddressService(address as AddressCreateDTO).create()
+      if (address) {
+        const addressFind = await prisma.address.findFirst({
+          where: {
+            OR: [
+              { zipCode: address.zipCode },
+              { streetNumber: address.streetNumber }
+            ]
+          }
+        })
+
         const userUpdated = await prisma.users.update({
-          where: { id },
+          where: {
+            id: userExists.id
+          },
           data: {
             ...query,
-            addressId: createdAddress.id
+            addressId: addressFind?.id
           }
         })
 
@@ -175,10 +184,11 @@ export default class UserService {
       }
 
       const userUpdated = await prisma.users.update({
-        where: { id },
+        where: {
+          id
+        },
         data: {
-          ...query,
-          addressId: addressExists.id
+          ...query
         }
       })
 

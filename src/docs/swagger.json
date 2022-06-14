@@ -14,7 +14,7 @@
         "tags": [
           "Authentication"
         ],
-        "summary": "LOGIN User",
+        "summary": "LOGIN",
         "description": "Login using a JWT",
         "requestBody": {
           "content": {
@@ -65,39 +65,6 @@
             "description": "INTERNAL_SERVER_ERROR"
           }
         }
-      }
-    }
-  },
-  "/v1/auth/logout": {
-    "post": {
-      "tags": [
-        "Authentication"
-      ],
-      "summary": "LOGOUT USER",
-      "description": "Logout using a JWT",
-      "parameters": {}
-    },
-    "responses": {
-      "200": {
-        "description": "Success!",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "auth": {
-                  "type": "boolean"
-                },
-                "token": {
-                  "type": "null"
-                }
-              }
-            }
-          }
-        }
-      },
-      "500": {
-        "description": "INTERNAL_SERVER_ERROR"
       }
     }
   }
