@@ -85,9 +85,16 @@ export default class UserService {
         email
       }
 
-      const [existUser, existAddress] = await Promise.all([
-        await this.get({ email, nick } as UserGetDTO),
-        await new AddressService({ zipCode, streetNumber } as AddressGetDTO).get()
+      const [existUser, existAddress] = await prisma.$transaction([
+        prisma.users.findUnique({
+          where: { nick }
+        }),
+        prisma.address.findFirst({
+          where: {
+            zipCode,
+            streetNumber
+          }
+        })
       ])
 
       if (existUser) {
