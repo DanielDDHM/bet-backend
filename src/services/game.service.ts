@@ -39,7 +39,7 @@ export default class GamesService {
         })
       ])
 
-      return { games, Total: total }
+      return { games, total: total }
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
@@ -54,6 +54,7 @@ export default class GamesService {
         ownerId,
         prize,
         sortDate,
+        numbers,
         nick
       } = createGamesValidation.parse(params)
 
@@ -63,14 +64,17 @@ export default class GamesService {
 
       if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
 
-      if (user.id !== ownerId) throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      if (user.id !== ownerId) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
 
       const gameCreated = await prisma.game.create({
         data: {
           name,
           ownerId,
           prize,
-          sortDate
+          sortDate,
+          numbers
         }
       })
 
@@ -89,7 +93,6 @@ export default class GamesService {
         sortDate,
         winner,
         prizePhoto,
-        isActive,
         role,
         nick
       } = updateGamesValidation.parse(params)
@@ -98,7 +101,7 @@ export default class GamesService {
         prisma.users.findUnique({
           where: { nick }
         }),
-        prisma.game.findFirst({
+        prisma.game.findUnique({
           where: { id }
         })
       ])
@@ -117,8 +120,7 @@ export default class GamesService {
           prize,
           sortDate,
           winner,
-          prizePhoto,
-          isActive
+          prizePhoto
         }
       })
 

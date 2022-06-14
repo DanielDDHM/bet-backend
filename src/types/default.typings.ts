@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import {
+  DeleteGenericValidation,
   LoginValidation,
   VerifyValidation
 } from '../validations';
@@ -8,7 +9,4 @@ export type Verify = z.infer<typeof VerifyValidation>
 
 export type Login = z.infer<typeof LoginValidation>
 
-export interface GenericDeleteDTO {
-  id?: string,
-  role?: string
-}
+export type GenericDeleteDTO = z.infer<typeof DeleteGenericValidation>

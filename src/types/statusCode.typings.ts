@@ -1,9 +1,10 @@
-/* eslint-disable max-len */
+// 1
 export enum StatusCode {
   CONTINUE = 100,
   SWITCHING_PROTOCOLS = 101,
   PROCESSING = 102,
 
+  // 2
   OK = 200,
   CREATED = 201,
   ACCEPTED = 202,
@@ -15,6 +16,7 @@ export enum StatusCode {
   ALREADY_REPORTED = 208,
   IM_USED = 226,
 
+  // 3
   MULTIPLE_CHOICES = 300,
   MOVED_PERMANENTLY = 301,
   FOUND = 302,
@@ -24,6 +26,7 @@ export enum StatusCode {
   TEMPORARY_REDIRECT = 307,
   PERMANENT_REDIRECT = 308,
 
+  //4
   BAD_REQUEST = 400,
   UNAUTHORIZED = 401,
   PAYMENT_REQUIRED = 402,
@@ -53,6 +56,7 @@ export enum StatusCode {
   REQUEST_HEADER_FIELDS_TOO_LARGE = 431,
   UNAVAILABLE_FOR_LEGAL_REASONS = 451,
 
+  // 5
   INTERNAL_SERVER_ERROR = 500,
   NOT_IMPLEMENTED = 501,
   BAD_GATEWAY = 502,

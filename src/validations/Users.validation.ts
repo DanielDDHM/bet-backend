@@ -101,8 +101,7 @@ export const userUpdateValidation = z.object({
 
 export const deleteUserValidation = z.object({
   id: z.string()
-    .min(2, { message: 'MIN_LENGHT_3' })
-    .optional(),
+    .min(2, { message: 'MIN_LENGHT_3' }),
   email: z.string()
     .min(2, { message: 'NON_EMPTY' })
     .optional(),
@@ -111,22 +110,17 @@ export const deleteUserValidation = z.object({
     .max(10, { message: 'MAX_LENGTH_8' })
     .optional(),
   role: z.string()
-    .min(1, { message: 'NOT_EMPTY' })
-    .optional(),
+    .min(1, { message: 'NOT_EMPTY' }),
 }).strict();
 
 export const confirmUserValidation = z.object({
   id: z.string()
-    .min(2, { message: 'MIN_LENGHT_3' })
-    .optional(),
-  isConfirmed: z.boolean().optional(),
+    .min(2, { message: 'MIN_LENGHT_3' }),
 }).strict();
 
 export const activateUserValidation = z.object({
   id: z.string()
-    .min(2, { message: 'MIN_LENGHT_3' })
-    .optional(),
+    .min(2, { message: 'MIN_LENGHT_3' }),
   role: z.string()
-    .min(1, { message: 'NOT_EMPTY' })
-    .optional(),
+    .min(1, { message: 'NOT_EMPTY' }),
 }).strict();

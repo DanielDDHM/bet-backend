@@ -9,7 +9,6 @@ describe('[login test]', () => {
         password: "teste"
       }
     ).login()
-    console.log(login)
     expect(login).toHaveProperty('auth')
   })
 })

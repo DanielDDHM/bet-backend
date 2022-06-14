@@ -3,11 +3,11 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../config';
 import { StatusCode, Login, DefaultMessages } from '../types';
 import { PasswordCrypt, AppError } from '../helpers';
+import { LoginValidation } from '../validations';
 export default class Auth {
   payload: Login
   headers?: any
-  body?: any
-  AUTH_SECRET?: any
+  AUTH_SECRET?: string
 
   constructor(payload?: any, headers?: any) {
     this.payload = payload
@@ -16,9 +16,7 @@ export default class Auth {
   }
 
   async login(payload = this.payload) {
-    const { email, nick, password } = payload
-    const date = new Date()
-    const expTime = (1000 * 60 * 60 * 2);
+    const { email, nick, password } = LoginValidation.parse(payload)
 
     try {
       const user = await prisma.users.findFirst({
@@ -37,12 +35,10 @@ export default class Auth {
       if (!passMatch || user.email != email) throw new AppError('WRONG DATA', StatusCode.BAD_REQUEST);
 
       const data = {
-        data: nick,
-        iat: date.getTime(),
-        exp: date.setTime(date.getTime() + expTime),
+        data: { nick, message: DefaultMessages.CURIOSITY },
       }
 
-      const token = jwt.sign(data, String(this.AUTH_SECRET))
+      const token = jwt.sign(data, String(this.AUTH_SECRET), { expiresIn: '1h' })
 
       return { auth: true, token };
 
@@ -52,8 +48,9 @@ export default class Auth {
     }
   }
 
-  async logout() {
+  async logout(body: any) {
     try {
+      //TODO: implementar invalidacao do token apos login
       return { auth: false, token: null };
     } catch (error: any) {
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

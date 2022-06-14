@@ -11,10 +11,9 @@ export default class AuthUserMiddleware {
       if (!token) throw new AppError(DefaultMessages.MISSING_TOKEN, StatusCode.UNAUTHORIZED);
 
       const verify = jwt.verify(token, String(process.env.AUTH_SECRET))
-      console.log(verify)
 
       if (verify) {
-        req.nick = verify?.data
+        req.nick = verify?.data?.nick
         return next()
       }
 

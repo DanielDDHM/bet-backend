@@ -10,9 +10,9 @@ import { BetService } from "../services";
 export default class BetsController {
 
   async get(req: Request, res: Response) {
-    const { body, query } = req;
+    const { query, role } = req;
     try {
-      const bet = await new BetService({ ...body, query } as BetsGetDTO).get()
+      const bet = await new BetService({ ...query, role } as BetsGetDTO).get()
 
       return res.status(StatusCode.OK)
         .send({ data: bet, message: DefaultMessages.BET_FIND })
@@ -22,9 +22,9 @@ export default class BetsController {
   }
 
   async create(req: Request, res: Response) {
-    const { body } = req;
+    const { body, nick } = req;
     try {
-      const betCreated = await new BetService(body as BetsCreateDTO).create()
+      const betCreated = await new BetService({ ...body, nick } as BetsCreateDTO).create()
 
       return res.status(StatusCode.OK)
         .send({ data: betCreated, message: DefaultMessages.BET_CREATED })

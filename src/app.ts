@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // CRON
-betsCron.start()
+// betsCron.start()
 
 // app use routes
 app.use('/v1', rootRoutes)

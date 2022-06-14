@@ -14,7 +14,7 @@ const router = e.Router();
 router.patch('/users/activate/:id',
   new CheckTokenMiddleware().verifyToken,
   new CheckRoleMiddleware().checkRole,
-  new InternalUsersController().update)
+  new InternalUsersController().activate)
 
 router.delete('/users/delete/:id',
   new CheckTokenMiddleware().verifyToken,
@@ -32,7 +32,7 @@ router.delete('/bets/delete/:id',
 router.patch('/game/activate/:id',
   new CheckTokenMiddleware().verifyToken,
   new CheckRoleMiddleware().checkRole,
-  new InternalGameController().update)
+  new InternalGameController().activate)
 
 router.delete('/game/delete/:id',
   new CheckTokenMiddleware().verifyToken,

@@ -61,6 +61,7 @@ model game {
   owner      users?    @relation(fields: [ownerId], references: [id])
   winner     String?
   sortDate   DateTime
+  numbers    Int
   bets       bets[]
   prize      String
   prizePhoto String?

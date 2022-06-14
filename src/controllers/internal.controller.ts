@@ -12,9 +12,9 @@ import {
 
 export class InternalUsersController {
 
-  async update(req: Request, res: Response) {
-    const { params: { id }, body, role } = req
-    const data = { id, ...body, role }
+  async activate(req: Request, res: Response) {
+    const { params: { id }, role } = req
+    const data = { id, role }
 
     try {
       const updatedUser = await new UserService(data as UserActivateDTO).activateUser()
@@ -40,9 +40,9 @@ export class InternalUsersController {
 
 export class InternalBetsController {
   async delete(req: Request, res: Response) {
-    const { id } = req.params
+    const { params: { id }, role } = req
     try {
-      const betDeleted = await new BetService(id as GenericDeleteDTO).delete
+      const betDeleted = await new BetService({ id, role } as GenericDeleteDTO).delete
 
       return res.status(StatusCode.OK)
         .send({ data: betDeleted, message: DefaultMessages.BET_DELETED })
@@ -54,9 +54,9 @@ export class InternalBetsController {
 
 export class InternalGameController {
 
-  async update(req: Request, res: Response) {
-    const { params: { id }, body, role } = req
-    const data = { id, ...body, role }
+  async activate(req: Request, res: Response) {
+    const { params: { id }, role } = req
+    const data = { id, role }
 
     try {
       const updatedGame = await new GameService(data as GameActivateDTO).activateGame()
@@ -70,9 +70,9 @@ export class InternalGameController {
   }
 
   async delete(req: Request, res: Response) {
-    const { id } = req.params
+    const { params: { id }, role } = req
     try {
-      const deletedGame = await new GameService(id as GenericDeleteDTO).delete()
+      const deletedGame = await new GameService({ id, role } as GenericDeleteDTO).delete()
       return res.status(StatusCode.OK).send(deletedGame)
     } catch (error: any) {
       if (error instanceof AppError) res.status(error.statusCode).json(error.message)

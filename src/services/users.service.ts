@@ -14,10 +14,10 @@ import {
   confirmUserValidation,
 } from "../validations";
 import {
-  StatusCode,
   UserGetDTO,
   AddressGetDTO,
   AddressCreateDTO,
+  StatusCode,
   UserTypes,
   DefaultMessages,
   UserParams
@@ -30,9 +30,11 @@ export default class UserService {
   }
 
   async get(params = this.params) {
+
     const {
       id, email, nick, page, perPage, role
     } = getUserValidation.parse(params)
+
     try {
       if (email || nick || id) {
         const user = await prisma.users.findFirst({
@@ -53,7 +55,7 @@ export default class UserService {
           }),
           prisma.users.count()
         ])
-        return { users, Total: total }
+        return { users, total: total }
       }
 
       throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.NOT_ACCEPTABLE)
@@ -93,7 +95,11 @@ export default class UserService {
       }
 
       if (!existAddress) {
-        const { data: { logradouro, bairro, localidade, uf } } = await new AddressFinder(zipCode).check()
+        const {
+          data: {
+            logradouro, bairro, localidade, uf
+          } } = await new AddressFinder(zipCode).check()
+
         const addressCreated = await new AddressService({
           zipCode,
           streetNumber,
@@ -120,6 +126,7 @@ export default class UserService {
       });
 
       return userCreated
+
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -153,6 +160,7 @@ export default class UserService {
       ])
 
       if (!userExists) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
+
       if (!addressExists) {
         const createdAddress = await new AddressService(address as AddressCreateDTO).create()
         const userUpdated = await prisma.users.update({
@@ -260,9 +268,16 @@ export default class UserService {
 
       if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
 
+      if (role === UserTypes.ADMIN) {
+        await prisma.users.delete({
+          where: { id }
+        })
+        return `USER ${user?.nick} DELETED by ADMIN`
+      }
+
       const verifyPass = await new PasswordCrypt(String(password), user?.password).compare()
 
-      if (!verifyPass || user?.email !== email || role !== UserTypes.ADMIN) {
+      if (!verifyPass || user?.email !== email) {
         throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
       }
 
@@ -276,13 +291,4 @@ export default class UserService {
     }
   }
 
-
-  // async giveAdmin(params = this.params) {
-  //   try {
-  //     console.log('Give Admin')
-  //   } catch (error: any) {
-  //     if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
-  //     throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
-  //   }
-  // }
 }

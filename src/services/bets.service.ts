@@ -1,9 +1,8 @@
 import {
   StatusCode,
-  GamesGetDTO,
   DefaultMessages,
   UserTypes,
-  BetParams
+  BetParams,
 } from "../types"
 import { AppError } from "../helpers"
 import {
@@ -44,6 +43,8 @@ export default class BetsService {
             }
           }),
         ])
+
+        //TODO: Chumbar os dados da pessoa da requisicao
         return { bets, Total: total }
       } else if (role === UserTypes.ADMIN) {
         const [bets, total] = await prisma.$transaction([
@@ -72,11 +73,13 @@ export default class BetsService {
         nick
       } = betsCreateValidation.parse(params)
 
-      const [user, game] = await Promise.all([
-        await prisma.users.findFirst({
+      const [user, game] = await prisma.$transaction([
+        prisma.users.findUnique({
           where: { nick }
         }),
-        await this.get({ gameId } as GamesGetDTO)
+        prisma.game.findUnique({
+          where: { id: gameId }
+        })
       ])
 
       if (user && game) {
@@ -114,9 +117,7 @@ export default class BetsService {
       if (!bet) throw new AppError(DefaultMessages.BET_NOT_EXISTS, StatusCode.NOT_FOUND)
 
       await prisma.bets.delete({
-        where: {
-          id
-        }
+        where: { id }
       })
 
       return { message: `BET ${id} HAS DELETED` }
