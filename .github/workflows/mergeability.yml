@@ -32,5 +32,5 @@ jobs:
       - name: Lint Fix
         run: npm run lint --fix
 
-      - name: Unit Test
-        run: npm run test
+      # - name: Unit Test
+      #   run: npm run test
