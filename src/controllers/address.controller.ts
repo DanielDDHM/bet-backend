@@ -11,9 +11,10 @@ import { AppError } from "../helpers";
 export default class AddressController {
 
   async get(req: Request, res: Response) {
-    const { body } = req;
+    const { query: { zipCode, streetNumber } } = req;
+    const data = { zipCode, streetNumber: Number(streetNumber) }
     try {
-      const address = await new AddressService(body as AddressGetDTO).get()
+      const address = await new AddressService(data as AddressGetDTO).get()
       return res.status(StatusCode.OK).send(address)
     } catch (error: any) {
       if (error instanceof AppError) res.status(error.statusCode).json(error.message)

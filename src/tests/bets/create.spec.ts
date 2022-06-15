@@ -1,4 +1,3 @@
-import { prisma } from "../../config"
 import { AppError } from "../../helpers"
 import BetsService from "../../services/bets.service"
 
@@ -28,9 +27,5 @@ describe('[BETS CREATE]', () => {
     } catch (error: any) {
       expect(error).toBeInstanceOf(AppError)
     }
-  })
-
-  afterAll(async () => {
-    await prisma.bets.deleteMany()
   })
 })

@@ -5685,6 +5685,11 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
+node-cmdline-parser@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/node-cmdline-parser/-/node-cmdline-parser-1.0.2.tgz#4fcb05e49ca8a80e4250415abc409ab39da635d5"
+  integrity sha512-QaLmtfhSnKE9maz54bD/CgdZrNqtTfgrZnTlB/d80EALb747CwJnfTD+LHC0i3JzuJ9nqk0zXhZ6zeqbyBNzmQ==
+
 node-gyp-build-optional-packages@5.0.2:
   version "5.0.2"
   resolved "https://registry.npmjs.org/node-gyp-build-optional-packages/-/node-gyp-build-optional-packages-5.0.2.tgz"

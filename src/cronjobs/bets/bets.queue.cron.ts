@@ -3,7 +3,7 @@ import { prisma } from "../../config";
 import { DefaultStatus } from "../../types";
 import { betsQueue } from "./queue";
 
-const cron = '*/15 * * * * *';
+const cron = '*/5 * * * *';
 const tz = 'America/Sao_Paulo';
 
 export const betsCron = new CronJob(cron,

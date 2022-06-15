@@ -3,7 +3,7 @@ import { AppError } from "../../helpers"
 import { BetService } from "../../services";
 
 describe('[BETS DELETE]', () => {
-  beforeAll(async () => {
+  afterAll(async () => {
     await prisma.bets.create({
       data: {
         gameId: "62a8c454a07d46691ace262a",
@@ -19,6 +19,9 @@ describe('[BETS DELETE]', () => {
     const bet = await prisma.bets.findFirst({
       where: {
         gameId: "62a8c454a07d46691ace262a"
+      },
+      orderBy: {
+        createdAt: 'asc'
       }
     })
 

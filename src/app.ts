@@ -4,12 +4,16 @@ import "express-async-errors";
 import 'dotenv/config';
 
 import rootRoutes from './routes';
-import swaggerUi from 'swagger-ui-express'
+import swaggerUi from 'swagger-ui-express';
 import { apiDocumentation } from './docs/api';
-
-// import { betsCron } from './cronjobs';
+import promptScript from './scripts/prompt.script';
+import { betsCron } from './cronjobs';
 const { PORT, NAME } = process.env
 
+// DRAWN ON PROMPT
+promptScript();
+
+//APP
 const app = express();
 
 // Express middlewares
@@ -21,7 +25,7 @@ app.use(cors());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(apiDocumentation))
 
 // CRON
-// betsCron.start()
+betsCron.start()
 
 // app use routes
 app.use('/v1', rootRoutes)
@@ -36,6 +40,6 @@ app.get('/', (request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`App started on http://localhost:${PORT || 3000}`);
+  console.log(`APP STARTED ON http://localhost:${PORT || 3000}`);
 });
 

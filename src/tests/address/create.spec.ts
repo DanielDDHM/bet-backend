@@ -23,7 +23,7 @@ describe('[ADDRESS CREATE]', () => {
     }
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await prisma.address.deleteMany()
   })
 })
