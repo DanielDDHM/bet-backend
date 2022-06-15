@@ -25,17 +25,12 @@ jobs:
 
       - name: Setuping Node
         uses: actions/setup-node@v3
-        with:
-          node-version: 15
 
-      - name: NPM Cache
-        uses: c-hive/gha-npm-cache@v1.1.0
-
-      - name: Installing Dependencies
+      - name: Dependencies Install
         run : npm install
 
-      - name: unit tests
-        run: npm run test
+      - name: Lint Fix
+        run: npm run lint --fix
 
-      - name: Test Lint
-        run: npm run lint
+      # - name: Unit Test
+      #   run: npm run test

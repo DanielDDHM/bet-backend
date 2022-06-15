@@ -14,7 +14,7 @@
     "bull": "^4.8.3",
     "cors": "^2.8.5",
     "cron": "^2.0.0",
-    "docker": "^1.0.0",
+    "docker": "^0.2.14",
     "dotenv": "^16.0.1",
     "eslint": "^8.16.0",
     "express": "^4.18.1",
@@ -31,7 +31,7 @@
     "prisma": "^3.14.0",
     "promise": "^8.1.0",
     "run": "^1.4.0",
-    "swagger": "^0.7.5",
+    "swagger": "^0.0.1",
     "swagger-ui-express": "^4.4.0",
     "ts-jest": "^28.0.4",
     "ts-node": "^10.8.0",
@@ -60,11 +60,11 @@
   },
   "scripts": {
     "start": "npm run lint:fix && npm run dev",
-    "dev": "NODE_ENV=DEV ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
-    "dev:test": "NODE_ENV=TEST ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
+    "dev": "cross-env NODE_ENV=DEV ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
+    "dev:test": "cross-env NODE_ENV=TEST PORT=4000 DATABASE_URL='mongodb+srv://admin:admin@cluster0.gudbo.mongodb.net/betdbdev?retryWrites=true&w=majority' ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
     "lint": "eslint --ext js,ts src",
     "lint:fix": "eslint --ext js,ts src --fix",
     "prepare": "husky install",
-    "test": "cross-env NODE_ENV=TEST DATABASE_URL=mongodb+srv://admin:admin@cluster0.gudbo.mongodb.net/betdbdev?retryWrites=true&w=majority jest -i"
+    "test": "cross-env NODE_ENV=TEST DATABASE_URL='mongodb+srv://admin:admin@cluster0.gudbo.mongodb.net/betdbdev?retryWrites=true&w=majority' jest -i"
   }
 }

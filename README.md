@@ -14,6 +14,7 @@ Backend For Bet App from CajaCodes
 
 ## 🚀 Technologies
  - Typescript
+ - Swagger
  - Prisma
  - Docker
  - MongoDB
