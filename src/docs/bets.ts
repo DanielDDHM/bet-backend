@@ -67,8 +67,26 @@ const GET_BETS = {
             properties: {
               data: {
                 type: 'object',
-                bets: { type: 'array' },
-                Total: { type: 'number' },
+                properties: {
+                  bets: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: { type: 'string' },
+                        value: { type: 'number' },
+                        bet: { type: 'number' },
+                        status: { type: 'string' },
+                        winner: { type: 'boolean' },
+                        createdAt: { type: 'string' },
+                        updatedAt: { type: 'string' },
+                        usersId: { type: 'string' },
+                        gameId: { type: 'string' },
+                      }
+                    }
+                  },
+                  total: { type: 'number' },
+                }
               },
               message: { type: 'string' },
             }
@@ -84,7 +102,6 @@ const GET_BETS = {
     },
   },
 };
-
 
 const CREATE_BETS = {
   tags: ['Bets'],
@@ -110,29 +127,29 @@ const CREATE_BETS = {
           schema: {
             type: 'object',
             properties: {
-              id: { type: 'string' },
-              value: { type: 'string' },
-              bet: { type: 'number' },
-              status: { type: 'string' },
-              winner: { type: 'boolean' },
-              usersId: { type: 'string' },
-              gameId: { type: 'boolean' },
-              createdAt: { type: 'string' },
-              updatedAt: { type: 'string' },
-              message: { type: 'string' }
-            },
+              data: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  value: { type: 'string' },
+                  bet: { type: 'number' },
+                  status: { type: 'string' },
+                  winner: { type: 'boolean' },
+                  usersId: { type: 'string' },
+                  gameId: { type: 'boolean' },
+                  createdAt: { type: 'string' },
+                  updatedAt: { type: 'string' },
+                  message: { type: 'string' }
+                }
+              },
+              message: { type: 'string' },
+            }
           },
         },
       },
     },
     '500': {
       description: DefaultMessages.INTERNAL_SERVER_ERROR,
-      content: {
-        type: 'string',
-        properties: {
-          error: 'string'
-        }
-      }
     },
   },
 };

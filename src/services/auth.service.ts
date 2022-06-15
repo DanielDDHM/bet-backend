@@ -50,9 +50,9 @@ export default class Auth {
     }
   }
 
-  async logout(body: any) {
+  async logout(token: any) {
     try {
-      //TODO: implementar invalidacao do token apos login
+      console.log(token)
       return { auth: false, token: null };
     } catch (error: any) {
       throw new AppError(DefaultMessages.INTERNAL_SERVER_ERROR, StatusCode.INTERNAL_SERVER_ERROR)
