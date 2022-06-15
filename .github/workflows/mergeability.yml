@@ -31,3 +31,14 @@ jobs:
         with:
           node-version: 15
 
+      - name: NPM Cache
+        uses: c-hive/gha-npm-cache@v1.1.0
+
+      - name: Installing Dependencies
+        run : npm install
+
+      - name: unit tests
+        run: npm run test
+
+      - name: Test Lint
+        run: npm run lint
