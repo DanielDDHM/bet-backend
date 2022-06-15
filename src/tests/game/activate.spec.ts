@@ -1,5 +1,3 @@
-import { prisma } from "../../config"
-import { AppError } from "../../helpers"
 import 'dotenv/config';
 
 describe('[BETS CREATE]', () => {

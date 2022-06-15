@@ -26,11 +26,11 @@ jobs:
       - name: Setuping Node
         uses: actions/setup-node@v3
 
-      - name: DEPENDENCIES INSTALL
+      - name: Dependencies Install
         run : npm install
 
-      - name: UNIT TESTS
-        run: npm run test
+      - name: Lint Fix
+        run: npm run lint --fix
 
-      - name: LINT TEST
-        run: npm run lint
+      - name: Unit Test
+        run: npm run test
