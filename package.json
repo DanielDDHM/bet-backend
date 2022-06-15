@@ -60,11 +60,11 @@
   },
   "scripts": {
     "start": "npm run lint:fix && npm run dev",
-    "dev": "NODE_ENV=DEV ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
-    "dev:test": "NODE_ENV=TEST ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
+    "dev": "cross-env NODE_ENV=DEV ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
+    "dev:test": "cross-env NODE_ENV=TEST DATABASE_URL='mongodb+srv://admin:admin@cluster0.gudbo.mongodb.net/betdbdev?retryWrites=true&w=majority' ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
     "lint": "eslint --ext js,ts src",
     "lint:fix": "eslint --ext js,ts src --fix",
     "prepare": "husky install",
-    "test": "cross-env NODE_ENV=TEST DATABASE_URL=mongodb+srv://admin:admin@cluster0.gudbo.mongodb.net/betdbdev?retryWrites=true&w=majority jest -i"
+    "test": "cross-env NODE_ENV=TEST DATABASE_URL='mongodb+srv://admin:admin@cluster0.gudbo.mongodb.net/betdbdev?retryWrites=true&w=majority' jest -i"
   }
 }
