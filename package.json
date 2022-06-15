@@ -65,6 +65,6 @@
     "lint": "eslint --ext js,ts src",
     "lint:fix": "eslint --ext js,ts src --fix",
     "prepare": "husky install",
-    "test": "cross-env NODE_ENV=TEST DATABASE_URL= jest -i"
+    "test": "cross-env NODE_ENV=TEST DATABASE_URL=mongodb+srv://admin:admin@cluster0.gudbo.mongodb.net/betdbdev?retryWrites=true&w=majority jest -i"
   }
 }
