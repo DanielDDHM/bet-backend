@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { StatusCode } from '../types';
-import AppError from './AppError';
+import AppError from './apperror';
 
 export default class PasswordCrypt {
   pass: string

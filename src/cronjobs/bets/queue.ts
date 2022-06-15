@@ -1,8 +1,9 @@
 import Queue from 'bull';
 import 'dotenv/config';
-import { prisma } from '.';
+import { prisma } from '../../config';
+import { DefaultStatus } from '../../types';
 
-const CONCURRENCY = 1
+const CONCURRENCY = 3
 
 export const betsQueue = new Queue('BETS', {
   redis: {
@@ -24,7 +25,7 @@ betsQueue.process(CONCURRENCY, async (job: any) => {
         id
       },
       data: {
-        status: 'CREATED'
+        status: DefaultStatus.CREATED
       }
     })
   } catch (error: any) {

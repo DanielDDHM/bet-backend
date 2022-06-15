@@ -1,11 +1,8 @@
 import {
   StatusCode,
-  BetsCreateDTO,
-  BetsGetDTO,
-  GenericDeleteDTO,
-  GamesGetDTO,
   DefaultMessages,
-  UserTypes
+  UserTypes,
+  BetParams,
 } from "../types"
 import { AppError } from "../helpers"
 import {
@@ -15,8 +12,8 @@ import {
 } from "../validations"
 import { prisma } from "../config"
 export default class BetsService {
-  params: BetsCreateDTO | GenericDeleteDTO | BetsGetDTO
-  constructor(params: BetsCreateDTO | GenericDeleteDTO | BetsGetDTO) {
+  params: BetParams
+  constructor(params: BetParams) {
     this.params = params
   }
 
@@ -36,7 +33,7 @@ export default class BetsService {
               usersId,
               gameId
             },
-            skip: (Number(page) - 1) * Number(perPage) || 0,
+            skip: (Number(page)) * Number(perPage) || 0,
             take: Number(perPage) || 10,
           }),
           prisma.bets.count({
@@ -46,11 +43,12 @@ export default class BetsService {
             }
           }),
         ])
+
         return { bets, Total: total }
       } else if (role === UserTypes.ADMIN) {
         const [bets, total] = await prisma.$transaction([
           prisma.bets.findMany({
-            skip: (Number(page) - 1) * Number(perPage) || 0,
+            skip: (Number(page)) * Number(perPage) || 0,
             take: Number(perPage) || 10,
           }),
           prisma.bets.count()
@@ -74,11 +72,13 @@ export default class BetsService {
         nick
       } = betsCreateValidation.parse(params)
 
-      const [user, game] = await Promise.all([
-        await prisma.users.findFirst({
+      const [user, game] = await prisma.$transaction([
+        prisma.users.findUnique({
           where: { nick }
         }),
-        await this.get({ gameId } as GamesGetDTO)
+        prisma.game.findUnique({
+          where: { id: gameId }
+        })
       ])
 
       if (user && game) {
@@ -116,9 +116,7 @@ export default class BetsService {
       if (!bet) throw new AppError(DefaultMessages.BET_NOT_EXISTS, StatusCode.NOT_FOUND)
 
       await prisma.bets.delete({
-        where: {
-          id
-        }
+        where: { id }
       })
 
       return { message: `BET ${id} HAS DELETED` }

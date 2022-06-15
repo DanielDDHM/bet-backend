@@ -1,22 +1,19 @@
-import { GetAllPaginate, Verify } from "./default.typings"
+import { Verify } from "./default.typings"
+import * as z from 'zod';
+import {
+  activateUserValidation,
+  createGamesValidation,
+  getGamesValidation,
+  sortValidation,
+  updateGamesValidation
+} from "../validations";
 
-export interface GamesGetDTO extends GetAllPaginate {
-  id?: string
-}
+export type GamesGetDTO = z.infer<typeof getGamesValidation>
 
-export interface GamesCreateDTO {
-  name: string,
-  ownerId: string,
-  prize: string,
-  sortDate: Date,
-  nick?: string
-}
+export type GamesCreateDTO = z.infer<typeof createGamesValidation> & Verify
 
-export interface GamesUpdateDTO extends Verify {
-  id?: string
-  prize?: string,
-  sortDate?: Date,
-  winner?: string,
-  prizePhoto?: string,
-  isActive?: boolean
-}
+export type GamesUpdateDTO = z.infer<typeof updateGamesValidation> & Verify
+
+export type GameActivateDTO = z.infer<typeof activateUserValidation>
+
+export type GameSortDTO = z.infer<typeof sortValidation>

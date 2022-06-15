@@ -1,42 +1,25 @@
-import { GetAllPaginate, Verify } from "./default.typings"
+import {
+  activateUserValidation,
+  confirmUserValidation,
+  createUserValidation,
+  deleteUserValidation,
+  getAddressValidation,
+  getUserValidation,
+  userUpdateValidation
+} from "../validations";
+import { Verify } from "./default.typings";
+import * as z from 'zod';
 
-export interface UserCreateDTO {
-  name: string,
-  nick: string,
-  phone: string,
-  email: string,
-  address: UserAddressDTO,
-  password: string,
-  photo?: string,
-  isStaff?: boolean,
-}
+export type UserCreateDTO = z.infer<typeof createUserValidation>;
 
-export interface UserGetDTO extends GetAllPaginate {
-  id?: string,
-  nick?: string,
-  email?: string,
-  role?: string
-}
+export type UserGetDTO = z.infer<typeof getUserValidation>;
 
-export interface UserUpdateDTO extends Verify {
-  id: string,
-  nick?: string,
-  phone?: string,
-  email?: string,
-  password?: string,
-  address?: any,
-  photo?: string,
-  addressId?: string,
-}
+export type UserUpdateDTO = z.infer<typeof userUpdateValidation> & Verify;
 
-export interface UserDeleteDTO extends Verify {
-  id: string,
-  email?: string,
-  password?: string
-}
+export type UserDeleteDTO = z.infer<typeof deleteUserValidation> & Verify;
 
-export interface UserAddressDTO {
-  streetNumber?: number,
-  zipCode?: string,
-}
+export type UserAddressDTO = z.infer<typeof getAddressValidation>
 
+export type UserConfirmDTO = z.infer<typeof confirmUserValidation>
+
+export type UserActivateDTO = z.infer<typeof activateUserValidation>;

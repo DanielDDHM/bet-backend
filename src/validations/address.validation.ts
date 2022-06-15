@@ -5,7 +5,13 @@ export const getAddressValidation = z.object({
     .min(1, { message: 'NOT_EMPTY' }),
   streetNumber: z.number()
     .nonnegative({ message: 'NON_NEGATIVE' })
-    .min(3, { message: 'NOT_EMPTY' })
+    .min(3, { message: 'NOT_EMPTY' }),
+  page: z.number()
+    .nonnegative()
+    .optional(),
+  perPage: z.number()
+    .nonnegative()
+    .optional()
 }).strict();
 
 export const createAddressValidation = z.object({

@@ -1,9 +1,9 @@
 import { AddressFinder, AppError } from "../helpers";
 import { prisma } from "../config";
 import {
-  GetAddressDTO,
-  CreateAddressDTO,
-  StatusCode
+  StatusCode,
+  AddressParams,
+  DefaultMessages
 } from "../types";
 import {
   getAddressValidation,
@@ -11,8 +11,8 @@ import {
 } from "../validations";
 
 export default class AddressService {
-  params: GetAddressDTO | CreateAddressDTO
-  constructor(params: GetAddressDTO | CreateAddressDTO) {
+  params: AddressParams
+  constructor(params: AddressParams) {
     this.params = params
   }
 
@@ -25,9 +25,14 @@ export default class AddressService {
           streetNumber
         }
       });
+
+      if (!address) throw new AppError(DefaultMessages.ADDRESS_NOT_FOUND, StatusCode.NOT_FOUND)
+
       return address
+
     } catch (error: any) {
-      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+      if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+      throw new AppError(DefaultMessages.INTERNAL_SERVER_ERROR, StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 
@@ -38,8 +43,14 @@ export default class AddressService {
         streetNumber
       } = createAddressValidation.parse(params)
 
-      const addressFinded = await new AddressFinder(zipCode).check()
-      const { data: { logradouro, bairro, localidade, uf } } = addressFinded
+      const {
+        data: {
+          logradouro,
+          bairro,
+          localidade,
+          uf
+        }
+      } = await new AddressFinder(zipCode).check()
 
       const addressCreated = await prisma.address.create({
         data: {
@@ -56,7 +67,7 @@ export default class AddressService {
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
-      throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+      throw new AppError(DefaultMessages.INTERNAL_SERVER_ERROR, StatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 }

@@ -7,7 +7,8 @@ import {
   UserUpdateDTO,
   StatusCode,
   DefaultMessages,
-  CrudOperations
+  CrudOperations,
+  UserConfirmDTO
 } from "../types";
 export default class UsersController {
 
@@ -46,7 +47,7 @@ export default class UsersController {
       }
 
       if (req.method === CrudOperations.PATCH) {
-        const confirmedUser = await new UserService({ id } as UserUpdateDTO).confirmUser()
+        const confirmedUser = await new UserService({ id } as UserConfirmDTO).confirmUser()
         return res.status(StatusCode.OK)
           .send({ data: confirmedUser, message: DefaultMessages.USER_CONFIRMED })
       }

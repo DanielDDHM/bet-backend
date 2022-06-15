@@ -1,16 +1,6 @@
 version: '3.4'
 
 services:
-  # betbackend:
-  #   image: betbackend
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #   environment:
-  #     NODE_ENV: production
-  #   ports:
-  #     - 3000:3000
-
   redis:
     image: redis
     container_name: redis-bet

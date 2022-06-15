@@ -1,25 +1,12 @@
-export interface GetAllPaginate {
-  page?: number,
-  perPage?: number
-}
+import * as z from 'zod';
+import {
+  DeleteGenericValidation,
+  LoginValidation,
+  VerifyValidation
+} from '../validations';
 
-export interface Verify {
-  role?: string
-  nick?: string
-}
-export interface Login {
-  nick?: string,
-  email?: string,
-  password?: string,
-}
+export type Verify = z.infer<typeof VerifyValidation>
 
-export enum UserTypes {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-  OWNER = 'OWNER'
-}
+export type Login = z.infer<typeof LoginValidation>
 
-export interface GenericDeleteDTO {
-  id?: string,
-  role?: string
-}
+export type GenericDeleteDTO = z.infer<typeof DeleteGenericValidation>

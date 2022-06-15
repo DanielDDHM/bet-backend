@@ -4,7 +4,7 @@ import {
   GamesGetDTO,
   GamesUpdateDTO,
   DefaultMessages,
-  CrudOperations
+  GameSortDTO
 } from "../types";
 import { Request, Response } from 'express';
 import { GameService } from "../services";
@@ -39,22 +39,32 @@ export default class GamesController {
   async update(req: Request, res: Response) {
 
     const { params: { id }, body, nick, role } = req
+
+    if (typeof body.sortDate as string) {
+      body.sortDate = new Date(body.sortDate)
+    }
+
     const data = { id, nick, ...body, role }
-    if (typeof body.sortDate as string) body.sortDate = new Date(body.sortDate)
 
     try {
-      if (req.method === CrudOperations.PUT) {
-        const updatedGame = await new GameService(data as GamesUpdateDTO).update()
-        return res.status(StatusCode.OK)
-          .send({ data: updatedGame, message: DefaultMessages.GAME_UPDATED })
-      }
+      const updatedGame = await new GameService(data as GamesUpdateDTO).update()
+      return res.status(StatusCode.OK)
+        .send({ data: updatedGame, message: DefaultMessages.GAME_UPDATED })
 
-      if (req.method === CrudOperations.PATCH) {
-        const confirmedUser = await new GameService(data as GamesUpdateDTO).activateGame()
-        return res.status(StatusCode.OK)
-          .send({ data: confirmedUser, message: DefaultMessages.GAME_ACTIVATED })
-      }
+    } catch (error: any) {
+      if (error instanceof AppError) res.status(error.statusCode).json(error.message)
+      res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)
+    }
+  }
 
+  async sort(req: Request, res: Response) {
+    try {
+      const { params: { id }, nick, role } = req
+      const data = { id, nick, role }
+      const numberSorted = await new GameService(data as GameSortDTO).sort()
+
+      return res.status(StatusCode.OK)
+        .send({ data: numberSorted })
     } catch (error: any) {
       if (error instanceof AppError) res.status(error.statusCode).json(error.message)
       res.status(Number(StatusCode.INTERNAL_SERVER_ERROR)).json(error)

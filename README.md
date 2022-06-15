@@ -1,5 +1,8 @@
 # Bet Backend
 
+# DOCS
+To acess docs 'url/api-docs'
+
 ## 👨🏻‍💻 About this project
 Backend For Bet App from CajaCodes
 

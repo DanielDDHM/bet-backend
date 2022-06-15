@@ -14,27 +14,27 @@ import {
   confirmUserValidation,
 } from "../validations";
 import {
-  StatusCode,
-  UserCreateDTO,
-  UserUpdateDTO,
   UserGetDTO,
-  GetAddressDTO,
-  CreateAddressDTO,
+  AddressGetDTO,
+  AddressCreateDTO,
+  StatusCode,
   UserTypes,
-  UserDeleteDTO,
-  DefaultMessages
+  DefaultMessages,
+  UserParams
 } from "../types";
 
 export default class UserService {
-  params: UserGetDTO | UserCreateDTO | UserUpdateDTO | UserDeleteDTO
-  constructor(params: UserGetDTO | UserCreateDTO | UserUpdateDTO | UserDeleteDTO) {
+  params: UserParams
+  constructor(params: UserParams) {
     this.params = params
   }
 
   async get(params = this.params) {
+
     const {
       id, email, nick, page, perPage, role
     } = getUserValidation.parse(params)
+
     try {
       if (email || nick || id) {
         const user = await prisma.users.findFirst({
@@ -55,7 +55,7 @@ export default class UserService {
           }),
           prisma.users.count()
         ])
-        return { users, Total: total }
+        return { users, total: total }
       }
 
       throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.NOT_ACCEPTABLE)
@@ -85,9 +85,16 @@ export default class UserService {
         email
       }
 
-      const [existUser, existAddress] = await Promise.all([
-        await this.get({ email, nick } as UserGetDTO),
-        await new AddressService({ zipCode, streetNumber } as GetAddressDTO).get()
+      const [existUser, existAddress] = await prisma.$transaction([
+        prisma.users.findUnique({
+          where: { nick }
+        }),
+        prisma.address.findFirst({
+          where: {
+            zipCode,
+            streetNumber
+          }
+        })
       ])
 
       if (existUser) {
@@ -95,7 +102,11 @@ export default class UserService {
       }
 
       if (!existAddress) {
-        const { data: { logradouro, bairro, localidade, uf } } = await new AddressFinder(zipCode).check()
+        const {
+          data: {
+            logradouro, bairro, localidade, uf
+          } } = await new AddressFinder(zipCode).check()
+
         const addressCreated = await new AddressService({
           zipCode,
           streetNumber,
@@ -103,7 +114,7 @@ export default class UserService {
           neighborhood: bairro,
           city: localidade,
           state: uf
-        } as CreateAddressDTO).create();
+        } as AddressCreateDTO).create();
 
         const userCreated = await prisma.users.create({
           data: {
@@ -122,6 +133,7 @@ export default class UserService {
       });
 
       return userCreated
+
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
@@ -149,19 +161,29 @@ export default class UserService {
         photo
       }
 
-      const [userExists, addressExists] = await Promise.all([
-        await this.get({ id } as UserGetDTO),
-        await new AddressService(address as GetAddressDTO).get()
-      ])
+      const userExists = await prisma.users.findUnique({
+        where: { id }
+      })
 
       if (!userExists) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
-      if (!addressExists) {
-        const createdAddress = await new AddressService(address as CreateAddressDTO).create()
+
+      if (address) {
+        const addressFind = await prisma.address.findFirst({
+          where: {
+            OR: [
+              { zipCode: address.zipCode },
+              { streetNumber: address.streetNumber }
+            ]
+          }
+        })
+
         const userUpdated = await prisma.users.update({
-          where: { id },
+          where: {
+            id: userExists.id
+          },
           data: {
             ...query,
-            addressId: createdAddress.id
+            addressId: addressFind?.id
           }
         })
 
@@ -169,10 +191,11 @@ export default class UserService {
       }
 
       const userUpdated = await prisma.users.update({
-        where: { id },
+        where: {
+          id
+        },
         data: {
-          ...query,
-          addressId: addressExists.id
+          ...query
         }
       })
 
@@ -262,9 +285,16 @@ export default class UserService {
 
       if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
 
+      if (role === UserTypes.ADMIN) {
+        await prisma.users.delete({
+          where: { id }
+        })
+        return `USER ${user?.nick} DELETED by ADMIN`
+      }
+
       const verifyPass = await new PasswordCrypt(String(password), user?.password).compare()
 
-      if (!verifyPass || user?.email !== email || role !== UserTypes.ADMIN) {
+      if (!verifyPass || user?.email !== email) {
         throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
       }
 
@@ -278,13 +308,4 @@ export default class UserService {
     }
   }
 
-
-  // async giveAdmin(params = this.params) {
-  //   try {
-  //     console.log('Give Admin')
-  //   } catch (error: any) {
-  //     if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
-  //     throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
-  //   }
-  // }
 }

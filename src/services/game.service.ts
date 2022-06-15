@@ -1,24 +1,25 @@
 import {
   StatusCode,
-  GamesCreateDTO,
-  GamesGetDTO,
-  GamesUpdateDTO,
+  GameParams,
   UserTypes,
-  DefaultMessages
+  DefaultMessages,
+  DefaultStatus
 } from "../types"
-import { AppError } from "../helpers"
 import {
   getGamesValidation,
   createGamesValidation,
   updateGamesValidation,
   deleteGamesValidation,
-  activateGameValidation
+  activateGameValidation,
+  sortValidation
 } from "../validations"
 import { prisma } from "../config"
+import { AppError } from "../helpers"
+import Generator from "../helpers/generators"
 
 export default class GamesService {
-  params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO
-  constructor(params: GamesCreateDTO | GamesGetDTO | GamesUpdateDTO) {
+  params: GameParams
+  constructor(params: GameParams) {
     this.params = params
   }
 
@@ -41,7 +42,7 @@ export default class GamesService {
         })
       ])
 
-      return { games, Total: total }
+      return { games, total: total }
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
@@ -56,6 +57,7 @@ export default class GamesService {
         ownerId,
         prize,
         sortDate,
+        numbers,
         nick
       } = createGamesValidation.parse(params)
 
@@ -65,14 +67,17 @@ export default class GamesService {
 
       if (!user) throw new AppError(DefaultMessages.USER_NOT_EXISTS, StatusCode.NOT_FOUND)
 
-      if (user.id !== ownerId) throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      if (user.id !== ownerId) {
+        throw new AppError(DefaultMessages.NOT_PERMITED, StatusCode.BAD_REQUEST)
+      }
 
       const gameCreated = await prisma.game.create({
         data: {
           name,
           ownerId,
           prize,
-          sortDate
+          sortDate,
+          numbers
         }
       })
 
@@ -91,7 +96,6 @@ export default class GamesService {
         sortDate,
         winner,
         prizePhoto,
-        isActive,
         role,
         nick
       } = updateGamesValidation.parse(params)
@@ -100,7 +104,7 @@ export default class GamesService {
         prisma.users.findUnique({
           where: { nick }
         }),
-        prisma.game.findFirst({
+        prisma.game.findUnique({
           where: { id }
         })
       ])
@@ -119,8 +123,7 @@ export default class GamesService {
           prize,
           sortDate,
           winner,
-          prizePhoto,
-          isActive
+          prizePhoto
         }
       })
 
@@ -201,4 +204,42 @@ export default class GamesService {
     }
   }
 
+  async sort(params = this.params) {
+    const { id, nick, role } = sortValidation.parse(params)
+
+    const [game, user] = await prisma.$transaction([
+      prisma.game.findUnique({
+        where: { id }
+      }),
+      prisma.users.findUnique({
+        where: { nick }
+      })
+    ])
+
+    if (game?.ownerId === user?.id || role === UserTypes.ADMIN) {
+      const sortedNumber = await new Generator(game?.numbers).numberGenerator()
+      const winner = await prisma.bets.findMany({
+        where: {
+          AND: [
+            { gameId: id },
+            { bet: sortedNumber },
+            { status: DefaultStatus.CREATED }
+          ]
+        }
+      })
+
+      for (const win of winner) {
+        await prisma.bets.update({
+          where: { id: win.id },
+          data: { winner: true }
+        })
+      }
+
+      return { message: `SORTED NUMBER HAS ${sortedNumber}`, winners: winner }
+    }
+
+  } catch(error: any) {
+    if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
+    throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)
+  }
 }
