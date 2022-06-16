@@ -1,5 +1,5 @@
 import { AddressCreateDTO, AddressGetDTO } from "./address.typings"
-import { BetsCreateDTO, BetsGetDTO } from "./bets.typings"
+import { BetsCreateDTO, BetsGetDTO } from "./bet.typings"
 import { GenericDeleteDTO } from "./default.typings"
 import { GameActivateDTO, GamesCreateDTO, GamesGetDTO, GamesUpdateDTO } from "./game.typings"
 import {

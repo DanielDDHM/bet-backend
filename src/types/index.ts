@@ -1,6 +1,6 @@
 export * from './user.typings'
 export * from './default.typings'
-export * from './bets.typings'
+export * from './bet.typings'
 export * from './statusCode.typings'
 export * from './address.typings'
 export * from './game.typings'

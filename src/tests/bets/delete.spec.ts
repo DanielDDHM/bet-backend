@@ -6,8 +6,8 @@ describe('[BETS DELETE]', () => {
   afterAll(async () => {
     await prisma.bets.create({
       data: {
-        gameId: "62a8c454a07d46691ace262a",
-        usersId: "62a85fab4388090db5a93b45",
+        gameId: "62aaf673c02eb14dcbfe0cde",
+        usersId: "62aaf4cf5a66de846e8990b2",
         bet: 24,
         value: "100",
       }
@@ -18,7 +18,7 @@ describe('[BETS DELETE]', () => {
 
     const bet = await prisma.bets.findFirst({
       where: {
-        gameId: "62a8c454a07d46691ace262a"
+        gameId: "62aaf673c02eb14dcbfe0cde"
       },
       orderBy: {
         createdAt: 'asc'
