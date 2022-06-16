@@ -10,7 +10,7 @@ import {
   UserDeleteDTO,
   UserGetDTO,
   UserUpdateDTO
-} from "./user.typings"
+} from "./User.typings"
 
 export type UserParams = UserCreateDTO |
   UserGetDTO | UserUpdateDTO | UserDeleteDTO | UserAddressDTO | UserActivateDTO | UserConfirmDTO
