@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { DefaultMessages, StatusCode } from '../types'
-import AppError from './apperror'
+import AppError from './appError'
 
 export default class AddressFinder {
   zipCode: string

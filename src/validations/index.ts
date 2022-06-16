@@ -1,5 +1,5 @@
-export * from './bets.validation'
-export * from './users.validation'
+export * from './bet.validation'
+export * from './user.validation'
 export * from './address.validation'
 export * from './game.validation'
 export * from './generic.validation'

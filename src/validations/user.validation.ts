@@ -14,10 +14,10 @@ export const getUserValidation = z.object({
     .min(1, { message: 'NOT_EMPTY' })
     .optional(),
   page: z.number()
-    .nonnegative()
+    .nonnegative({ message: 'NON_NEGATIVE' })
     .optional(),
   perPage: z.number()
-    .nonnegative()
+    .nonnegative({ message: 'NON_NEGATIVE' })
     .optional()
 }).strict();
 

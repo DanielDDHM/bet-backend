@@ -14,8 +14,6 @@ import {
   confirmUserValidation,
 } from "../validations";
 import {
-  UserGetDTO,
-  AddressGetDTO,
   AddressCreateDTO,
   StatusCode,
   UserTypes,
