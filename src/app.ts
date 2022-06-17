@@ -6,7 +6,7 @@ import 'dotenv/config';
 import rootRoutes from './routes';
 import swaggerUi from 'swagger-ui-express';
 import { apiDocumentation } from './docs/api';
-import { betsCron } from './cronjobs';
+// import { betsCron } from './cronjobs';
 const { PORT, NAME } = process.env
 
 //APP
@@ -21,7 +21,7 @@ app.use(cors());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(apiDocumentation))
 
 // CRON
-betsCron.start()
+// betsCron.start()
 
 // app use routes
 app.use('/v1', rootRoutes)
