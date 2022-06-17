@@ -6,7 +6,7 @@ describe('[BETS CREATE]', () => {
   it('CREATE BETS WITH SUCCESS', async () => {
     const betCreated = await new BetsService({
       usersId: "62aaf4cf5a66de846e8990b2",
-      gameId: "62aaf673c02eb14dcbfe0cde",
+      gameId: "62ac712d60a2196f5420e14f",
       bet: 24,
       value: "100",
       nick: "teste"
@@ -18,7 +18,7 @@ describe('[BETS CREATE]', () => {
     try {
       const betCreated = await new BetsService({
         usersId: "62aaf4cf5a66de846e8990b2",
-        gameId: "62a8c454a06691ace262a",
+        gameId: "62ac712d60a2196f5420e14f",
         bet: 24,
         value: "100",
         nick: "teste"

@@ -11,14 +11,15 @@ import { AppError } from "../helpers";
 export default class BetsController {
 
   async get(req: Request, res: Response) {
-    const { query: { usersId, gameId, page, perPage }, role } = req;
+    const {
+      query: { usersId, gameId, page, perPage },
+      role } = req;
     const data = {
       usersId,
       gameId,
-      page: page ? Number(page) : page,
-      perPage: perPage ? Number(perPage) : perPage,
+      page: page ? Number(page) : 1,
+      perPage: perPage ? Number(perPage) : 10,
     }
-    console.log(data)
     try {
       const bet = await new BetService({ ...data, role } as BetsGetDTO).get()
 

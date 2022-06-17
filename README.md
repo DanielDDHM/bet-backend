@@ -1,11 +1,7 @@
 # Bet Backend
-
-# DOCS
-To acess docs 'url/api-docs'
-
 ## 👨🏻‍💻 About this project
-Backend For Bet App from CajaCodes
-
+Backend For Bet App
+To acess docs 'localhost:4000/api-docs'
 ## 🪓 Requirements
 
 - Docker
@@ -38,13 +34,14 @@ Backend For Bet App from CajaCodes
 
 
 ## ⚒️ Included npm scripts
-
 Run this commands from the project folder with `npm run "script-name"`.
 * `start`: runs project with lint fixed
 * `dev`: runs project in development mode
-* `build`: builds all .ts files from `./src` folder to `./build`
+* `dev:test`: runs project in development test mode
+* `push:test`: build the sql or migrate in db of tests
 * `lint`: lints source code using `eslint`
-* `update`: easily check for updates and update all dependencies
+* `lint:fix`: lints source code and fix using `eslint`
+* `prepare`: prepare husky on the vscode
 * `test`: run tests
 
 ## External typings augmentation
@@ -58,16 +55,3 @@ This starter is already configured to allow you to extend typings of external pa
 * now you have two ways:
   * use the provided debug URL in Chrome
   * use VS Code included (inside .vscode folder) `attach` config (best debugging experience)
-
-## Docker Support
-
-This stater uses Node.js best practices and creates dummy user to start node process, instead of using root user.
-
-```
-# Go to the root of your repo created from this starter
-# Build your docker image
-docker build -t payments-service .
-
-# run your docker container
-docker run -p 3000:3000 payments-service
-```

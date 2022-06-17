@@ -10,7 +10,7 @@ import {
 
 export type GamesGetDTO = z.infer<typeof getGamesValidation>
 
-export type GamesCreateDTO = z.infer<typeof createGamesValidation> & Verify
+export type GamesCreateDTO = z.infer<typeof createGamesValidation>
 
 export type GamesUpdateDTO = z.infer<typeof updateGamesValidation> & Verify
 

@@ -13,8 +13,13 @@ import {
 export default class UsersController {
 
   async get(req: Request, res: Response) {
-    const { params: { id }, body, role, query } = req;
-    const data = { id, role, ...body, ...query }
+    const { params: { id }, role, query: { page, perPage } } = req;
+    const data = {
+      id,
+      role,
+      page: Number(page) || 1,
+      perPage: Number(perPage) || 10
+    }
     try {
       const user = await new UserService(data as UserGetDTO).get()
       return res.status(StatusCode.OK).send({ data: user, message: DefaultMessages.USER_FIND })
