@@ -226,12 +226,12 @@ export default class UserService {
           break;
       }
 
-      const userActivated = await prisma.users.update({
+      await prisma.users.update({
         where: { id },
         data: { isActive: activate }
       })
 
-      return userActivated
+      return { id: id, Status: activate, updatedAt: user?.updatedAt }
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
@@ -255,12 +255,12 @@ export default class UserService {
         case true: break;
       }
 
-      const userConfirmed = await prisma.users.update({
+      await prisma.users.update({
         where: { id },
         data: { isConfirmed: confirm }
       })
-
-      return userConfirmed
+      console.log(confirm)
+      return { id: id, Status: confirm, updatedAt: user?.updatedAt }
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
@@ -287,7 +287,7 @@ export default class UserService {
         await prisma.users.delete({
           where: { id }
         })
-        return `USER ${user?.nick} DELETED by ADMIN`
+        return { message: `USER ${user?.nick} DELETED by ADMIN`, deleted: true }
       }
 
       const verifyPass = await new PasswordCrypt(String(password), user?.password).compare()
@@ -299,7 +299,7 @@ export default class UserService {
       await prisma.users.delete({
         where: { id }
       })
-      return `USER ${user?.nick} DELETED`
+      return { message: `USER ${user?.nick} DELETED by USER`, deleted: true }
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

@@ -50,7 +50,6 @@ export const updateGamesValidation = z.object({
 export const activateGameValidation = z.object({
   id: z.string()
     .min(2, { message: 'MIN_LENGHT_3' }),
-  isActive: z.boolean(),
   role: z.string()
     .min(1, { message: 'NOT_EMPTY' }),
   nick: z.string()

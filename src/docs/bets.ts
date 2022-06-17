@@ -86,6 +86,8 @@ const GET_BETS = {
                     }
                   },
                   total: { type: 'number' },
+                  page: { type: 'number' },
+                  perPage: { type: 'number' },
                 }
               },
               message: { type: 'string' },
