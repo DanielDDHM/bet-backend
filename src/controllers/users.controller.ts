@@ -20,7 +20,6 @@ export default class UsersController {
       page: Number(page) || 1,
       perPage: Number(perPage) || 10
     }
-    console.log(data)
     try {
       const user = await new UserService(data as UserGetDTO).get()
       return res.status(StatusCode.OK).send({ data: user, message: DefaultMessages.USER_FIND })

@@ -17,9 +17,9 @@ describe('[GAMES CREATE]', () => {
     expect(gameCreated).toHaveProperty("id")
   })
 
-  it('CREATE BETS WITH FAIL', async () => {
+  it('CREATE GAMES WITH FAIL', async () => {
     try {
-      const betCreated = await new GameService({
+      const gameCreated = await new GameService({
         name: "teste",
         prize: "10000",
         sortDate: new Date("06/14/2023"),
@@ -28,7 +28,7 @@ describe('[GAMES CREATE]', () => {
         nick: 'tesasdte',
         role: UserTypes.ADMIN
       }).create()
-      expect(betCreated).toHaveProperty("id")
+      expect(gameCreated).toHaveProperty("id")
     } catch (error: any) {
       expect(error).toBeInstanceOf(AppError)
     }

@@ -52,7 +52,6 @@ export default class Auth {
 
   async logout(token: any) {
     try {
-      console.log(token)
       return { auth: false, token: null };
     } catch (error: any) {
       throw new AppError(DefaultMessages.INTERNAL_SERVER_ERROR, StatusCode.INTERNAL_SERVER_ERROR)

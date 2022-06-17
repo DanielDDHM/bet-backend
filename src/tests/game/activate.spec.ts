@@ -10,7 +10,7 @@ describe('[GAMES ACTIVATE]', () => {
     expect(gameActivated).toHaveProperty("id")
   })
 
-  it('CREATE BETS WITH FAIL', async () => {
+  it('ACTIVATE GAMES WITH FAIL', async () => {
     try {
       const data = { id: "62ac712d60a2196f5420e14f", role: UserTypes.USER }
       const gameActivated = await new GameService(data).activateGame()

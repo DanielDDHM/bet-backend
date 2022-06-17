@@ -40,7 +40,6 @@ export class InternalUsersController {
 
 export class InternalBetsController {
   async delete(req: Request, res: Response) {
-    console.log(req)
     const { params: { id }, role } = req
     try {
       const betDeleted = await new BetService({ id, role } as GenericDeleteDTO).delete()

@@ -1,5 +1,4 @@
 import { prisma } from "../../config"
-import { AppError } from "../../helpers"
 import { GameService } from "../../services";
 
 describe('[GAME SORT]', () => {

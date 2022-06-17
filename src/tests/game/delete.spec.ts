@@ -27,7 +27,7 @@ describe('[GAME DELETE]', () => {
     expect(gameDel).toHaveProperty("message")
   });
 
-  it('GET GAME WITH FAIL ', async () => {
+  it('DELETE GAME WITH FAIL ', async () => {
     try {
       const game = await new GameService({ id: "sdasdasd", nick: "teste", role: 'ADMIN' }).delete()
       expect(game).toBe(Error)

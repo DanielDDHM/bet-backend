@@ -252,14 +252,14 @@ export default class UserService {
       switch (user.isConfirmed) {
         case false: confirm = true
           break;
-        case true: break;
+        case true: throw new AppError(DefaultMessages.USER_HAS_CONFIRMED, StatusCode.BAD_REQUEST)
+          break;
       }
 
       await prisma.users.update({
         where: { id },
         data: { isConfirmed: confirm }
       })
-      console.log(confirm)
       return { id: id, Status: confirm, updatedAt: user?.updatedAt }
 
     } catch (error: any) {
