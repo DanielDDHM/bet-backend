@@ -32,6 +32,10 @@ const apiDocumentation = {
     {
       url: 'http://localhost:3000/',
       description: 'Local Server',
+    },
+    {
+      url: 'https://animalbet.herokuapp.com/',
+      description: 'Prod Server',
     }
   ],
   tags: [
