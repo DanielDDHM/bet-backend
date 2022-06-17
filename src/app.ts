@@ -6,12 +6,8 @@ import 'dotenv/config';
 import rootRoutes from './routes';
 import swaggerUi from 'swagger-ui-express';
 import { apiDocumentation } from './docs/api';
-import prodScript from './scripts/prod.script';
 import { betsCron } from './cronjobs';
 const { PORT, NAME } = process.env
-
-// DRAWN ON PROMPT
-prodScript();
 
 //APP
 const app = express();
