@@ -59,8 +59,8 @@
     "cross-env": "^7.0.3"
   },
   "scripts": {
-    "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js",
+    "build": "cross-env tsc --p ./tsconfig.json",
+    "start": "npm run build && node build/app.js",
     "dev": "cross-env NODE_ENV=DEV ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
     "dev:test": "cross-env NODE_ENV=TEST PORT=4000 DATABASE_URL='mongodb+srv://admin:admin@cluster0.j289o.mongodb.net/betdbtest?retryWrites=true&w=majority' AUTH_SECRET=Q3VyaW9zaWRhZGUgTWF0b3UgbyBHYXRv ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
     "push:test": "cross-env DATABASE_URL='mongodb+srv://admin:admin@cluster0.j289o.mongodb.net/betdbtest?retryWrites=true&w=majority' yarn prisma db push",
