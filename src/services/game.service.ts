@@ -162,12 +162,12 @@ export default class GamesService {
 
       if (!game) throw new AppError(DefaultMessages.GAME_NOT_EXISTS, StatusCode.BAD_REQUEST)
 
-      const gameActivated = await prisma.game.update({
+      await prisma.game.update({
         where: { id },
         data: { isActive: activate }
       })
 
-      return gameActivated
+      return { id: id, Status: activate, updatedAt: game?.updatedAt }
 
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
@@ -197,7 +197,7 @@ export default class GamesService {
         where: { id },
       });
 
-      return `GAME ${game.name} DELETED`
+      return { message: `GAME ${String(game.name).toUpperCase()} DELETED` }
     } catch (error: any) {
       if (error instanceof AppError) throw new AppError(String(error.message), error.statusCode)
       throw new AppError(String(error.message), StatusCode.INTERNAL_SERVER_ERROR)

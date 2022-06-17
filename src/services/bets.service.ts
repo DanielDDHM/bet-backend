@@ -33,7 +33,7 @@ export default class BetsService {
               usersId,
               gameId
             },
-            skip: (Number(page)) * Number(perPage) || 0,
+            skip: (Number(page) - 1) * Number(perPage) || 0,
             take: Number(perPage) || 10,
           }),
           prisma.bets.count({
@@ -44,16 +44,16 @@ export default class BetsService {
           }),
         ])
 
-        return { bets, Total: total }
+        return { bets, Total: total, page: page, perPage: perPage }
       } else if (role === UserTypes.ADMIN) {
         const [bets, total] = await prisma.$transaction([
           prisma.bets.findMany({
-            skip: (Number(page)) * Number(perPage) || 0,
+            skip: (Number(page) - 1) * Number(perPage) || 0,
             take: Number(perPage) || 10,
           }),
           prisma.bets.count()
         ])
-        return { bets, Total: total }
+        return { bets, Total: total, page: page, perPage: perPage }
       }
 
     } catch (error: any) {

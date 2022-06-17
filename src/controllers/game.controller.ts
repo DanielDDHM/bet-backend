@@ -13,9 +13,9 @@ import { AppError } from "../helpers";
 export default class GamesController {
 
   async get(req: Request, res: Response) {
-    const { params } = req;
+    const { params: { id }, query } = req;
     try {
-      const game = await new GameService(params as GamesGetDTO).get()
+      const game = await new GameService({ id, ...query } as GamesGetDTO).get()
       return res.status(StatusCode.OK).send(game)
     } catch (error: any) {
       if (error instanceof AppError) res.status(error.statusCode).json(error.message)
