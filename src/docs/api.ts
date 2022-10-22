@@ -9,6 +9,7 @@ import {
   CREATE_GAMES, GET_GAMES, UPDATE_GAMES, ACTIVATE_GAMES, DELETE_GAMES,
   GamesBody, UpdateGamesBody,
 } from "./game";
+import { URL_PATH } from "./server";
 import {
   ACTIVATE_USERS, CREATE_USERS, DELETE_USERS, GET_USERS, UPDATE_USERS,
   UpdateUsersBody, UsersBody, CONFIRM_USERS
@@ -19,7 +20,7 @@ const apiDocumentation = {
   info: {
     title: "BET",
     description: "API for a bet animal game",
-    version: "1.0.0",
+    version: "2.0.0",
     contact: {
       email: "daniel.ddhm@gmail.com",
     },
@@ -27,16 +28,12 @@ const apiDocumentation = {
   servers: [
     {
       url: 'http://localhost:4000/',
-      description: 'Test Server',
+      description: 'Server',
     },
     {
-      url: 'http://localhost:3000/',
-      description: 'Local Server',
+      url: URL_PATH,
+      description: 'Server PROD',
     },
-    {
-      url: 'https://animalbet.herokuapp.com/',
-      description: 'Prod Server',
-    }
   ],
   tags: [
     { name: 'Auth' },
